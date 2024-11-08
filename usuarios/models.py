@@ -1,20 +1,25 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.db import models
 
 class Usuario(AbstractUser):
-    # Campos extras
-    telefono = models.CharField(max_length=10, blank=True, null=True)
-    direccion = models.CharField(max_length=100, blank=True, null=True)
-    fecha_nacimiento = models.DateField(blank=True, null=True)
-    genero = models.CharField(max_length=10, choices=[('M', 'Masculino'), ('F', 'Femenino')], blank=True)
+    pass
 
-    # Tipo de usuario
-    TIPO_USUARIO_CHOICES = [
-        ('doctor', 'Doctor'),
-        ('paciente', 'Paciente'),
-    ]
-    tipo_usuario = models.CharField(max_length=10, choices=TIPO_USUARIO_CHOICES)
+class Medico(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    matricula = models.CharField(max_length=6, unique=True)
+    nombre = models.CharField(max_length=50)
+    apellido_paterno = models.CharField(max_length=50)
+    apellido_materno = models.CharField(max_length=50)
+    correo = models.EmailField(unique=True)
+    contrasena = models.CharField(max_length=100)
+    fecha_nacimiento = models.DateField()
 
-    def __str__(self):
-        return f"{self.username} - {self.tipo_usuario}"
+class Paciente(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    matricula = models.CharField(max_length=6, unique=True)
+    nombre = models.CharField(max_length=50)
+    apellido_paterno = models.CharField(max_length=50)
+    apellido_materno = models.CharField(max_length=50)
+    correo = models.EmailField(unique=True)
+    contrasena = models.CharField(max_length=100)
+    fecha_nacimiento = models.DateField()

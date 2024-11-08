@@ -8,6 +8,7 @@ __pycache__/
 activar
 entorno
 run
+migrar
 
 # Distribution / packaging
 .Python
