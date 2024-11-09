@@ -73,7 +73,7 @@ class HistorialMedico(models.Model):
     usa_cigarro = models.BooleanField(default=False)
     ingiere_alcohol = models.BooleanField(default=False)
 
-    paciente = models.OneToOneField('Usuario', on_delete=models.CASCADE, related_name='historial', null=True)
+    paciente = models.OneToOneField('Usuario', on_delete=models.CASCADE, related_name='historial', null=True, editable=False)
 
     def __str__(self):
         return f'{self.id_historial}'
