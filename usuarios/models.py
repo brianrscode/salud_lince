@@ -62,3 +62,34 @@ class Usuario(AbstractBaseUser):
         if not self.matricula:
             self.usuario_activo = True
         super(Usuario, self).save(*args, **kwargs)
+
+
+class Medico(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.usuario.matricula} - {self.usuario.nombres}'
+
+
+class HistorialMedico(models.Model):
+    # matricula = models.CharField('Matricula', max_length=9, primary_key=True, unique=True)
+    id_historial = models.CharField('Id Historial', max_length=9, primary_key=True, unique=True)
+    enfermedades_cronicas = models.CharField('Enfermedades crónicas', max_length=150, blank=True, null=True)
+    alergias = models.CharField('Alergias', max_length=150, blank=True, null=True)
+    medicamento_usado = models.CharField('Medicamento usado', max_length=150, blank=True, null=True)
+    esEmbarazada = models.BooleanField(default=False)
+    usaDrogas = models.BooleanField(default=False)
+    usaCigarro = models.BooleanField(default=False)
+    ingiereAlcohol = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.id_historial}'
+
+
+class Paciente(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    historial_medico = models.ForeignKey(HistorialMedico, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.usuario.matricula} - {self.usuario.nombres}'
+
