@@ -9,6 +9,7 @@ activar
 entorno
 run
 migrar
+admin
 
 # Distribution / packaging
 .Python

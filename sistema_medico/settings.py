@@ -65,22 +65,22 @@ WSGI_APPLICATION = 'sistema_medico.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('NAME_BD'),
-        'USER': env('USER_BD'),
-        'PASSWORD': env('PASSWORD_BD'),
-        'HOST': env('HOST_BD'),
-        'PORT': env('PORT_BD'),
-    }
-}
 # DATABASES = {
-#     'default':{
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'area_medicabd.sqlite3',
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': env('NAME_BD'),
+#         'USER': env('USER_BD'),
+#         'PASSWORD': env('PASSWORD_BD'),
+#         'HOST': env('HOST_BD'),
+#         'PORT': env('PORT_BD'),
 #     }
 # }
+DATABASES = {
+    'default':{
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'area_medicabd.sqlite3',
+    }
+}
 
 # Para que Django use el modelo "Usuario"
 # en lugar del modelo predeterminado "user"
