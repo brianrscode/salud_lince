@@ -44,6 +44,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     nombres = models.CharField('Nombres', max_length=100)
     apellido_paterno = models.CharField('Apellido Paterno', max_length=30)
     apellido_materno = models.CharField('Apellido Materno', max_length=30, blank=True, null=True)
+    fecha_nacimiento = models.DateField('Fecha de Nacimiento', blank=True, null=True)
     usuario_activo = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='paciente')
