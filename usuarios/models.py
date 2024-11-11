@@ -39,7 +39,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         ('admin', 'Administrador'),
     )
 
-    matricula = models.CharField('Matrícula', max_length=9, primary_key=True, unique=True)
+    clave = models.CharField('Matrícula', max_length=9, primary_key=True, unique=True)
     email = models.EmailField('Correo', unique=True)
     nombres = models.CharField('Nombres', max_length=100)
     apellido_paterno = models.CharField('Apellido Paterno', max_length=30)

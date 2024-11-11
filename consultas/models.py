@@ -7,7 +7,7 @@ class Consulta(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
     padecimiento_actual = models.TextField()
     tratamiento_no_farmacologico = models.TextField('Tratamiento no farmacológico', max_length=100, blank=True, null=True)
-    tratamiento_farmacologico = models.CharField('Tratamiento farmacológico', max_length=100, blank=True, null=True)
+    tratamiento_farmacologico_recetado = models.CharField('Tratamiento farmacológico recetado', max_length=100, blank=True, null=True)
     peso = models.DecimalField('Peso (kg)', max_digits=4, decimal_places=2, blank=True, null=True)  # en kg
     talla = models.DecimalField('Talla (m)', max_digits=4, decimal_places=2, blank=True, null=True)  # en cm
     temperatura = models.DecimalField('Temperatura (°C)', max_digits=4, decimal_places=2, blank=True, null=True)  # en °C
