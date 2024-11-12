@@ -10,6 +10,8 @@ entorno
 run
 migrar
 admin
+crear_usuarios.py
+crear_consultas.py
 
 # Distribution / packaging
 .Python

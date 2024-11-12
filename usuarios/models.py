@@ -2,14 +2,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self, matricula, nombres, email, password=None, role=None):
+    def create_user(self, clave, nombres, email, apellido_paterno, fecha_nacimiento, apellido_materno=None, password=None, role=None):
         if not email:
             raise ValueError('El usuario debe tener un correo electrónico')
 
         usuario = self.model(
-            matricula=matricula,
+            clave=clave,
             nombres=nombres,
             email=self.normalize_email(email),
+            apellido_paterno=apellido_paterno,
+            apellido_materno=apellido_materno,
+            fecha_nacimiento=fecha_nacimiento,
             role=role
         )
         usuario.set_password(password)
@@ -17,11 +20,14 @@ class UsuarioManager(BaseUserManager):
 
         return usuario
 
-    def create_superuser(self, matricula, nombres, email, password=None):
+    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, password=None, role=None):
         usuario = self.create_user(
-            matricula=matricula,
+            clave=clave,
             nombres=nombres,
             email=email,
+            apellido_paterno=apellido_paterno,
+            apellido_materno=apellido_materno,
+            fecha_nacimiento=fecha_nacimiento,
             password=password,
             role='admin'
         )
@@ -39,7 +45,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         ('admin', 'Administrador'),
     )
 
-    clave = models.CharField('Matrícula', max_length=9, primary_key=True, unique=True)
+    clave = models.CharField('clave', max_length=9, primary_key=True, unique=True)
     email = models.EmailField('Correo', unique=True)
     nombres = models.CharField('Nombres', max_length=100)
     apellido_paterno = models.CharField('Apellido Paterno', max_length=30)
@@ -52,10 +58,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     objects = UsuarioManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['matricula', 'nombres']
+    REQUIRED_FIELDS = ['clave', 'nombres', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento']
 
     def __str__(self):
-        return f'{self.matricula} - {self.nombres} - {self.role}'
+        return f'{self.clave} - {self.nombres} - {self.role}'
 
     def has_perm(self, perm, obj=None):
         return True
