@@ -7,55 +7,42 @@ from consultas.models import Consulta
 
 @receiver(post_migrate)
 def crear_grupos_permisos(sender, **kwargs):
-    # Definir permisos y grupos
-    permisos_medico = [
-        'view_consulta', 'add_consulta',
-        'view_historialmedico',
-        'view_usuario', 'change_usuario'
-    ]
-    permisos_paciente = [
-        'view_consulta',
-        'view_historialmedico', 'change_historialmedico',
-        'view_usuario', 'change_usuario'
-    ]
-
     # Crear grupos si no existen
     medico_group, _ = Group.objects.get_or_create(name="Medico")
     paciente_group, _ = Group.objects.get_or_create(name="Paciente")
     admin_group, _ = Group.objects.get_or_create(name="Administrador")
 
-    # Obtener content types
-    consulta_content_type = ContentType.objects.get_for_model(Consulta)
-    historial_content_type = ContentType.objects.get_for_model(HistorialMedico)
-    usuario_content_type = ContentType.objects.get_for_model(Usuario)
+    # Definir permisos y grupos
+    permisos_medico = [
+        ('view_consulta', Consulta),
+        ('add_consulta', Consulta),
+        ('view_historialmedico', HistorialMedico),
+        ('view_usuario', Usuario),
+        ('change_usuario', Usuario),
+    ]
+    permisos_paciente = [
+        ('view_consulta', Consulta),
+        ('view_historialmedico', HistorialMedico),
+        ('change_historialmedico', HistorialMedico),
+        ('view_usuario', Usuario),
+        ('change_usuario', Usuario),
+    ]
 
-    # Asignar permisos al grupo Médico
-    for permiso in permisos_medico:
-        content_type = (
-            consulta_content_type if 'consulta' in permiso
-            else historial_content_type if 'historialmedico' in permiso
-            else usuario_content_type
-        )
-        permission, _ = Permission.objects.get_or_create(
-            codename=permiso, content_type=content_type
-        )
-        medico_group.permissions.add(permission)
+    # Asignar permisos a los grupos
+    def asignar_permisos(grupo, permisos):
+        for permiso_codename, model in permisos:
+            content_type = ContentType.objects.get_for_model(model)
+            permission, _ = Permission.objects.get_or_create(codename=permiso_codename, content_type=content_type)
+            grupo.permissions.add(permission)
 
-    # Asignar permisos al grupo Paciente
-    for permiso in permisos_paciente:
-        content_type = (
-            consulta_content_type if 'consulta' in permiso
-            else historial_content_type if 'historialmedico' in permiso
-            else usuario_content_type
-        )
-        permission, _ = Permission.objects.get_or_create(
-            codename=permiso, content_type=content_type
-        )
-        paciente_group.permissions.add(permission)
+    # Asignar permisos a cada grupo
+    asignar_permisos(medico_group, permisos_medico)
+    asignar_permisos(paciente_group, permisos_paciente)
 
     # Asignar todos los permisos al grupo Administrador
     all_permissions = Permission.objects.all()
     admin_group.permissions.set(all_permissions)
+
 
 @receiver(post_save, sender=Usuario)
 def asignar_grupo_y_crear_historial(sender, instance, created, **kwargs):
@@ -72,3 +59,4 @@ def asignar_grupo_y_crear_historial(sender, instance, created, **kwargs):
         elif instance.role == 'admin':
             admin_group = Group.objects.get(name='Administrador')
             instance.groups.add(admin_group)
+        instance.save()
