@@ -12,6 +12,7 @@ migrar
 admin
 crear_usuarios.py
 crear_consultas.py
+consultar_datos.py
 
 # Distribution / packaging
 .Python
