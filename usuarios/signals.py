@@ -2,8 +2,16 @@ from django.db.models.signals import post_migrate, post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from .models import HistorialMedico, Usuario
+from .models import HistorialMedico, Usuario, Role
 from consultas.models import Consulta
+
+
+@receiver(post_migrate)
+def crear_roles_por_defecto(sender, **kwargs):
+    roles = ["paciente", "medico", "admin"]
+    for role in roles:
+        Role.objects.get_or_create(nombre_rol=role)
+
 
 @receiver(post_migrate)
 def crear_grupos_permisos(sender, **kwargs):
@@ -47,16 +55,15 @@ def crear_grupos_permisos(sender, **kwargs):
 @receiver(post_save, sender=Usuario)
 def asignar_grupo_y_crear_historial(sender, instance, created, **kwargs):
     if created:
-        # Asignar grupo al usuario según su rol
-        if instance.role == 'medico':
+        if instance.role == Role.objects.get(nombre_rol='medico'):
             medico_group = Group.objects.get(name='Medico')
             instance.groups.add(medico_group)
-        elif instance.role == 'paciente':
+        elif instance.role == Role.objects.get(nombre_rol='paciente'):
             paciente_group = Group.objects.get(name='Paciente')
             instance.groups.add(paciente_group)
             # Crear el historial médico para el paciente
             HistorialMedico.objects.create(id_historial=instance.clave, paciente=instance)
-        elif instance.role == 'admin':
+        elif instance.role == Role.objects.get(nombre_rol='admin'):
             admin_group = Group.objects.get(name='Administrador')
             instance.groups.add(admin_group)
         instance.save()

@@ -1,10 +1,16 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, clave, nombres, email, apellido_paterno, fecha_nacimiento, apellido_materno=None, password=None, role=None):
         if not email:
             raise ValueError('El usuario debe tener un correo electrónico')
+
+        try:
+            role_obj = Role.objects.get(nombre_rol=role)
+        except ObjectDoesNotExist:
+            raise ValueError(f"El rol {role} no existe")
 
         usuario = self.model(
             clave=clave,
@@ -13,14 +19,18 @@ class UsuarioManager(BaseUserManager):
             apellido_paterno=apellido_paterno,
             apellido_materno=apellido_materno,
             fecha_nacimiento=fecha_nacimiento,
-            role=role
+            role=role_obj
         )
         usuario.set_password(password)
         usuario.save(using=self._db)
 
         return usuario
 
-    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, password=None, role=None):
+    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, password=None, role="admin"):
+        try:
+            role_obj = Role.objects.get(nombre_rol=role)
+        except ObjectDoesNotExist:
+            raise ValueError(f"El rol {role} no existe")
         usuario = self.create_user(
             clave=clave,
             nombres=nombres,
@@ -29,7 +39,7 @@ class UsuarioManager(BaseUserManager):
             apellido_materno=apellido_materno,
             fecha_nacimiento=fecha_nacimiento,
             password=password,
-            role='admin'
+            role=role_obj
         )
         usuario.is_staff = True
         usuario.is_superuser = True
@@ -37,13 +47,15 @@ class UsuarioManager(BaseUserManager):
         return usuario
 
 
+class Role(models.Model):
+    nombre_rol = models.CharField(max_length=20, unique=True)
+    descripcion = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre_rol
+
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
-    ROLE_CHOICES = (
-        ('medico', 'Médico'),
-        ('paciente', 'Paciente'),
-        ('admin', 'Administrador'),
-    )
 
     clave = models.CharField('clave', max_length=9, primary_key=True, unique=True)
     email = models.EmailField('Correo', unique=True)
@@ -53,7 +65,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', blank=True, null=True)
     usuario_activo = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='paciente')
+
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, default=0)
 
     objects = UsuarioManager()
 
