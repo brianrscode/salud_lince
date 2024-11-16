@@ -2,7 +2,7 @@ from django.db.models.signals import post_migrate, post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from .models import HistorialMedico, Usuario, Role
+from .models import HistorialMedico, Usuario, Role, Area
 from consultas.models import Consulta
 
 
@@ -11,6 +11,24 @@ def crear_roles_por_defecto(sender, **kwargs):
     roles = ["paciente", "medico", "admin"]
     for role in roles:
         Role.objects.get_or_create(nombre_rol=role)
+
+
+@receiver(post_migrate)
+def crear_areas_por_defecto(sender, **kwargs):
+    areas = [
+        "Sistemas",
+        "Bioquímica",
+        "Mecatrónica",
+        "Industrial",
+        "Electromecánica",
+        "Gastronomía",
+        "Maestría",
+        "Médico",
+        "Administración",
+        "Docente"
+    ]
+    for area in areas:
+        Area.objects.get_or_create(carrera_o_puesto=area)
 
 
 @receiver(post_migrate)
