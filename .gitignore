@@ -10,6 +10,7 @@ entorno
 run
 migrar
 admin
+borrar
 crear_usuarios.py
 crear_consultas.py
 consultar_datos.py
