@@ -14,6 +14,7 @@ borrar
 crear_usuarios.py
 crear_consultas.py
 consultar_datos.py
+area_medicabd.sqlite3
 
 # Distribution / packaging
 .Python
