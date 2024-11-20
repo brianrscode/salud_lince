@@ -52,14 +52,14 @@ class UsuarioManager(BaseUserManager):
 
 
 class Area(models.Model):
-    carrera_o_puesto = models.CharField(max_length=50, unique=True)
+    carrera_o_puesto = models.CharField(max_length=50, unique=True, primary_key=True)
 
     def __str__(self):
         return self.carrera_o_puesto
 
 
 class Role(models.Model):
-    nombre_rol = models.CharField(max_length=20, unique=True)
+    nombre_rol = models.CharField(max_length=20, unique=True, primary_key=True)
     descripcion = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):

@@ -3,12 +3,12 @@ from usuarios.models import Usuario
 
 
 class Consulta(models.Model):
-    CHOICES = [("M", "Medica"), ("A", "Ambulatoria")]
-    # id_consulta = models.AutoField(primary_key=True, default=None)
+    id_consulta = models.BigAutoField(primary_key=True)
     fecha = models.DateField(auto_now_add=True)
     padecimiento_actual = models.TextField()
     tratamiento_no_farmacologico = models.TextField('Tratamiento no farmacológico', max_length=100, blank=True, null=True)
     tratamiento_farmacologico_recetado = models.CharField('Tratamiento farmacológico recetado', max_length=100, blank=True, null=True)
+    CHOICES = [("M", "Médica"), ("A", "Asesoría")]
     tipo_de_consulta = models.CharField('Tipo de consulta', max_length=1, choices=CHOICES, default="M")
     clave_paciente = models.ForeignKey(
         Usuario,
@@ -24,11 +24,11 @@ class Consulta(models.Model):
     )
 
     def __str__(self):
-        return f"Consulta {self.id} - {self.fecha} - {self.clave_paciente} - {self.paciente_medico}"
+        return f"Consulta {self.id_consulta} - {self.fecha} - {self.clave_paciente} - {self.paciente_medico}"
 
 
 class SignosVitales(models.Model):
-    # id_signos = models.AutoField(primary_key=True, default=None)
+    id_signos = models.BigAutoField(primary_key=True)
     peso = models.DecimalField('Peso (kg)', max_digits=4, decimal_places=2, blank=True, null=True)  # en kg
     talla = models.DecimalField('Talla (m)', max_digits=4, decimal_places=2, blank=True, null=True)  # en cm
     temperatura = models.DecimalField('Temperatura (°C)', max_digits=4, decimal_places=2, blank=True, null=True)  # en °C
@@ -43,4 +43,4 @@ class SignosVitales(models.Model):
     )
 
     def __str__(self):
-        return f"{self.id} - {self.consulta}"
+        return f"{self.id_signos} - {self.consulta}"
