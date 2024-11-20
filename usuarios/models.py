@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self, clave, nombres, email, apellido_paterno, fecha_nacimiento, apellido_materno=None, password=None, role=None, carrera_o_puesto=None):
+    def create_user(self, clave, nombres, email, apellido_paterno, fecha_nacimiento, sexo=None, apellido_materno=None, password=None, role=None, carrera_o_puesto=None):
         if not email:
             raise ValueError('El usuario debe tener un correo electrónico')
 
@@ -24,6 +24,7 @@ class UsuarioManager(BaseUserManager):
             apellido_paterno=apellido_paterno,
             apellido_materno=apellido_materno,
             fecha_nacimiento=fecha_nacimiento,
+            sexo=sexo,
             role=role_obj,
             carrera_o_puesto=carrera_o_puesto_obj
         )
@@ -32,7 +33,7 @@ class UsuarioManager(BaseUserManager):
 
         return usuario
 
-    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, password=None, role="admin", carrera_o_puesto="Administración"):
+    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, sexo=None, password=None, role="admin", carrera_o_puesto="Administración"):
 
         usuario = self.create_user(
             clave=clave,
@@ -41,6 +42,7 @@ class UsuarioManager(BaseUserManager):
             apellido_paterno=apellido_paterno,
             apellido_materno=apellido_materno,
             fecha_nacimiento=fecha_nacimiento,
+            sexo=sexo,
             password=password,
             role=role,
             carrera_o_puesto=carrera_o_puesto
@@ -73,6 +75,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     apellido_paterno = models.CharField('Apellido Paterno', max_length=30)
     apellido_materno = models.CharField('Apellido Materno', max_length=30, blank=True, null=True)
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', blank=True, null=True)
+    sexos = [('M', 'Masculino'), ('F', 'Femenino')]
+    sexo = models.CharField('Sexo', max_length=1, choices=sexos, blank=True, null=True)
     usuario_activo = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
