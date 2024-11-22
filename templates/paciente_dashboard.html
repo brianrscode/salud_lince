@@ -2,6 +2,11 @@
 
 {% block title %}Dashboard de paciente{% endblock %}
 
+{% block enlaces %}
+    <li><a href="{% url 'paciente_dashboard' %}">Dashboard de paciente</a></li>
+    <li><a href="{% url 'historial' %}">Historial médico</a></li>
+{% endblock %}
+
 {% block content %}
     <h1>Dashboard de paciente</h1>
 {% endblock %}

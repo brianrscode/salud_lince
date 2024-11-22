@@ -43,3 +43,11 @@ def medico_dashboard(request):
 @role_required(["paciente"])
 def paciente_dashboard(request):
     return render(request, "paciente_dashboard.html")
+
+
+@login_required
+@role_required(["paciente"])
+def historial_view(request):
+    # obtener el historial médico del paciente
+    historial = request.user.historial
+    return render(request, "historial_medico.html", {"historial": historial})

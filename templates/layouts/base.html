@@ -10,7 +10,15 @@
 </head>
 <body>
 
-    {% include "./partials/barra.html" %}
+    {% comment %} {% include "./partials/barra.html" %} {% endcomment %}
+    <nav>
+        <ul>
+            <li><a href="#">{% if user.is_authenticated %}{{ user.nombres }}{% else %}N/A{% endif %}</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% block enlaces %}
+            {% endblock %}
+        </ul>
+    </nav>
 
     <main>
         {% block content %}

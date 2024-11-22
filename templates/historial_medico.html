@@ -1,0 +1,18 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Mi Historial Médico{% endblock %}
+
+{% block content %}
+<h1>Historial Médico</h1>
+{% if historial %}
+    <p><strong>Enfermedades crónicas:</strong> {{ historial.enfermedades_cronicas }}</p>
+    <p><strong>Alergias:</strong> {{ historial.alergias }}</p>
+    <p><strong>Medicamentos usados:</strong> {{ historial.medicamento_usado }}</p>
+    <p><strong>¿Es embarazada?:</strong> {{ historial.es_embarazada|yesno:"Sí,No" }}</p>
+    <p><strong>¿Usa drogas?:</strong> {{ historial.usa_drogas|yesno:"Sí,No" }}</p>
+    <p><strong>¿Fuma cigarro?:</strong> {{ historial.usa_cigarro|yesno:"Sí,No" }}</p>
+    <p><strong>¿Ingiere alcohol?:</strong> {{ historial.ingiere_alcohol|yesno:"Sí,No" }}</p>
+{% else %}
+    <p>No se encontró un historial médico.</p>
+{% endif %}
+{% endblock %}
