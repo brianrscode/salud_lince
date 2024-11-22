@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    {% block styles %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+    {% include "./partials/barra.html" %}
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% include "./partials/footer.html" %}
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

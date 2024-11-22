@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% comment %} <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"> {% endcomment %}
+    <title>Login</title>
+</head>
+<body>
+    <h2>Iniciar Sesión</h2>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %} {% comment%} Token de seguridad {% endcomment %}
+        <label for="email">Correo:</label>
+        <input type="email" name="email" id="email" required>
+        <br>
+        <label for="password">Contraseña:</label>
+        <input type="password" name="password" id="password" required>
+        <br>
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+</body>
+</html>
