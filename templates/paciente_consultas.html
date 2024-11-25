@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Mis consultas {% endblock %}
+
+{% block enlaces %}
+    <li><a href="{% url 'paciente_dashboard' %}">Dashboard de paciente</a></li>
+    <li><a href="{% url 'historial' %}">Historial médico</a></li>
+    <li><a href="{% url 'paciente_consultas' %}">Mis consultas</a></li>
+{% endblock %}
+
+{% block content %}
+    <h1>Mis consultas</h1>
+    <p>Estas son tus consultas:</p>
+    {% comment %} <ul>
+        {% for consulta in consultas %}
+            <li>{{ consulta.id_consulta }}</li>
+            <li>{{ consulta.fecha }}</li>
+            <li>{{ consulta.padecimiento_actual }}</li>
+            <li>{{ consulta.tratamiento_no_farmacologico }}</li>
+            <li>{{ consulta.tratamiento_farmacologico_recetado }}</li>
+            <li>{{ consulta.tipo_de_consulta }}</li>
+            <li>{{ consulta.clave_paciente }}</li>
+            <li>{{ consulta.paciente_medico }}</li>
+        {% endfor %}
+    </ul> {% endcomment %}
+    <table>
+        <tr>
+            <th>Fecha</th>
+            <th>Padecimiento actual</th>
+            <th>Tratamiento no farmacologico</th>
+            <th>Tratamiento farmacologico recetado</th>
+            <th>Tipo de consulta</th>
+            <th>Clave paciente</th>
+            <th>Clave medico</th>
+        </tr>
+        {% for consulta in consultas %}
+            <tr>
+                <td>{{ consulta.id_consulta }}</td>
+                <td>{{ consulta.fecha }}</td>
+                <td>{{ consulta.padecimiento_actual }}</td>
+                <td>{{ consulta.tratamiento_no_farmacologico }}</td>
+                <td>{{ consulta.tratamiento_farmacologico_recetado }}</td>
+                <td>{{ consulta.tipo_de_consulta }}</td>
+                <td>{{ consulta.clave_paciente }}</td>
+                <td>{{ consulta.clave_medico }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <br>
+    <br>
+    <h2>Signos vitales</h2>
+    {% for signo in signos %}
+        <p>{{ signo.id_signos }}</p>
+        <p>{{ signo.peso }}</p>
+        <p>{{ signo.talla }}</p>
+        <p>{{ signo.temperatura }}</p>
+        <p>{{ signo.frecuencia_cardíaca }}</p>
+        <p>{{ signo.frecuencia_respiratoria }}</p>
+        <p>{{ signo.presion_arterial }}</p>
+        <p>{{ signo.consulta }}</p>
+    {% endfor %}
+{% endblock %}

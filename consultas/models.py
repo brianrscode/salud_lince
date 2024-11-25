@@ -16,7 +16,7 @@ class Consulta(models.Model):
         related_name='consultas_paciente',
         limit_choices_to={'role__nombre_rol': 'paciente'}
     )
-    paciente_medico = models.ForeignKey(
+    clave_medico = models.ForeignKey(
         Usuario,
         on_delete=models.CASCADE,
         related_name='consultas_medico',
@@ -24,7 +24,7 @@ class Consulta(models.Model):
     )
 
     def __str__(self):
-        return f"Consulta {self.id_consulta} - {self.fecha} - {self.clave_paciente} - {self.paciente_medico}"
+        return f"Consulta {self.id_consulta} - {self.fecha} - {self.clave_paciente} - {self.clave_medico}"
 
 
 class SignosVitales(models.Model):
