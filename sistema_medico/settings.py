@@ -76,12 +76,6 @@ DATABASES = {
         'PORT': env('PORT_BD'),
     }
 }
-# DATABASES = {
-#     'default':{
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'area_medicabd.sqlite3',
-#     }
-# }
 
 # Para que Django use el modelo "Usuario"
 # en lugar del modelo predeterminado "user"
