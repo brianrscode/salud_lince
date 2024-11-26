@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .decorators import role_required
@@ -63,3 +63,39 @@ def paciente_consultas(request):
     consultas = Consulta.objects.filter(clave_paciente=request.user)
     signos = SignosVitales.objects.filter(consulta__clave_paciente=request.user)
     return render(request, "paciente_consultas.html", {"consultas": consultas, "signos": signos})
+
+
+@login_required
+@role_required(["paciente"])
+def paciente_informacion(request):
+    informacion = request.user
+    return render(request, "paciente_informacion.html", {"informacion": informacion})
+
+
+@login_required
+@role_required(["paciente", "medico"])
+def cambiar_contrasena(request):
+    if request.method == 'POST':
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if not request.user.check_password(current_password):
+            return render(request, 'paciente_informacion.html', {
+                'informacion': request.user,
+                'error': 'La contraseña actual es incorrecta.'
+            })
+
+        if new_password != confirm_password:
+            return render(request, 'paciente_informacion.html', {
+                'informacion': request.user,
+                'error': 'Las contraseñas no coinciden.'
+            })
+
+        request.user.set_password(new_password)
+        request.user.save()
+        update_session_auth_hash(request, request.user)  # Mantener la sesión activa después del cambio de contraseña
+        messages.success(request, 'Tu contraseña ha sido cambiada exitosamente.')
+        return redirect('paciente_informacion')
+
+    return redirect('paciente_informacion')

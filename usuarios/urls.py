@@ -9,4 +9,6 @@ urlpatterns = [
     path("paciente/dashboard/", views.paciente_dashboard, name="paciente_dashboard"),
     path("paciente/historial/", views.historial_view, name="historial"),
     path("paciente/mis_consultas/", views.paciente_consultas, name="paciente_consultas"),
+    path("paciente/informacion/", views.paciente_informacion, name="paciente_informacion"),
+    path("cambiar_contrasena/", views.cambiar_contrasena, name="cambiar_contrasena"),
 ]
