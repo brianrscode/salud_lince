@@ -2,10 +2,10 @@
 
 {% block title %}Información de médico{% endblock %}
 
-{% block enlaces %}
+{% comment %} {% block enlaces %}
     <li><a href="{% url 'medico_dashboard' %}">Dashboard de médico</a></li>
     <li><a href="{% url 'medico_informacion' %}">Información de médico</a></li>
-{% endblock %}
+{% endblock %} {% endcomment %}
 
 {% block content %}
     <h1>Información de médico</h1>

@@ -7,12 +7,12 @@
 {% endblock %}
 {% block title %}Mi Historial Médico{% endblock %}
 
-{% block enlaces %}
+{% comment %} {% block enlaces %}
     <li class="nav-item"><a class="nav-link" href="{% url 'paciente_dashboard' %}">Dashboard de paciente</a></li>
     <li class="nav-item"><a class="nav-link" href="{% url 'historial' %}">Historial médico</a></li>
     <li class="nav-item"><a class="nav-link" href="{% url 'paciente_consultas' %}">Mis consultas</a></li>
     <li class="nav-item"><a class="nav-link" href="{% url 'paciente_informacion' %}">Información de paciente</a></li>
-{% endblock %}
+{% endblock %} {% endcomment %}
 
 {% block content %}
 <h1>Historial Médico</h1>
