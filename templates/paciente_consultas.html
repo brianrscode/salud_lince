@@ -1,6 +1,11 @@
 {% extends "layouts/base.html" %}
+{% load static %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
 {% block title %} Mis consultas {% endblock %}
+
 
 {% block enlaces %}
     <li><a href="{% url 'paciente_dashboard' %}">Dashboard de paciente</a></li>
@@ -10,55 +15,105 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Mis consultas</h1>
-    <p>Estas son tus consultas:</p>
-    {% comment %} <ul>
-        {% for consulta in consultas %}
-            <li>{{ consulta.id_consulta }}</li>
-            <li>{{ consulta.fecha }}</li>
-            <li>{{ consulta.padecimiento_actual }}</li>
-            <li>{{ consulta.tratamiento_no_farmacologico }}</li>
-            <li>{{ consulta.tratamiento_farmacologico_recetado }}</li>
-            <li>{{ consulta.tipo_de_consulta }}</li>
-            <li>{{ consulta.clave_paciente }}</li>
-            <li>{{ consulta.paciente_medico }}</li>
-        {% endfor %}
-    </ul> {% endcomment %}
-    <table>
+<h1>Mis consultas</h1>
+<p>Estas son tus consultas:</p>
+
+<table class="table table-striped">
+    <thead>
         <tr>
             <th>Fecha</th>
-            <th>Padecimiento actual</th>
-            <th>Tratamiento no farmacologico</th>
-            <th>Tratamiento farmacologico recetado</th>
-            <th>Tipo de consulta</th>
-            <th>Clave paciente</th>
-            <th>Clave medico</th>
+            <th>Padecimiento Actual</th>
+            <th>Tratamiento</th>
         </tr>
+    </thead>
+    <tbody>
         {% for consulta in consultas %}
-            <tr>
-                <td>{{ consulta.id_consulta }}</td>
-                <td>{{ consulta.fecha }}</td>
-                <td>{{ consulta.padecimiento_actual }}</td>
-                <td>{{ consulta.tratamiento_no_farmacologico }}</td>
-                <td>{{ consulta.tratamiento_farmacologico_recetado }}</td>
-                <td>{{ consulta.tipo_de_consulta }}</td>
-                <td>{{ consulta.clave_paciente }}</td>
-                <td>{{ consulta.clave_medico }}</td>
-            </tr>
+        <tr data-bs-toggle="modal" data-bs-target="#detalleConsultaModal"
+            data-fecha="{{ consulta.fecha }}"
+            data-padecimiento="{{ consulta.padecimiento_actual }}"
+            data-tratamiento-no-farmacologico="{{ consulta.tratamiento_no_farmacologico }}"
+            data-tratamiento-farmacologico="{{ consulta.tratamiento_farmacologico_recetado }}"
+            data-tipo-consulta="{{ consulta.tipo_de_consulta }}"
+            data-clave-paciente="{{ consulta.clave_paciente }}"
+            data-clave-medico="{{ consulta.clave_medico }}"
+            data-signos='{
+                "peso": "{{ consulta.signos_vitales.peso }}",
+                "talla": "{{ consulta.signos_vitales.talla }}",
+                "temperatura": "{{ consulta.signos_vitales.temperatura }}",
+                "frecuencia_cardiaca": "{{ consulta.signos_vitales.frecuencia_cardiaca }}",
+                "frecuencia_respiratoria": "{{ consulta.signos_vitales.frecuencia_respiratoria }}",
+                "presion_arterial": "{{ consulta.signos_vitales.presion_arterial }}"
+            }'>
+            <td>{{ consulta.fecha }}</td>
+            <td>{{ consulta.padecimiento_actual }}</td>
+            <td>{{ consulta.tratamiento_no_farmacologico }} / {{ consulta.tratamiento_farmacologico_recetado }}</td>
+        </tr>
         {% endfor %}
-    </table>
-    <br>
-    <br>
-    <br>
-    <h2>Signos vitales</h2>
-    {% for signo in signos %}
-        <p>{{ signo.id_signos }}</p>
-        <p>{{ signo.peso }}</p>
-        <p>{{ signo.talla }}</p>
-        <p>{{ signo.temperatura }}</p>
-        <p>{{ signo.frecuencia_cardíaca }}</p>
-        <p>{{ signo.frecuencia_respiratoria }}</p>
-        <p>{{ signo.presion_arterial }}</p>
-        <p>{{ signo.consulta }}</p>
-    {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="detalleConsultaModal" tabindex="-1" aria-labelledby="detalleConsultaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleConsultaModalLabel">Detalles de la Consulta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Fecha:</strong> <span id="detalleFecha"></span></p>
+                <p><strong>Padecimiento Actual:</strong> <span id="detallePadecimiento"></span></p>
+                <p><strong>Tratamiento No Farmacológico:</strong> <span id="detalleTratamientoNoFarmacologico"></span></p>
+                <p><strong>Tratamiento Farmacológico:</strong> <span id="detalleTratamientoFarmacologico"></span></p>
+                <p><strong>Tipo de Consulta:</strong> <span id="detalleTipoConsulta"></span></p>
+                <p><strong>Clave Paciente:</strong> <span id="detalleClavePaciente"></span></p>
+                <p><strong>Clave Médico:</strong> <span id="detalleClaveMedico"></span></p>
+                <h5>Signos Vitales</h5>
+                <ul>
+                    <li><strong>Peso:</strong> <span id="detallePeso"></span></li>
+                    <li><strong>Talla:</strong> <span id="detalleTalla"></span></li>
+                    <li><strong>Temperatura:</strong> <span id="detalleTemperatura"></span></li>
+                    <li><strong>Frecuencia Cardíaca:</strong> <span id="detalleFrecuenciaCardiaca"></span></li>
+                    <li><strong>Frecuencia Respiratoria:</strong> <span id="detalleFrecuenciaRespiratoria"></span></li>
+                    <li><strong>Presión Arterial:</strong> <span id="detallePresionArterial"></span></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('detalleConsultaModal');
+
+        modal.addEventListener('show.bs.modal', (event) => {
+            const button = event.relatedTarget;
+            const data = button.dataset;
+
+            // Set modal content
+            document.getElementById('detalleFecha').textContent = data.fecha;
+            document.getElementById('detallePadecimiento').textContent = data.padecimiento;
+            document.getElementById('detalleTratamientoNoFarmacologico').textContent = data.tratamientoNoFarmacologico;
+            document.getElementById('detalleTratamientoFarmacologico').textContent = data.tratamientoFarmacologico;
+            document.getElementById('detalleTipoConsulta').textContent = data.tipoConsulta;
+            document.getElementById('detalleClavePaciente').textContent = data.clavePaciente;
+            document.getElementById('detalleClaveMedico').textContent = data.claveMedico;
+
+            // Parse signos vitales
+            const signos = JSON.parse(data.signos);
+            document.getElementById('detallePeso').textContent = signos.peso;
+            document.getElementById('detalleTalla').textContent = signos.talla;
+            document.getElementById('detalleTemperatura').textContent = signos.temperatura;
+            document.getElementById('detalleFrecuenciaCardiaca').textContent = signos.frecuencia_cardiaca;
+            document.getElementById('detalleFrecuenciaRespiratoria').textContent = signos.frecuencia_respiratoria;
+            document.getElementById('detallePresionArterial').textContent = signos.presion_arterial;
+        });
+    });
+</script>
 {% endblock %}

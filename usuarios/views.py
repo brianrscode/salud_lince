@@ -9,7 +9,15 @@ from django.http import HttpResponse
 
 
 def login_view(request):
+    # Si ya hay una sesión iniciada, redirigir al dashboard del rol correspondiente
+    if request.user.is_authenticated:
+        if request.user.role.nombre_rol == "medico":
+            return redirect("medico_dashboard")  # Nombre de la vista para médicos
+        elif request.user.role.nombre_rol == "paciente":
+            return redirect("paciente_dashboard")  # Nombre de la vista para pacientes
+
     if request.method == "POST":
+        ''' Si el formulario es enviado se autentica el usuario '''
         email = request.POST.get("email")
         password = request.POST.get("password")
         user = authenticate(request, email=email, password=password)
@@ -72,6 +80,35 @@ def paciente_informacion(request):
     return render(request, "paciente_informacion.html", {"informacion": informacion})
 
 
+# @login_required
+# @role_required(["paciente", "medico"])
+# def cambiar_contrasena(request):
+#     if request.method == 'POST':
+#         current_password = request.POST.get('current_password')
+#         new_password = request.POST.get('new_password')
+#         confirm_password = request.POST.get('confirm_password')
+
+#         if not request.user.check_password(current_password):
+#             return render(request, 'paciente_informacion.html', {
+#                 'informacion': request.user,
+#                 'error': 'La contraseña actual es incorrecta.'
+#             })
+
+#         if new_password != confirm_password:
+#             return render(request, 'paciente_informacion.html', {
+#                 'informacion': request.user,
+#                 'error': 'Las contraseñas no coinciden.'
+#             })
+
+#         request.user.set_password(new_password)
+#         request.user.save()
+#         update_session_auth_hash(request, request.user)  # Mantener la sesión activa después del cambio de contraseña
+#         messages.success(request, 'Tu contraseña ha sido cambiada exitosamente.')
+#         return redirect('paciente_informacion')
+
+#     return redirect('paciente_informacion')
+
+
 @login_required
 @role_required(["paciente", "medico"])
 def cambiar_contrasena(request):
@@ -81,21 +118,34 @@ def cambiar_contrasena(request):
         confirm_password = request.POST.get('confirm_password')
 
         if not request.user.check_password(current_password):
-            return render(request, 'paciente_informacion.html', {
+            error_message = 'La contraseña actual es incorrecta.'
+            template = 'medico_informacion.html' if request.user.role.nombre_rol == 'medico' else 'paciente_informacion.html'
+            return render(request, template, {
                 'informacion': request.user,
-                'error': 'La contraseña actual es incorrecta.'
+                'error': error_message
             })
 
         if new_password != confirm_password:
-            return render(request, 'paciente_informacion.html', {
+            error_message = 'Las contraseñas no coinciden.'
+            template = 'medico_informacion.html' if request.user.role.nombre_rol == 'medico' else 'paciente_informacion.html'
+            return render(request, template, {
                 'informacion': request.user,
-                'error': 'Las contraseñas no coinciden.'
+                'error': error_message
             })
 
+        redi = 'medico_informacion' if request.user.role.nombre_rol == 'medico' else 'paciente_informacion'
         request.user.set_password(new_password)
         request.user.save()
-        update_session_auth_hash(request, request.user)  # Mantener la sesión activa después del cambio de contraseña
+        # Mantener la sesión activa después del cambio de contraseña
+        update_session_auth_hash(request, request.user)
         messages.success(request, 'Tu contraseña ha sido cambiada exitosamente.')
-        return redirect('paciente_informacion')
+        return redirect(redi)
 
-    return redirect('paciente_informacion')
+    return redirect(redi)
+
+
+@login_required
+@role_required(["medico"])
+def medico_informacion(request):
+    informacion = request.user
+    return render(request, "medico_informacion.html", {"informacion": informacion})
