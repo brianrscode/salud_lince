@@ -1,0 +1,43 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
+
+{% block title %} Consultas realizadas {% endblock %}
+
+
+{% block content %}
+
+<h1>Mis consultas</h1>
+<p>Estas son tus consultas realizadas:</p>
+
+{% comment %} Botón para crear una nueva consulta {% endcomment %}
+
+<a class="btn btn-primary">Crear nueva consulta</a>
+
+{% for consulta in consultas %}
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Fecha:</strong> {{ consulta.fecha }}</p>
+            <p><strong>Padecimiento Actual:</strong> {{ consulta.padecimiento_actual }}</p>
+            <p><strong>Tratamiento No Farmacológico:</strong> {{ consulta.tratamiento_no_farmacologico }}</p>
+            <p><strong>Tratamiento Farmacológico:</strong> {{ consulta.tratamiento_farmacologico }}</p>
+            <p><strong>Tipo de Consulta:</strong> {{ consulta.tipo_consulta }}</p>
+            <p><strong>Clave Paciente:</strong> {{ consulta.clave_paciente }}</p>
+            <p><strong>Clave Médico:</strong> {{ consulta.clave_medico }}</p>
+            <h5>Signos Vitales</h5>
+            <ul>
+                <li><strong>Peso:</strong> {{ consulta.signos_vitales.peso }}</li>
+                <li><strong>Talla:</strong> {{ consulta.signos_vitales.talla }}</li>
+                <li><strong>Temperatura:</strong> {{ consulta.signos_vitales.temperatura }}</li>
+                <li><strong>Frecuencia Cardíaca:</strong> {{ consulta.signos_vitales.frecuencia_cardiaca }}</li>
+                <li><strong>Frecuencia Respiratoria:</strong> {{ consulta.signos_vitales.frecuencia_respiratoria }}</li>
+                <li><strong>Presión Arterial:</strong> {{ consulta.signos_vitales.presion_arterial }}</li>
+            </ul>
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}

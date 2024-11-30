@@ -149,3 +149,11 @@ def cambiar_contrasena(request):
 def medico_informacion(request):
     informacion = request.user
     return render(request, "medico_informacion.html", {"informacion": informacion})
+
+
+@login_required
+@role_required(["medico"])
+def medico_consultas(request):
+    consultas = Consulta.objects.filter(clave_medico=request.user)
+    signos = SignosVitales.objects.filter(consulta__clave_medico=request.user)
+    return render(request, "medico_consultas.html", {"consultas": consultas, "signos": signos})
