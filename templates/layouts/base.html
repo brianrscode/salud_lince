@@ -11,16 +11,33 @@
 <body>
 
     {% comment %} {% include "./partials/barra.html" %} {% endcomment %}
-    <nav>
+    {% comment %} <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <ul>
             <li><a href="#">{% if user.is_authenticated %}{{ user.nombres }}{% else %}N/A{% endif %}</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
             {% block enlaces %}
             {% endblock %}
         </ul>
+    </nav> {% endcomment %}
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Salud Lince</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% block enlaces %}
+                    {% endblock %}
+                    <li class="nav-item"><a class="nav-link" href="#">{% if user.is_authenticated %}{{ user.nombres }}{% else %}N/A{% endif %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <main>
+    <main class="container">
         {% block content %}
         {% endblock %}
     </main>

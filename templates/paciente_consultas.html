@@ -3,15 +3,20 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        .table-hover-row tr:hover {
+            cursor: pointer;
+        }
+    </style>
 {% endblock %}
 {% block title %} Mis consultas {% endblock %}
 
 
 {% block enlaces %}
-    <li><a href="{% url 'paciente_dashboard' %}">Dashboard de paciente</a></li>
-    <li><a href="{% url 'historial' %}">Historial médico</a></li>
-    <li><a href="{% url 'paciente_consultas' %}">Mis consultas</a></li>
-    <li><a href="{% url 'paciente_informacion' %}">Información de paciente</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'paciente_dashboard' %}">Dashboard de paciente</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'historial' %}">Historial médico</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'paciente_consultas' %}">Mis consultas</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'paciente_informacion' %}">Información de paciente</a></li>
 {% endblock %}
 
 {% block content %}
@@ -26,7 +31,7 @@
             <th>Tratamiento</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="table-hover-row">
         {% for consulta in consultas %}
         <tr data-bs-toggle="modal" data-bs-target="#detalleConsultaModal"
             data-fecha="{{ consulta.fecha }}"
