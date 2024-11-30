@@ -1,13 +1,13 @@
+{% extends "layouts/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% comment %} <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"> {% endcomment %}
-    <title>Login</title>
-</head>
-<body>
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+{% endblock %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}
     <h2>Iniciar Sesión</h2>
     {% if messages %}
         <ul>
@@ -26,5 +26,4 @@
         <br>
         <button type="submit">Iniciar Sesión</button>
     </form>
-</body>
-</html>
+{% endblock %}
