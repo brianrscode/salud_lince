@@ -9,17 +9,7 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-
-    {% comment %} {% include "./partials/barra.html" %} {% endcomment %}
-    {% comment %} <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <ul>
-            <li><a href="#">{% if user.is_authenticated %}{{ user.nombres }}{% else %}N/A{% endif %}</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-            {% block enlaces %}
-            {% endblock %}
-        </ul>
-    </nav> {% endcomment %}
-
+    {% comment %} Barra de navegación {% endcomment %}
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Salud Lince</a>
@@ -37,7 +27,7 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'paciente_informacion' %}">Información de paciente</a></li>
                     {% endif %}
                     {% if user.role.nombre_rol == "medico" %}
-                        <li><a href="{% url 'medico_dashboard' %}">Dashboard de médico</a></li>
+                        <li><a href="{% url 'medico_dashboard' %}">Inicio</a></li>
                         <li><a href="{% url 'medico_informacion' %}">Información de médico</a></li>
                     {% endif %}
                     <li class="nav-item"><a class="nav-link" href="#">{% if user.is_authenticated %}{{ user.nombres }}{% else %}N/A{% endif %}</a></li>
