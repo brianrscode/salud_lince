@@ -32,7 +32,7 @@ class SignosVitales(models.Model):
     peso = models.DecimalField('Peso (kg)', max_digits=4, decimal_places=2, blank=True, null=True)  # en kg
     talla = models.DecimalField('Talla (m)', max_digits=4, decimal_places=2, blank=True, null=True)  # en cm
     temperatura = models.DecimalField('Temperatura (°C)', max_digits=4, decimal_places=2, blank=True, null=True)  # en °C
-    frecuencia_cardíaca = models.IntegerField('Frecuencia cardíaca (bpm)', blank=True, null=True)  # en bpm
+    frecuencia_cardiaca = models.IntegerField('Frecuencia cardíaca (bpm)', blank=True, null=True)  # en bpm
     frecuencia_respiratoria = models.IntegerField('Frecuencia respiratoria (rpm)', blank=True, null=True)  # en rpm
     presion_arterial = models.CharField('Presión arterial', max_length=7, blank=True, null=True)  # ej: "120/80"
 

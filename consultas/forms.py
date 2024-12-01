@@ -26,7 +26,7 @@ class SignosVitalesForm(forms.ModelForm):
             'peso',
             'talla',
             'temperatura',
-            'frecuencia_cardíaca',
+            'frecuencia_cardiaca',
             'frecuencia_respiratoria',
             'presion_arterial'
         ]
@@ -34,7 +34,7 @@ class SignosVitalesForm(forms.ModelForm):
             'peso': forms.NumberInput(attrs={'class': 'form-control'}),
             'talla': forms.NumberInput(attrs={'class': 'form-control'}),
             'temperatura': forms.NumberInput(attrs={'class': 'form-control'}),
-            'frecuencia_cardíaca': forms.NumberInput(attrs={'class': 'form-control'}),
+            'frecuencia_cardiaca': forms.NumberInput(attrs={'class': 'form-control'}),
             'frecuencia_respiratoria': forms.NumberInput(attrs={'class': 'form-control'}),
             'presion_arterial': forms.TextInput(attrs={'class': 'form-control'}),
         }
