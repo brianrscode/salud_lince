@@ -1,0 +1,43 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
+{% block title %} Historiales de pacientes {% endblock %}
+
+{% block content %}
+    <h1>Historiales de todos los pacientes</h1>
+
+    <!-- Barra de búsqueda -->
+    <form method="GET" action="" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Buscar por ID del historial" value="{{ query }}">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+
+    <!-- Lista de historiales -->
+    {% if historiales %}
+        {% for historial in historiales %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Paciente: {{ historial.paciente }}</h5>
+                    <p class="card-text">Id: {{ historial.id_historial }}</p>
+                    <p class="card-text">Enfermedades cronicas: {{ historial.enfermedades_cronicas }}</p>
+                    <p class="card-text">Alergias: {{ historial.alergias }}</p>
+                    <p class="card-text">Medicamentos usados: {{ historial.medicamento_usado }}</p>
+                    {% if historial.paciente.sexo == "F" %}
+                        <p class="card-text">¿Es embarazada?: {{ historial.es_embarazada|yesno:"Sí,No" }}</p>
+                    {% endif %}
+                    <p class="card-text">¿Usa drogas?: {{ historial.usa_drogas|yesno:"Sí,No" }}</p>
+                    <p class="card-text">¿Fuma cigarro?: {{ historial.usa_cigarro|yesno:"Sí,No" }}</p>
+                    <p class="card-text">¿Ingiere alcohol?: {{ historial.ingiere_alcohol|yesno:"Sí,No" }}</p>
+                </div>
+                <a href="{% url 'editar_historial' historial.id_historial %}" class="btn btn-primary mt-2">Editar</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No se encontraron historiales que coincidan con la búsqueda.</p>
+    {% endif %}
+{% endblock %}
