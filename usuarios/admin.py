@@ -14,6 +14,20 @@ class UsuarioAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class HistorialAdmin(admin.ModelAdmin):
+    model = HistorialMedico
+    list_display = ('id_historial', 'enfermedades_cronicas', 'alergias', 'medicamento_usado', 'es_embarazada', 'usa_drogas', 'usa_cigarro', 'ingiere_alcohol')
+    ordering = ('id_historial',)
+    list_filter = ('es_embarazada', 'usa_drogas', 'usa_cigarro', 'ingiere_alcohol')
+
+
+class RoleAdmin(admin.ModelAdmin):
+    model = Role
+    list_display = ('nombre_rol', 'descripcion')
+    ordering = ('nombre_rol',)
+    list_filter = ('nombre_rol',)
+
+
 admin.site.register(Usuario, UsuarioAdmin)
-admin.site.register(HistorialMedico)
-admin.site.register(Role)
+admin.site.register(HistorialMedico, HistorialAdmin)
+admin.site.register(Role, RoleAdmin)
