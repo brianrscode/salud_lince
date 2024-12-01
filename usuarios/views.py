@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .decorators import role_required
 from consultas.models import Consulta, SignosVitales
+from .models import HistorialMedico
 from django.contrib import admin
 from django.http import HttpResponse
 
@@ -157,3 +158,14 @@ def medico_consultas(request):
     consultas = Consulta.objects.filter(clave_medico=request.user)
     signos = SignosVitales.objects.filter(consulta__clave_medico=request.user)
     return render(request, "medico_consultas.html", {"consultas": consultas, "signos": signos})
+
+
+@login_required
+@role_required(["medico"])
+def medico_historiales(request):
+    query = request.GET.get('search', '')
+    if query:
+        historiales = HistorialMedico.objects.filter(id_historial__icontains=query)
+    else:
+        historiales = HistorialMedico.objects.all()
+    return render(request, "medico_historiales.html", {"historiales": historiales, "query": query})

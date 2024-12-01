@@ -1,5 +1,9 @@
 {% extends "layouts/base.html" %}
+{% load static %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
 {% block title %}Información de médico{% endblock %}
 
 

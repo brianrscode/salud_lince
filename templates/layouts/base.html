@@ -28,8 +28,9 @@
                         {% endif %}
                         {% if user.role.nombre_rol == "medico" %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'medico_dashboard' %}">Inicio</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'medico_informacion' %}">Información de médico</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'medico_historiales' %}">Historiales</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'medico_consultas' %}">Mis consultas</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'medico_informacion' %}">Información de médico</a></li>
                         {% endif %}
                         <li class="nav-item"><a class="nav-link" href="#">{% if user.is_authenticated %}{{ user.nombres }}{% else %}N/A{% endif %}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
