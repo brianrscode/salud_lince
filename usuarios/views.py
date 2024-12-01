@@ -1,12 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .decorators import role_required
 from consultas.models import Consulta, SignosVitales
 from .models import HistorialMedico
-from django.contrib import admin
-from django.http import HttpResponse
+from django.forms.models import ModelForm
 
 
 def login_view(request):
@@ -159,3 +158,21 @@ def medico_historiales(request):
     else:
         historiales = HistorialMedico.objects.all()
     return render(request, "medico_historiales.html", {"historiales": historiales, "query": query})
+
+class HistorialMedicoForm(ModelForm):
+    class Meta:
+        model = HistorialMedico
+        fields = ['enfermedades_cronicas', 'alergias', 'medicamento_usado', 'es_embarazada', 'usa_drogas', 'usa_cigarro', 'ingiere_alcohol']
+
+@login_required
+@role_required(["medico"])
+def editar_historial(request, pk):
+    historial = get_object_or_404(HistorialMedico, id_historial=pk)
+    if request.method == 'POST':
+        form = HistorialMedicoForm(request.POST, instance=historial)
+        if form.is_valid():
+            form.save()
+            return redirect('medico_historiales')  # Cambia a la URL de tu vista principal
+    else:
+        form = HistorialMedicoForm(instance=historial)
+    return render(request, 'editar_historial.html', {'form': form, 'historial': historial})

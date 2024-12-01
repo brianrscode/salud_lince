@@ -34,6 +34,7 @@
                     <p class="card-text">¿Fuma cigarro?: {{ historial.usa_cigarro|yesno:"Sí,No" }}</p>
                     <p class="card-text">¿Ingiere alcohol?: {{ historial.ingiere_alcohol|yesno:"Sí,No" }}</p>
                 </div>
+                <a href="{% url 'editar_historial' historial.id_historial %}" class="btn btn-primary mt-2">Editar</a>
             </div>
         {% endfor %}
     {% else %}

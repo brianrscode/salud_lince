@@ -15,4 +15,5 @@ urlpatterns = [
 
     path("medico/consultas/", views.medico_consultas, name="medico_consultas"),
     path("medico/historiales/", views.medico_historiales, name="medico_historiales"),
+    path("medico/editar_historial/<str:pk>/", views.editar_historial, name="editar_historial"),
 ]
