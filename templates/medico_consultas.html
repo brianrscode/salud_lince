@@ -12,31 +12,12 @@
 
 {% block title %} Consultas realizadas {% endblock %}
 
-
 {% block content %}
 
 <h1>Mis consultas</h1>
 <p>Estas son tus consultas realizadas:</p>
 
-{% comment %} Botón para crear una nueva consulta {% endcomment %}
-
 <a class="btn btn-primary" href="{% url 'crear_consulta' %}">Crear nueva consulta</a><br><br>
-{% comment %}
-<table class="table table-striped">
-</table>
-
-<br>
-{% for consulta in consultas %}
-    <div class="card">
-        <div class="card-body">
-            <p>{{consulta}}</p>
-            <p>{{consulta.padecimiento_actual}}</p>
-            <p>{{consulta.signos_vitales}}</p>
-            <p>{{consulta.signos_vitales.peso}}</p>
-        </div>
-    </div>
-    <br>
-{% endfor %} {% endcomment %}
 
 <table class="table table-striped">
     <thead>

@@ -27,7 +27,9 @@
                     <p class="card-text">Enfermedades cronicas: {{ historial.enfermedades_cronicas }}</p>
                     <p class="card-text">Alergias: {{ historial.alergias }}</p>
                     <p class="card-text">Medicamentos usados: {{ historial.medicamento_usado }}</p>
-                    <p class="card-text">¿Es embarazada?: {{ historial.es_embarazada|yesno:"Sí,No" }}</p>
+                    {% if historial.paciente.sexo == "F" %}
+                        <p class="card-text">¿Es embarazada?: {{ historial.es_embarazada|yesno:"Sí,No" }}</p>
+                    {% endif %}
                     <p class="card-text">¿Usa drogas?: {{ historial.usa_drogas|yesno:"Sí,No" }}</p>
                     <p class="card-text">¿Fuma cigarro?: {{ historial.usa_cigarro|yesno:"Sí,No" }}</p>
                     <p class="card-text">¿Ingiere alcohol?: {{ historial.ingiere_alcohol|yesno:"Sí,No" }}</p>
