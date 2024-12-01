@@ -4,9 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .decorators import role_required
 from consultas.models import Consulta, SignosVitales
-from .models import HistorialMedico
+from .models import HistorialMedico, Usuario
 from django.forms.models import ModelForm
-
+from django.db.models import Count
+import plotly.express as px
+import plotly.graph_objects as go
 
 def login_view(request):
     # Si ya hay una sesión iniciada, redirigir al dashboard del rol correspondiente
@@ -48,8 +50,40 @@ def logout_view(request):
 @login_required
 @role_required(["medico"])
 def medico_dashboard(request):
-    return render(request, "medico_dashboard.html")
+    # Distribución de género
+    usuarios = Usuario.objects.all()
+    genero_data = usuarios.values('sexo').annotate(total=Count('sexo'))
+    genero_fig = px.pie(
+        values=[g['total'] for g in genero_data],
+        names=['Masculino' if g['sexo'] == 'M' else 'Femenino' for g in genero_data],
+        title="Distribución de Género"
+    )
 
+    # Pacientes con hábitos
+    historiales = HistorialMedico.objects.all()
+    habitos = {
+        'Fuman': historiales.filter(usa_cigarro=True).count(),
+        'Ingiere Alcohol': historiales.filter(ingiere_alcohol=True).count(),
+        'Usa Drogas': historiales.filter(usa_drogas=True).count(),
+        'Embarazadas': historiales.filter(es_embarazada=True).count(),
+    }
+    habitos_fig = go.Figure([go.Bar(x=list(habitos.keys()), y=list(habitos.values()), marker_color='indianred')])
+    habitos_fig.update_layout(title_text="Pacientes con Hábitos", xaxis_title="Hábito", yaxis_title="Cantidad")
+
+    # Tipos de consultas
+    consultas = Consulta.objects.values('tipo_de_consulta').annotate(total=Count('tipo_de_consulta'))
+    consultas_fig = px.pie(
+        values=[c['total'] for c in consultas],
+        names=['Médica' if c['tipo_de_consulta'] == 'M' else 'Asesoría' for c in consultas],
+        title="Distribución de Tipos de Consultas"
+    )
+
+    # Pasar gráficas como HTML al template
+    return render(request, 'medico_dashboard.html', {
+        'genero_graph': genero_fig.to_html(full_html=False),
+        'habitos_graph': habitos_fig.to_html(full_html=False),
+        'consultas_graph': consultas_fig.to_html(full_html=False),
+    })
 
 @login_required
 @role_required(["paciente"])

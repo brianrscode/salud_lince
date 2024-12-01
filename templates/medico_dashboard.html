@@ -8,5 +8,29 @@
 
 
 {% block content %}
-    <h1>Dashboard de médico</h1>
+<h2>Estadísticas de Pacientes</h2>
+
+    <!-- Gráfica de Género -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Distribución de Género</h5>
+            <div>{{ genero_graph|safe }}</div>
+        </div>
+    </div>
+
+    <!-- Gráfica de Hábitos -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Pacientes con Hábitos</h5>
+            <div>{{ habitos_graph|safe }}</div>
+        </div>
+    </div>
+
+    <!-- Gráfica de Tipos de Consultas -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Distribución de Tipos de Consultas</h5>
+            <div>{{ consultas_graph|safe }}</div>
+        </div>
+    </div>
 {% endblock %}
