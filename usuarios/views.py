@@ -51,38 +51,41 @@ def logout_view(request):
 @role_required(["medico"])
 def medico_dashboard(request):
     # Distribución de género
-    usuarios = Usuario.objects.all()
-    genero_data = usuarios.values('sexo').annotate(total=Count('sexo'))
-    genero_fig = px.pie(
-        values=[g['total'] for g in genero_data],
-        names=['Masculino' if g['sexo'] == 'M' else 'Femenino' for g in genero_data],
+    usuarios = Usuario.objects.all()  # Todos los usuarios
+    genero_data = usuarios.values('sexo').annotate(total=Count('sexo'))  # Cantidad de usuarios por género
+    genero_fig = px.pie(  # Gráfica de pastel
+        values=[g['total'] for g in genero_data],  # Cantidad de usuarios por género
+        names=['Masculino' if g['sexo'] == 'M' else 'Femenino' for g in genero_data],  # Nombres de género
         title="Distribución de Género"
     )
 
     # Pacientes con hábitos
-    historiales = HistorialMedico.objects.all()
-    habitos = {
-        'Fuman': historiales.filter(usa_cigarro=True).count(),
-        'Ingiere Alcohol': historiales.filter(ingiere_alcohol=True).count(),
-        'Usa Drogas': historiales.filter(usa_drogas=True).count(),
-        'Embarazadas': historiales.filter(es_embarazada=True).count(),
+    historiales = HistorialMedico.objects.all()  # Todos los historiales médicos
+    habitos = {  # Filtro de los hábitos de los pacientes
+        'Fuman': historiales.filter(usa_cigarro=True).count(),  # Cantidad de pacientes que fuman
+        'Ingiere Alcohol': historiales.filter(ingiere_alcohol=True).count(),  # Cantidad de pacientes que ingieren alcohol
+        'Usa Drogas': historiales.filter(usa_drogas=True).count(),  # Cantidad de pacientes que usan drogas
+        'Embarazadas': historiales.filter(es_embarazada=True).count(),  # Cantidad de pacientes embarazadas
     }
+    # Gráfica de barras
     habitos_fig = go.Figure([go.Bar(x=list(habitos.keys()), y=list(habitos.values()), marker_color='indianred')])
+    # Personalización de gráfica
     habitos_fig.update_layout(title_text="Pacientes con Hábitos", xaxis_title="Hábito", yaxis_title="Cantidad")
 
     # Tipos de consultas
+    # Cantidad de pacientes por tipo de consulta
     consultas = Consulta.objects.values('tipo_de_consulta').annotate(total=Count('tipo_de_consulta'))
-    consultas_fig = px.pie(
-        values=[c['total'] for c in consultas],
-        names=['Médica' if c['tipo_de_consulta'] == 'M' else 'Asesoría' for c in consultas],
+    consultas_fig = px.pie(  # Gráfica de pastel
+        values=[c['total'] for c in consultas],  # Cantidad de pacientes por tipo de consulta
+        names=['Médica' if c['tipo_de_consulta'] == 'M' else 'Asesoría' for c in consultas],  # Nombres de tipos de consulta
         title="Distribución de Tipos de Consultas"
     )
 
     # Pasar gráficas como HTML al template
     return render(request, 'medico_dashboard.html', {
-        'genero_graph': genero_fig.to_html(full_html=False),
-        'habitos_graph': habitos_fig.to_html(full_html=False),
-        'consultas_graph': consultas_fig.to_html(full_html=False),
+        'genero_graph': genero_fig.to_html(full_html=False),  # Gráfica de pastel
+        'habitos_graph': habitos_fig.to_html(full_html=False),  # Gráfica de barras
+        'consultas_graph': consultas_fig.to_html(full_html=False),  # Gráfica de pastel
     })
 
 @login_required
@@ -112,35 +115,6 @@ def paciente_consultas(request):
 def usuario_informacion(request):
     informacion = request.user
     return render(request, "informacion.html", {"informacion": informacion})
-
-
-# @login_required
-# @role_required(["paciente", "medico"])
-# def cambiar_contrasena(request):
-#     if request.method == 'POST':
-#         current_password = request.POST.get('current_password')
-#         new_password = request.POST.get('new_password')
-#         confirm_password = request.POST.get('confirm_password')
-
-#         if not request.user.check_password(current_password):
-#             return render(request, 'paciente_informacion.html', {
-#                 'informacion': request.user,
-#                 'error': 'La contraseña actual es incorrecta.'
-#             })
-
-#         if new_password != confirm_password:
-#             return render(request, 'paciente_informacion.html', {
-#                 'informacion': request.user,
-#                 'error': 'Las contraseñas no coinciden.'
-#             })
-
-#         request.user.set_password(new_password)
-#         request.user.save()
-#         update_session_auth_hash(request, request.user)  # Mantener la sesión activa después del cambio de contraseña
-#         messages.success(request, 'Tu contraseña ha sido cambiada exitosamente.')
-#         return redirect('paciente_informacion')
-
-#     return redirect('paciente_informacion')
 
 
 @login_required
