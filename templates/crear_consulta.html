@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
+
+{% block title %}Crear Consulta{% endblock %}
+
+{% block content %}
+    <h1>Crear Nueva Consulta</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <h2>Datos de la Consulta</h2>
+        {{ consulta_form.as_p }}
+
+        <h2>Signos Vitales</h2>
+        {{ signos_form.as_p }}
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+    <a href="{% url 'medico_consultas' %}">Volver al listado de consultas</a>
+{% endblock %}
