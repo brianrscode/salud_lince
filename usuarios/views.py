@@ -75,10 +75,10 @@ def paciente_consultas(request):
 
 
 @login_required
-@role_required(["paciente"])
-def paciente_informacion(request):
+@role_required(["paciente", "medico"])
+def usuario_informacion(request):
     informacion = request.user
-    return render(request, "paciente_informacion.html", {"informacion": informacion})
+    return render(request, "informacion.html", {"informacion": informacion})
 
 
 # @login_required
@@ -120,36 +120,26 @@ def cambiar_contrasena(request):
 
         if not request.user.check_password(current_password):
             error_message = 'La contraseña actual es incorrecta.'
-            template = 'medico_informacion.html' if request.user.role.nombre_rol == 'medico' else 'paciente_informacion.html'
-            return render(request, template, {
+            return render(request, "informacion.html", {
                 'informacion': request.user,
                 'error': error_message
             })
 
         if new_password != confirm_password:
             error_message = 'Las contraseñas no coinciden.'
-            template = 'medico_informacion.html' if request.user.role.nombre_rol == 'medico' else 'paciente_informacion.html'
-            return render(request, template, {
+            return render(request, "informacion.html", {
                 'informacion': request.user,
                 'error': error_message
             })
 
-        redi = 'medico_informacion' if request.user.role.nombre_rol == 'medico' else 'paciente_informacion'
         request.user.set_password(new_password)
         request.user.save()
         # Mantener la sesión activa después del cambio de contraseña
         update_session_auth_hash(request, request.user)
         messages.success(request, 'Tu contraseña ha sido cambiada exitosamente.')
-        return redirect(redi)
+        return redirect("informacion")
 
-    return redirect(redi)
-
-
-@login_required
-@role_required(["medico"])
-def medico_informacion(request):
-    informacion = request.user
-    return render(request, "medico_informacion.html", {"informacion": informacion})
+    return redirect("informacion")
 
 
 @login_required
