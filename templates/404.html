@@ -1,7 +1,20 @@
 {% extends "layouts/base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
+
+{% block title %}404 - Página no encontrada{% endblock %}
 
 {% block content %}
-    <h1>404</h1>
-    <p>La p&aacute;gina que est&aacute;s buscando no existe.</p>
-    {% comment %} <img src="{% static 'img/404.png' %}" alt="404"> {% endcomment %}
+<div class="d-flex vh-100 justify-content-center align-items-center bg-light">
+    <div class="text-center bg-white p-4 rounded shadow">
+        {% comment %} <img src="{% static 'imgs/404.png' %}" class="img-fluid mb-4" alt="404"> {% endcomment %}
+        <h1 class="display-4 text-danger">¡Oops! Página no encontrada</h1>
+        <p class="lead text-muted">
+            Lo sentimos, pero la página que buscas no existe. Es posible que haya sido eliminada o que el enlace esté roto.
+        </p>
+    </div>
+</div>
 {% endblock %}
