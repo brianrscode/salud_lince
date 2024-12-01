@@ -1,19 +1,29 @@
-# Sistema médico
+# Salud lince
 
 
 ## Descripción
-Este proyecto tiene como objetivo crear un sistema web que facilite la realización de consultas médicas
+Este proyecto tiene como objetivo crear un sistema medico web que facilite la realización de consultas médicas
 
 
 ## Requisitos
+### Aplicaciones
 - XAMPP
-- asgiref
-- Django
-- django-environ
-- PyMySQL
-- sqlparse
-- tzdata
 
+### Librerías
+- asgiref==3.8.1
+- Django==4.1.13
+- django-environ==0.11.2
+- numpy==2.1.3
+- packaging==24.2
+- pandas==2.2.3
+- plotly==5.24.1
+- PyMySQL==1.1.1
+- python-dateutil==2.9.0.post0
+- pytz==2024.2
+- six==1.16.0
+- sqlparse==0.5.1
+- tenacity==9.0.0
+- tzdata==2024.2
 
 ## Instalación
 1. Clona este repositorio en tu máquina local:
