@@ -17,6 +17,21 @@
 <h1>Mis consultas</h1>
 <p>Estas son tus consultas realizadas:</p>
 
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-primary" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+{% if error %}
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+        {{ error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
 <a class="btn btn-primary" href="{% url 'crear_consulta' %}">Crear nueva consulta</a><br><br>
 
 <table class="table table-striped">
