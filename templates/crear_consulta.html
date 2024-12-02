@@ -9,8 +9,15 @@
 
 {% block content %}
     <h1>Crear Nueva Consulta</h1>
-    <form method="POST">
+    <form method="POST" id="consultaForm">
         {% csrf_token %}
+
+        <!-- Barra de búsqueda -->
+        <label for="search-clave">Buscar Paciente por Clave:</label>
+        <input type="text" id="search-clave" class="form-control" placeholder="Ingrese clave del paciente">
+        <button type="button" class="btn btn-secondary mt-2" onclick="buscarPaciente()">Buscar</button>
+        <small id="search-result" class="text-muted"></small>
+
         <h2>Datos de la Consulta</h2>
         {{ consulta_form.as_p }}
 
@@ -20,4 +27,37 @@
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
     <a href="{% url 'medico_consultas' %}">Volver al listado de consultas</a>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function buscarPaciente() {
+            const claveInput = document.getElementById("search-clave").value;
+            const selectPaciente = document.getElementById("id_clave_paciente");
+            const resultText = document.getElementById("search-result");
+
+            let found = false;
+
+            // Si la clave no está vacia, buscar el paciente en el select
+            if (claveInput !== ""){
+                // Iterar sobre las opciones del select
+                for (let option of selectPaciente.options) {
+                    if (option.value === claveInput) {
+                        selectPaciente.value = claveInput; // Selecciona el paciente en el select
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    resultText.textContent = "Paciente encontrado y seleccionado.";
+                } else {
+                    resultText.textContent = "No se encontró un paciente con esa clave.";
+                }
+            } else {
+                resultText.textContent = "Ingrese una clave para buscar el paciente.";
+            }
+        }
+    </script>
 {% endblock %}

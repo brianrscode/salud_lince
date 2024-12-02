@@ -1,5 +1,6 @@
 from django import forms
 from .models import Consulta, SignosVitales
+from usuarios.models import Usuario
 
 class ConsultaForm(forms.ModelForm):
     class Meta:
@@ -18,6 +19,11 @@ class ConsultaForm(forms.ModelForm):
             'tipo_de_consulta': forms.Select(attrs={'class': 'form-select'}),
             'clave_paciente': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filtrar solo pacientes en el queryset
+        self.fields['clave_paciente'].queryset = Usuario.objects.filter(role__nombre_rol='paciente')
 
 class SignosVitalesForm(forms.ModelForm):
     class Meta:
