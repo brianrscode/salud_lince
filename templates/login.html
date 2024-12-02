@@ -18,13 +18,16 @@
     <form method="POST">
         {% csrf_token %} {% comment%} Token de seguridad {% endcomment %}
         <body class="bg-light">
-            <div class="col-md-12 d-flex justify-content-center align-items-center">
+            {% comment %} <div class="col-md-12 d-flex justify-content-center align-items-center">
                 <div class="text-center">
                     <p class="mt-4">Bienvenido a Salud Lince. Inicia sesión para continuar.</p>
                     <img src=""class="img-fluid" style="max-width: 20%; height: auto;">
                 </div>
-            </div>
+            </div> {% endcomment %}
             <div class="container d-flex justify-content-center align-items-center vh-100">
+                <div class="text-center">
+                    <img src="{% static 'imgs/logo.png' %}"class="img-fluid" style="max-width: 60%; height: auto;">
+                </div>
                 <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
                     <h2 class="text-center mb-4" >Iniciar Sesión</h2>
                         <div class="mb-3">
@@ -40,5 +43,5 @@
                 </div>
             </div>
         </body>
-    
+
 {% endblock %}
