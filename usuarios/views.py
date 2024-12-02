@@ -152,9 +152,16 @@ def cambiar_contrasena(request):
 @login_required
 @role_required(["medico"])
 def medico_consultas(request):
-    consultas = Consulta.objects.filter(clave_medico=request.user)
-    signos = SignosVitales.objects.filter(consulta__clave_medico=request.user)
-    return render(request, "medico_consultas.html", {"consultas": consultas, "signos": signos})
+    mostrar_todas = request.GET.get('todas', '0') == '1'  # Leer parámetro 'todas'
+    if mostrar_todas:
+        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').all()
+    else:
+        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').filter(clave_medico=request.user)
+
+    return render(request, "medico_consultas.html", {
+        "consultas": consultas,
+        "mostrar_todas": mostrar_todas
+    })
 
 
 @login_required

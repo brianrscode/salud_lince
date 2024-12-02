@@ -14,8 +14,7 @@
 
 {% block content %}
 
-<h1>Mis consultas</h1>
-<p>Estas son tus consultas realizadas:</p>
+<h1>{% if mostrar_todas %}Todas las Consultas{% else %}Mis Consultas{% endif %}</h1>
 
 {% if messages %}
     {% for message in messages %}
@@ -33,6 +32,14 @@
 {% endif %}
 
 <a class="btn btn-primary" href="{% url 'crear_consulta' %}">Crear nueva consulta</a><br><br>
+
+<div class="mb-3">
+    {% if mostrar_todas %}
+        <a href="?todas=0" class="btn btn-primary">Mostrar solo mis consultas</a>
+    {% else %}
+        <a href="?todas=1" class="btn btn-secondary">Mostrar todas las consultas</a>
+    {% endif %}
+</div>
 
 <table class="table table-striped">
     <thead>
