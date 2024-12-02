@@ -9,7 +9,7 @@
 {% block content %}
     <h1>Historiales de todos los pacientes</h1>
 
-    <!-- Barra de búsqueda -->
+    {% comment %} Barra de búsqueda {% endcomment %}
     <form method="GET" action="" class="mb-4">
         <div class="input-group">
             <input type="text" name="search" class="form-control" placeholder="Buscar por ID del historial" value="{{ query }}">
@@ -17,7 +17,7 @@
         </div>
     </form>
 
-    <!-- Lista de historiales -->
+    {% comment %} Lista de historiales {% endcomment %}
     {% if historiales %}
         {% for historial in historiales %}
             <div class="card mb-3">

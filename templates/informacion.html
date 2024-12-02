@@ -10,7 +10,7 @@
 {% block content %}
     <div class="container mt-4">
         <div class="row">
-            <!-- Columna izquierda: Información del paciente -->
+            {% comment %}  Columna izquierda: Información del paciente  {% endcomment %}
             <div class="col-md-6">
                 {% if user.role.nombre_rol == "paciente" %}
                     <h2>Información de paciente</h2>
@@ -26,7 +26,7 @@
                 <p><strong>Carrera o puesto:</strong> {{ informacion.carrera_o_puesto }}</p>
             </div>
 
-            <!-- Columna derecha: Formulario de cambio de contraseña -->
+            {% comment %} Columna derecha: Formulario de cambio de contraseña {% endcomment %}
             <div class="col-md-6">
                 <h2>Cambiar contraseña</h2>
                 <form method="POST" action="{% url 'cambiar_contrasena' %}">
@@ -50,7 +50,7 @@
 
         <br><br><br>
 
-        <!-- Mensajes -->
+        {% comment %} Mensajes {% endcomment %}
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-primary" role="alert">
