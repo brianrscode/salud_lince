@@ -9,5 +9,57 @@
 
 
 {% block content %}
-    <h1>Dashboard de paciente</h1>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Bienvenido Paciente a Salud Lince 🩺</h2>
+    <!--recomendaciones -->
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-5">
+        <!-- recomendacion 1 -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <img src="{% static 'imgs/agua.png' %}" class="card-img-top" alt="Hidratación">
+                    <h5 class="card-title">Mantente Hidratado</h5>
+                    <p class="card-text">Bebe al menos 8 vasos de agua al día para mantener tu cuerpo funcionando correctamente.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- recomendacion 2 -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Haz Ejercicio</h5>
+                    <p class="card-text">Dedica al menos 30 minutos al día a realizar alguna actividad física.</p>
+                    <img src="{% static 'imgs/ejercicio.png' %}" class="card-img-top" alt="Ejercicio">
+                </div>
+            </div>
+        </div>
+        
+        <!-- recomendacion 3 -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <img src="{% static 'imgs/comer.png' %}" class="card-img-top" alt="Dieta Balanceada">
+                    <h5 class="card-title">Dieta Balanceada</h5>
+                    <p class="card-text">Consume frutas, verduras y alimentos ricos en nutrientes para una salud óptima.</p>
+                </div>
+            </div>
+        </div>
+         <!-- recomendacion 4 -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Descanso</h5>
+                    <p class="card-text">Desconéctate 30 min antes de dormir y 
+                        Medita o lee antes de dormir.</p>
+                    <img src="{% static 'imgs/descanso.png' %}" class="card-img-top" alt="Descanso">
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
 {% endblock %}
