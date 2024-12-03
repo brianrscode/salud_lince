@@ -9,6 +9,20 @@
 
 {% block content %}
     <h1>Crear Nueva Consulta</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-primary" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if error %}
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
     <form method="POST" id="consultaForm">
         {% csrf_token %}
 
