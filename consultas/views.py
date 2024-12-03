@@ -13,9 +13,11 @@ def crear_consulta(request):
         return redirect('dashboard')
 
     if request.method == 'POST':
+        # Validar los formularios
         consulta_form = ConsultaForm(request.POST)
         signos_form = SignosVitalesForm(request.POST)
         if consulta_form.is_valid() and signos_form.is_valid():
+            # Guardar la consulta y los signos vitales
             consulta = consulta_form.save(commit=False)
             consulta.clave_medico = request.user
             consulta.save()

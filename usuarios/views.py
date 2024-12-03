@@ -168,6 +168,7 @@ def medico_consultas(request):
 @role_required(["medico"])
 def medico_historiales(request):
     query = request.GET.get('search', '')
+    # Si hay una consulta, filtrar los historiales de acuerdo a la consulta
     if query:
         historiales = HistorialMedico.objects.filter(id_historial__icontains=query)
     else:

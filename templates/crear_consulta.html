@@ -9,6 +9,8 @@
 
 {% block content %}
     <h1>Crear Nueva Consulta</h1>
+
+    {% comment %} Mensajes y errores {% endcomment %}
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-primary" role="alert">
@@ -23,10 +25,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endif %}
+
     <form method="POST" id="consultaForm">
         {% csrf_token %}
 
-        <!-- Barra de búsqueda -->
+        {% comment %}  Barra de búsqueda  {% endcomment %}
         <label for="search-clave">Buscar Paciente por Clave:</label>
         <input type="text" id="search-clave" class="form-control" placeholder="Ingrese clave del paciente">
         <button type="button" class="btn btn-secondary mt-2" onclick="buscarPaciente()">Buscar</button>
@@ -53,7 +56,7 @@
 
             let found = false;
 
-            // Si la clave no está vacia, buscar el paciente en el select
+            // Si la clave no está vacía, buscar el paciente en el select
             if (claveInput !== ""){
                 // Iterar sobre las opciones del select
                 for (let option of selectPaciente.options) {
