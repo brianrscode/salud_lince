@@ -10,10 +10,10 @@
 
 {% block content %}
 <div class="container my-5">
-    <h2 class="text-center mb-4">Bienvenido Paciente a Salud Lince 🩺</h2>
+    <h2 class="text-center mb-4">Bienvenido, paciente, a Salud Lince 🩺</h2>
     <!--recomendaciones -->
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-5">
-        <!-- recomendacion 1 -->
+        {% comment %} recomendación 1 {% endcomment %}
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
@@ -23,8 +23,8 @@
                 </div>
             </div>
         </div>
-        
-        <!-- recomendacion 2 -->
+
+        {% comment %} recomendación 2 {% endcomment %}
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
@@ -34,8 +34,8 @@
                 </div>
             </div>
         </div>
-        
-        <!-- recomendacion 3 -->
+
+        {% comment %} recomendación 3 {% endcomment %}
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
@@ -45,13 +45,12 @@
                 </div>
             </div>
         </div>
-         <!-- recomendacion 4 -->
+         {% comment %} recomendacion 4 {% endcomment %}
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Descanso</h5>
-                    <p class="card-text">Desconéctate 30 min antes de dormir y 
-                        Medita o lee antes de dormir.</p>
+                    <p class="card-text">Desconectare 30 min antes de dormir y medita o lee antes de dormir.</p>
                     <img src="{% static 'imgs/descanso.png' %}" class="card-img-top" alt="Descanso">
                 </div>
             </div>
