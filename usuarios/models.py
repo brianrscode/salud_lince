@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import RegexValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
@@ -69,11 +70,22 @@ class Role(models.Model):
 
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
-    clave = models.CharField('clave', max_length=9, primary_key=True, unique=True)
-    email = models.EmailField('Correo', unique=True)
-    nombres = models.CharField('Nombres', max_length=100)
-    apellido_paterno = models.CharField('Apellido Paterno', max_length=30)
-    apellido_materno = models.CharField('Apellido Materno', max_length=30, blank=True, null=True)
+    clave = models.CharField('clave', max_length=9, primary_key=True, unique=True,
+                                validators=[RegexValidator(
+                                    regex=r'^((ib|im|ii|ie|lsc|lg|am)[0-9]{6})|([0-9]{6})|(admin[0-9])$',
+                                    message='Formato de clave no valido'
+                                )])
+    email = models.EmailField('Correo', unique=True,
+                                validators=[RegexValidator(
+                                    regex=r'^((ib|im|ii|ie|lsc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|([0-9]{6}@itsatlixco\.edu\.mx)|(admin[0-9]@admin\.com)$',
+                                    message='Formato de correo no valido'
+                                )])
+    nombres = models.CharField('Nombres', max_length=100,
+                                validators=[RegexValidator(r'^([A-ZÑÁÉÍÓÚ][a-zñáéíóú]+)( [A-ZÑÁÉÍÓÚ][a-zñáéíóú]+)?$')])
+    apellido_paterno = models.CharField('Apellido Paterno', max_length=30,
+                                        validators=[RegexValidator(r'^[A-ZÑÁÉÍÓÚ][a-zñáéíóú]+')])
+    apellido_materno = models.CharField('Apellido Materno', max_length=30, blank=True, null=True,
+                                        validators=[RegexValidator(r'^[A-ZÑÁÉÍÓÚ][a-zñáéíóú]+')])
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', blank=True, null=True)
     sexos = [('M', 'Masculino'), ('F', 'Femenino')]
     sexo = models.CharField('Sexo', max_length=1, choices=sexos, blank=True, null=True)
