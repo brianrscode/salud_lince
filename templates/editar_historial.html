@@ -8,7 +8,7 @@
 {% block title %}Editar Historial{% endblock %}
 
 {% block content %}
-    <h1>Editar Historial: {{ historial.id_historial }}</h1>
+    <h1>Editar Historial: {{ historial.paciente }}</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

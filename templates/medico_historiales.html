@@ -21,18 +21,18 @@
     {% if historiales %}
         {% for historial in historiales %}
             <div class="card mb-3">
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Paciente: {{ historial.paciente }}</h5>
-                    <p class="card-text">Id: {{ historial.id_historial }}</p>
-                    <p class="card-text">Enfermedades cronicas: {{ historial.enfermedades_cronicas }}</p>
-                    <p class="card-text">Alergias: {{ historial.alergias }}</p>
-                    <p class="card-text">Medicamentos usados: {{ historial.medicamento_usado }}</p>
+                    <p class="card-text mb-1"><strong>ID:</strong> {{ historial.id_historial }}</p>
+                    <p class="card-text mb-1"><strong>Enfermedades crónicas:</strong> {{ historial.enfermedades_cronicas }}</p>
+                    <p class="card-text mb-1"><strong>Alergias:</strong> {{ historial.alergias }}</p>
+                    <p class="card-text mb-1"><strong>Medicamentos usados:</strong> {{ historial.medicamento_usado }}</p>
                     {% if historial.paciente.sexo == "F" %}
-                        <p class="card-text">¿Es embarazada?: {{ historial.es_embarazada|yesno:"Sí,No" }}</p>
+                        <p class="card-text mb-1"><strong>¿Esta embarazada?:</strong> {{ historial.es_embarazada|yesno:"Sí,No" }}</p>
                     {% endif %}
-                    <p class="card-text">¿Usa drogas?: {{ historial.usa_drogas|yesno:"Sí,No" }}</p>
-                    <p class="card-text">¿Fuma cigarro?: {{ historial.usa_cigarro|yesno:"Sí,No" }}</p>
-                    <p class="card-text">¿Ingiere alcohol?: {{ historial.ingiere_alcohol|yesno:"Sí,No" }}</p>
+                    <p class="card-text mb-1"><strong>¿Usa drogas?:</strong> {{ historial.usa_drogas|yesno:"Sí,No" }}</p>
+                    <p class="card-text mb-1"><strong>¿Fuma cigarro?:</strong> {{ historial.usa_cigarro|yesno:"Sí,No" }}</p>
+                    <p class="card-text mb-1"><strong>¿Ingiere alcohol?:</strong> {{ historial.ingiere_alcohol|yesno:"Sí,No" }}</p>
                 </div>
                 <a href="{% url 'editar_historial' historial.id_historial %}" class="btn btn-primary mt-2">Editar</a>
             </div>
