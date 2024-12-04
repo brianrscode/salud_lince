@@ -7,6 +7,7 @@ from consultas.models import Consulta, SignosVitales
 from .models import HistorialMedico, Usuario
 from django.forms.models import ModelForm
 from django.db.models import Count
+from .forms import HistorialMedicoForm
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -175,10 +176,6 @@ def medico_historiales(request):
         historiales = HistorialMedico.objects.all()
     return render(request, "medico_historiales.html", {"historiales": historiales, "query": query})
 
-class HistorialMedicoForm(ModelForm):
-    class Meta:
-        model = HistorialMedico
-        fields = ['enfermedades_cronicas', 'alergias', 'medicamento_usado', 'es_embarazada', 'usa_drogas', 'usa_cigarro', 'ingiere_alcohol']
 
 @login_required
 @role_required(["medico"])
