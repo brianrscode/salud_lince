@@ -1,29 +1,75 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 {% endblock %}
+
 {% block title %}Mi Historial Médico{% endblock %}
 
-
 {% block content %}
-<h1>Historial Médico</h1>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Historial Médico</h1>
 
-{% if historial %}
+        {% if historial %}
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Datos Personales</h5>
 
-    <p><strong>Enfermedades crónicas:</strong> {{ historial.enfermedades_cronicas }}</p>
-    <p><strong>Alergias:</strong> {{ historial.alergias }}</p>
-    <p><strong>Medicamentos usados:</strong> {{ historial.medicamento_usado }}</p>
-    {% if user.sexo == "F" %}
-        <p><strong>¿Es embarazada?:</strong> {{ historial.es_embarazada|yesno:"Sí,No" }}</p>
-    {% endif %}
-    <p><strong>¿Usa drogas?:</strong> {{ historial.usa_drogas|yesno:"Sí,No" }}</p>
-    <p><strong>¿Fuma cigarro?:</strong> {{ historial.usa_cigarro|yesno:"Sí,No" }}</p>
-    <p><strong>¿Ingiere alcohol?:</strong> {{ historial.ingiere_alcohol|yesno:"Sí,No" }}</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <strong>Enfermedades crónicas:</strong>
+                                <span>{{ historial.enfermedades_cronicas }}</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <strong>Alergias:</strong>
+                                <span>{{ historial.alergias }}</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <strong>Medicamentos usados:</strong>
+                                <span>{{ historial.medicamento_usado }}</span>
+                            </div>
+                        </li>
 
-{% else %}
-    <p>No se encontró un historial médico.</p>
-{% endif %}
+                        {% if user.sexo == "F" %}
+                            <li class="list-group-item">
+                                <div class="d-flex flex-column">
+                                    <strong>¿Es embarazada?:</strong>
+                                    <span>{{ historial.es_embarazada|yesno:"Sí,No" }}</span>
+                                </div>
+                            </li>
+                        {% endif %}
+
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <strong>¿Usa drogas?:</strong>
+                                <span>{{ historial.usa_drogas|yesno:"Sí,No" }}</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <strong>¿Fuma cigarro?:</strong>
+                                <span>{{ historial.usa_cigarro|yesno:"Sí,No" }}</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <strong>¿Ingiere alcohol?:</strong>
+                                <span>{{ historial.ingiere_alcohol|yesno:"Sí,No" }}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning text-center mt-4">
+                No se encontró un historial médico.
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
