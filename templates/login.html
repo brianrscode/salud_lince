@@ -8,13 +8,6 @@
 {% block title %} Login {% endblock %}
 
 {% block content %}
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
     <form method="POST">
         {% csrf_token %} {% comment%} Token de seguridad {% endcomment %}
         <body class="bg-light">
@@ -23,6 +16,14 @@
                     <img src="{% static 'imgs/logo_t.png' %}"class="img-fluid" style="max-width: 80%; height: auto;">
                 </div>
                 <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                     <h2 class="text-center mb-4" >Iniciar Sesión</h2>
                         <div class="mb-3">
                             <label for="email" class="form-label">Correo:</label>
@@ -31,6 +32,8 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">Contraseña:</label>
                             <input type="password" name="password" id="password" class="form-control" required>
+                            <input type="checkbox" name="showPassword" id="showPassword" class="form-check-input">
+                            <label for="showPassword" class="text-muted">Mostrar contraseña</label>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                     </form>
@@ -38,4 +41,19 @@
             </div>
         </body>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const showPasswordCheckbox = document.getElementById('showPassword');
+    const passwordInput = document.getElementById('password');
+
+    showPasswordCheckbox.addEventListener('change', () => {
+        if (showPasswordCheckbox.checked) {
+            passwordInput.type = 'text';
+        } else {
+            passwordInput.type = 'password';
+        }
+    });
+</script>
 {% endblock %}

@@ -34,14 +34,20 @@
                     <div class="mb-3">
                         <label for="current_password" class="form-label">Contraseña actual:</label>
                         <input type="password" id="current_password" name="current_password" class="form-control" required>
+                        <input type="checkbox" name="showPassword1" id="showPassword1" class="form-check-input">
+                        <label for="showPassword1" class="text-muted">Mostrar contraseña</label>
                     </div>
                     <div class="mb-3">
                         <label for="new_password" class="form-label">Nueva contraseña:</label>
                         <input type="password" id="new_password" name="new_password" class="form-control" required>
+                        <input type="checkbox" name="showPassword2" id="showPassword2" class="form-check-input">
+                        <label for="showPassword2" class="text-muted">Mostrar contraseña</label>
                     </div>
                     <div class="mb-3">
                         <label for="confirm_password" class="form-label">Confirmar nueva contraseña:</label>
                         <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                        <input type="checkbox" name="showPassword3" id="showPassword3" class="form-check-input">
+                        <label for="showPassword3" class="text-muted">Mostrar contraseña</label>
                     </div>
                     <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
                 </form>
@@ -66,4 +72,41 @@
             </div>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const showPassword1Checkbox = document.getElementById('showPassword1');
+    const showPassword2Checkbox = document.getElementById('showPassword2');
+    const showPassword3Checkbox = document.getElementById('showPassword3');
+
+    const currentPasswordInput = document.getElementById('current_password');
+    const newPasswordInput = document.getElementById('new_password');
+    const confirmPasswordInput = document.getElementById('confirm_password');
+
+    showPassword1Checkbox.addEventListener('change', function() {
+        if (showPassword1Checkbox.checked) {
+            currentPasswordInput.type = 'text';
+        } else {
+            currentPasswordInput.type = 'password';
+        }
+    });
+
+    showPassword2Checkbox.addEventListener('change', function() {
+        if (showPassword2Checkbox.checked) {
+            newPasswordInput.type = 'text';
+        } else {
+            newPasswordInput.type = 'password';
+        }
+    });
+
+    showPassword3Checkbox.addEventListener('change', function() {
+        if (showPassword3Checkbox.checked) {
+            confirmPasswordInput.type = 'text';
+        } else {
+            confirmPasswordInput.type = 'password';
+        }
+    });
+
+</script>
 {% endblock %}
