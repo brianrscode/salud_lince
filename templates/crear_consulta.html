@@ -50,7 +50,7 @@
 {% block scripts %}
     <script>
         function buscarPaciente() {
-            const claveInput = document.getElementById("search-clave").value;
+            const claveInput = document.getElementById("search-clave").value.toLowerCase();
             const selectPaciente = document.getElementById("id_clave_paciente");
             const resultText = document.getElementById("search-result");
 
