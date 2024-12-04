@@ -11,7 +11,7 @@
 {% block content %}
 <div class="container my-5">
     <h2 class="text-center mb-4">Bienvenido, paciente, a Salud Lince 🩺</h2>
-    <!--recomendaciones -->
+    {% comment %} recomendaciones {% endcomment %}
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-5">
         {% comment %} recomendación 1 {% endcomment %}
         <div class="col">
@@ -45,12 +45,12 @@
                 </div>
             </div>
         </div>
-         {% comment %} recomendacion 4 {% endcomment %}
+         {% comment %} recomendación 4 {% endcomment %}
         <div class="col">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Descanso</h5>
-                    <p class="card-text">Desconectare 30 min antes de dormir y medita o lee antes de dormir.</p>
+                    <p class="card-text">Desconectarte 30 min antes de dormir y medita o lee antes de dormir.</p>
                     <img src="{% static 'imgs/descanso.png' %}" class="card-img-top" alt="Descanso">
                 </div>
             </div>
