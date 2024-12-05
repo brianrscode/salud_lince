@@ -10,6 +10,7 @@ from django.db.models import Count
 from .forms import HistorialMedicoForm
 import plotly.express as px
 import plotly.graph_objects as go
+import re
 
 def login_view(request):
     # Si ya hay una sesión iniciada, redirigir al dashboard del rol correspondiente
@@ -23,6 +24,13 @@ def login_view(request):
         ''' Si el formulario es enviado se autentica el usuario '''
         email = request.POST.get("email")
         password = request.POST.get("password")
+        if not re.match(r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|(^admin[0-9]@admin\.com)|^([0-9]{6}@itsatlixco\.edu\.mx)$', email):
+            messages.error(request, "Correo no válido.")
+            return redirect("login")
+        # if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$', password):
+        #     messages.error(request, "Contraseña no válida.")
+        #     return redirect("login")
+
         user = authenticate(request, email=email, password=password)
 
         if user is not None:
@@ -125,6 +133,12 @@ def cambiar_contrasena(request):
         current_password = request.POST.get('current_password')
         new_password = request.POST.get('new_password')
         confirm_password = request.POST.get('confirm_password')
+        if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$', new_password):
+            messages.error(request, "La contraseña debe tener al entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un caracter especial.")
+            return redirect("informacion")
+        if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$', confirm_password):
+            messages.error(request, "La contraseña debe tener al entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un caracter especial.")
+            return redirect("informacion")
 
         if not request.user.check_password(current_password):
             error_message = 'La contraseña actual es incorrecta.'

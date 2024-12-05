@@ -28,6 +28,12 @@
                             </div>
                         {% endfor %}
                     {% endif %}
+                    {% if error %}
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            {{ error }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
 
                     <h2 class="text-center mb-4" >Iniciar Sesión</h2>
                     {% comment %} Inputs {% endcomment %}
