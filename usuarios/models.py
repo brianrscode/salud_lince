@@ -1,38 +1,50 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+import re
+
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, clave, nombres, email, apellido_paterno, fecha_nacimiento, sexo=None, apellido_materno=None, password=None, role=None, carrera_o_puesto=None):
-        if not email:
-            raise ValueError('El usuario debe tener un correo electrónico')
+            if not email:
+                raise ValueError('El usuario debe tener un correo electrónico')
 
-        try:
-            role_obj = Role.objects.get(nombre_rol=role)
-        except ObjectDoesNotExist:
-            raise ValueError(f"El rol {role} no existe")
+            # Validar el formato del password
+            if not password:
+                raise ValueError('El usuario debe tener una contraseña')
+            # password_validator(password)  # Aplica la validación del password aquí
 
-        try:
-            carrera_o_puesto_obj = Area.objects.get(carrera_o_puesto=carrera_o_puesto)
-        except ObjectDoesNotExist:
-            raise ValueError(f"la carrera o puesto {carrera_o_puesto} no existe")
+            if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$', password):
+                raise ValueError('La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula, un número y un carácter especial.')
 
-        usuario = self.model(
-            clave=clave,
-            nombres=nombres,
-            email=self.normalize_email(email),
-            apellido_paterno=apellido_paterno,
-            apellido_materno=apellido_materno,
-            fecha_nacimiento=fecha_nacimiento,
-            sexo=sexo,
-            role=role_obj,
-            carrera_o_puesto=carrera_o_puesto_obj
-        )
-        usuario.set_password(password)
-        usuario.save(using=self._db)
+            # Buscar role y carrera
+            try:
+                role_obj = Role.objects.get(nombre_rol=role)
+            except ObjectDoesNotExist:
+                raise ValueError(f"El rol {role} no existe")
 
-        return usuario
+            try:
+                carrera_o_puesto_obj = Area.objects.get(carrera_o_puesto=carrera_o_puesto)
+            except ObjectDoesNotExist:
+                raise ValueError(f"La carrera o puesto {carrera_o_puesto} no existe")
+
+            usuario = self.model(
+                clave=clave,
+                nombres=nombres,
+                email=self.normalize_email(email),
+                apellido_paterno=apellido_paterno,
+                apellido_materno=apellido_materno,
+                fecha_nacimiento=fecha_nacimiento,
+                sexo=sexo,
+                role=role_obj,
+                carrera_o_puesto=carrera_o_puesto_obj
+            )
+            usuario.set_password(password)  # Hashea la contraseña
+            usuario.save(using=self._db)
+
+            return usuario
+
 
     def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, sexo=None, password=None, role="admin", carrera_o_puesto="Administración"):
 
@@ -72,12 +84,12 @@ class Role(models.Model):
 class Usuario(AbstractBaseUser, PermissionsMixin):
     clave = models.CharField('clave', max_length=9, primary_key=True, unique=True,
                                 validators=[RegexValidator(
-                                    regex=r'^((ib|im|ii|ie|lsc|lg|am)[0-9]{6})|([0-9]{6})|(admin[0-9])$',
+                                    regex=r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6})|^(admin[0-9])|^([0-9]{6})$',
                                     message='Formato de clave no valido'
                                 )])
     email = models.EmailField('Correo', unique=True,
                                 validators=[RegexValidator(
-                                    regex=r'^((ib|im|ii|ie|lsc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|([0-9]{6}@itsatlixco\.edu\.mx)|(admin[0-9]@admin\.com)$',
+                                    regex=r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|(^admin[0-9]@admin\.com)|^([0-9]{6}@itsatlixco\.edu\.mx)$',
                                     message='Formato de correo no valido'
                                 )])
     nombres = models.CharField('Nombres', max_length=100,
