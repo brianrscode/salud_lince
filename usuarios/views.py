@@ -91,7 +91,7 @@ def medico_dashboard(request):
         title="Distribución de Tipos de Consultas"
     )
 
-# Gráfica de barras de cantidad de pacientes por area
+    # Gráfica de barras de cantidad de pacientes por area
     carrera_o_puesto = Usuario.objects.values('carrera_o_puesto_id').annotate(total=Count('carrera_o_puesto_id'))
     areas_fig = go.Figure([go.Bar(x=[c['carrera_o_puesto_id'] for c in carrera_o_puesto], y=[c['total'] for c in carrera_o_puesto], marker_color='indianred')])
     areas_fig.update_layout(title_text="Distribución de Areas", xaxis_title="Area", yaxis_title="Cantidad")
@@ -104,7 +104,8 @@ def medico_dashboard(request):
         'cant_mujeres': cant_mujeres,
         'habitos_graph': habitos_fig.to_html(full_html=False),  # Gráfica de barras
         'consultas_graph': consultas_fig.to_html(full_html=False),  # Gráfica de pastel
-        'areas_graph': areas_fig.to_html(full_html=False)
+        'areas_graph': areas_fig.to_html(full_html=False),
+        'pacientes_areas': areas_fig.to_html(full_html=False),
     })
 
 @login_required
