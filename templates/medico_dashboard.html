@@ -33,4 +33,12 @@
             <div>{{ consultas_graph|safe }}</div>
         </div>
     </div>
+
+    {% comment %} Gráfica de cantidad de pacientes por area {% endcomment %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Distribución de Tipos de Consultas</h5>
+            <div>{{ areas_graph|safe }}</div>
+        </div>
+    </div>
 {% endblock %}
