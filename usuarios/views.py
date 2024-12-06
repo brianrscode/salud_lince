@@ -4,8 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .decorators import role_required
 from consultas.models import Consulta, SignosVitales
-from .models import HistorialMedico, Usuario
-from django.forms.models import ModelForm
+from .models import HistorialMedico, Usuario, Area
 from django.db.models import Count
 from .forms import HistorialMedicoForm
 import plotly.express as px
@@ -59,8 +58,7 @@ def logout_view(request):
 @login_required
 @role_required(["medico"])
 def medico_dashboard(request):
-    # Distribución de género
-    usuarios = Usuario.objects.all()  # Todos los usuarios
+    usuarios = Usuario.objects.filter(role__nombre_rol='paciente')  # Filtrar solo pacientes
     genero_data = usuarios.values('sexo').annotate(total=Count('sexo'))  # Cantidad de usuarios por género
     genero_fig = px.pie(  # Gráfica de pastel
         values=[g['total'] for g in genero_data],  # Cantidad de usuarios por género
