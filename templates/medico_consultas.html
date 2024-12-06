@@ -109,7 +109,7 @@
 </div>
 {% endblock %}
 {% block scripts %}
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', () => {
         const modal = document.getElementById('detalleConsultaModal');
 
@@ -128,12 +128,26 @@
 
             // Parse signos vitales
             const signos = JSON.parse(data.signos);
-            document.getElementById('detallePeso').textContent = signos.peso;
-            document.getElementById('detalleTalla').textContent = signos.talla;
-            document.getElementById('detalleTemperatura').textContent = signos.temperatura;
-            document.getElementById('detalleFrecuenciaCardiaca').textContent = signos.frecuencia_cardiaca;
-            document.getElementById('detalleFrecuenciaRespiratoria').textContent = signos.frecuencia_respiratoria;
-            document.getElementById('detallePresionArterial').textContent = signos.presion_arterial;
+
+            const setSignoVital = (id, value, unidad = '') => {
+                // Obtengo el elemento correspondiente a través de su id
+                const elemento = document.getElementById(id);
+                // Si el valor no es None y no está vacío
+                if (value && value !== "None" && value.trim() !== "") {
+                    // Muestro el signo vital y su unidad
+                    elemento.textContent = `${value} ${unidad}`;
+                } else { // Si el valor es None o esta vacío
+                    // Muestro N/A como signo vital
+                    elemento.textContent = 'N/A';
+                }
+            };
+
+            setSignoVital('detallePeso', signos.peso, 'kg');
+            setSignoVital('detalleTalla', signos.talla, 'm');
+            setSignoVital('detalleTemperatura', signos.temperatura, '°C');
+            setSignoVital('detalleFrecuenciaCardiaca', signos.frecuencia_cardiaca, 'bpm');
+            setSignoVital('detalleFrecuenciaRespiratoria', signos.frecuencia_respiratoria, 'rpm');
+            setSignoVital('detallePresionArterial', signos.presion_arterial, 'mmHg');
         });
     });
 </script>
