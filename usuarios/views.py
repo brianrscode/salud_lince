@@ -59,6 +59,9 @@ def logout_view(request):
 @role_required(["medico"])
 def medico_dashboard(request):
     usuarios = Usuario.objects.filter(role__nombre_rol='paciente')  # Filtrar solo pacientes
+    cantidad_usuarios = usuarios.count()
+    cant_hombres = usuarios.filter(sexo='M').count()  # Cantidad de hombres
+    cant_mujeres = usuarios.filter(sexo='F').count()  # Cantidad de mujeres
     genero_data = usuarios.values('sexo').annotate(total=Count('sexo'))  # Cantidad de usuarios por género
     genero_fig = px.pie(  # Gráfica de pastel
         values=[g['total'] for g in genero_data],  # Cantidad de usuarios por género
@@ -96,6 +99,9 @@ def medico_dashboard(request):
     # Pasar gráficas como HTML al template
     return render(request, 'medico_dashboard.html', {
         'genero_graph': genero_fig.to_html(full_html=False),  # Gráfica de pastel
+        'cantidad_usuarios': cantidad_usuarios,
+        'cant_hombres': cant_hombres,
+        'cant_mujeres': cant_mujeres,
         'habitos_graph': habitos_fig.to_html(full_html=False),  # Gráfica de barras
         'consultas_graph': consultas_fig.to_html(full_html=False),  # Gráfica de pastel
         'areas_graph': areas_fig.to_html(full_html=False)
