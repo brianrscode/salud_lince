@@ -9,12 +9,12 @@
 
 {% block content %}
     <form method="POST">
-        {% csrf_token %} {% comment%} Token de seguridad {% endcomment %}
+        {% csrf_token %}
         <body class="bg-light">
-            <div class="container d-flex justify-content-center align-items-center vh-100">
+            <div class="container d-flex flex-column flex-md-row justify-content-center align-items-center vh-100">
                 {% comment %} Imagen del logo {% endcomment %}
-                <div class="text-center">
-                    <img src="{% static 'imgs/logo_t.png' %}"class="img-fluid" style="max-width: 80%; height: auto;">
+                <div class="text-center mb-4 mb-md-0">
+                    <img src="{% static 'imgs/logo_t.png' %}" class="img-fluid" style="max-width: 80%; height: auto;">
                 </div>
 
                 {% comment %} Card del login {% endcomment %}
@@ -35,17 +35,17 @@
                         </div>
                     {% endif %}
 
-                    <h2 class="text-center mb-4" >Iniciar Sesión</h2>
+                    <h2 class="text-center mb-4">Iniciar Sesión</h2>
                     {% comment %} Inputs {% endcomment %}
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo:</label>
-                        <input type="email" name="email" id="email" class="form-control"required>
+                        <input type="email" name="email" id="email" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Contraseña:</label>
                         <input type="password" name="password" id="password" class="form-control" required>
                         <input type="checkbox" name="showPassword" id="showPassword" class="form-check-input">
-                        <label for="showPassword" class="text-muted">Mostrar contraseña</label>
+                        <label for="showPassword" class="text-muted">Mostrar contraseña</label>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                 </div>
