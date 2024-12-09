@@ -26,9 +26,9 @@ def login_view(request):
         if not re.match(r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|(^admin[0-9]@admin\.com)|^([0-9]{6}@itsatlixco\.edu\.mx)$', email):
             messages.error(request, "Correo no válido.")
             return redirect("login")
-        # if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$', password):
-        #     messages.error(request, "Contraseña no válida.")
-        #     return redirect("login")
+        if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$', password):
+            messages.error(request, "Contraseña no válida.")
+            return redirect("login")
 
         user = authenticate(request, email=email, password=password)
 
