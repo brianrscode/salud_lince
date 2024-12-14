@@ -8,33 +8,58 @@
 
 
 {% block content %}
-<h2>Estadísticas de Pacientes</h2>
-
-    {% comment %} Gráfica de Género {% endcomment %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Distribución de Género</h5>
-            <div>{{ genero_graph|safe }}</div>
-            <p class="card-text mb-1">Cantidad aproximada de pacientes: {{ cantidad_usuarios }}</p>
-            <p class="card-text mb-1">Cantidad aproximada de mujeres: {{ cant_mujeres }}</p>
-            <p class="card-text mb-1">Cantidad aproximada de hombres: {{ cant_hombres }}</p>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">MISIÓN</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <span>Contribuir a la formación de personas íntegras y competentes,
+                                    comprometidas con la mejora continua, capaces de aplicar y promover el conocimiento
+                                    para transformar el país y el mundo.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
-
-    {% comment %} Gráfica de Hábitos {% endcomment %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Pacientes con Hábitos</h5>
-            <div>{{ habitos_graph|safe }}</div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">VISIÓN</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <span>Ser referente en Educación Superior Tecnológica de nuestro país y el mundo,
+                                    con infraestructura moderna, profesorado capacitado, actualizado y comprometido;
+                                    así como programas de estudio pertinentes.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
 
-    {% comment %} Gráfica de Tipos de Consultas {% endcomment %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Distribución de Tipos de Consultas</h5>
-            <div>{{ consultas_graph|safe }}</div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">VALORES</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <span>Lealtad, nobleza, gratitud, empatía, perseverancia, solidaridad, búsqueda de la perfección, equidad y justicia.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
+
     </div>
 
     {% comment %} Gráfica de cantidad de pacientes por area {% endcomment %}
