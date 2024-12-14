@@ -12,6 +12,10 @@ import plotly.graph_objects as go
 import re
 
 def login_view(request):
+    token = {
+        "correo": r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|(^admin[0-9]@admin\.com)|^([0-9]{6}@itsatlixco\.edu\.mx)$',
+        "password": r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$'
+    }
     # Si ya hay una sesión iniciada, redirigir al dashboard del rol correspondiente
     if request.user.is_authenticated:
         if request.user.role.nombre_rol == "medico":
@@ -23,29 +27,33 @@ def login_view(request):
         ''' Si el formulario es enviado se autentica el usuario '''
         email = request.POST.get("email")
         password = request.POST.get("password")
-        if not re.match(r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|(^admin[0-9]@admin\.com)|^([0-9]{6}@itsatlixco\.edu\.mx)$', email):
+        token_email_valido = re.match(token["correo"], email)
+        token_password_valido = re.match(token["password"], password)
+
+        if not token_email_valido:
             messages.error(request, "Correo no válido.")
             return redirect("login")
-        if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$', password):
+        if not token_password_valido:
             messages.error(request, "Contraseña no válida.")
             return redirect("login")
 
-        user = authenticate(request, email=email, password=password)
+        if token_email_valido and token_password_valido:
+            user = authenticate(request, email=email, password=password)
 
-        if user is not None:
-            login(request, user)
-            # Redirigir según el rol del usuario
-            if user.role.nombre_rol == "medico":
-                return redirect("medico_dashboard")  # Nombre de la vista para médicos
-            elif user.role.nombre_rol == "paciente":
-                return redirect("paciente_dashboard")  # Nombre de la vista para pacientes
-            elif user.role.nombre_rol == "admin":
-                return redirect("/admin/")
+            if user is not None:
+                login(request, user)
+                # Redirigir según el rol del usuario
+                if user.role.nombre_rol == "medico":
+                    return redirect("medico_dashboard")  # Nombre de la vista para médicos
+                elif user.role.nombre_rol == "paciente":
+                    return redirect("paciente_dashboard")  # Nombre de la vista para pacientes
+                elif user.role.nombre_rol == "admin":
+                    return redirect("/admin/")
+                else:
+                    messages.error(request, "Rol no reconocido.")
+                    return redirect("login")
             else:
-                messages.error(request, "Rol no reconocido.")
-                return redirect("login")
-        else:
-            messages.error(request, "Credenciales inválidas.")
+                messages.error(request, "Credenciales inválidas.")
     return render(request, "login.html")
 
 
