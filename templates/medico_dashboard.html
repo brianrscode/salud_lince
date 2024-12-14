@@ -71,11 +71,11 @@
     </div>
 
     {% comment %} Gráfica de cantidad de pacientes por especialidad {% endcomment %}
-    <div class="card mb-4">
+    {% comment %} <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">Distribución de Tipos de Consultas</h5>
+            <h5 class="card-title">Gráfica de especialidades de pacientes</h5>
             <div>{{ especialidades_graph|safe }}</div>
         </div>
-    </div>
+    </div> {% endcomment %}
 
 {% endblock %}
