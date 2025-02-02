@@ -133,9 +133,9 @@ def historial_view(request):
 @login_required
 @role_required(["paciente"])
 def paciente_consultas(request):
-    consultas = Consulta.objects.filter(clave_paciente=request.user)
-    signos = SignosVitales.objects.filter(consulta__clave_paciente=request.user)
-    return render(request, "paciente_consultas.html", {"consultas": consultas, "signos": signos})
+    consultas = Consulta.objects.filter(clave_paciente=request.user).select_related('signos_vitales')
+    return render(request, "paciente_consultas.html", {"consultas": consultas})
+
 
 
 @login_required
@@ -188,12 +188,13 @@ def cambiar_contrasena(request):
 def medico_consultas(request):
     mostrar_todas = request.GET.get('todas', '0') == '1'  # Leer parámetro 'todas'
     if mostrar_todas:
+        # Mostrar primero la consulta con el més reciente
         consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').all()
     else:
         consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').filter(clave_medico=request.user)
 
     return render(request, "medico_consultas.html", {
-        "consultas": consultas,
+        "consultas": consultas.order_by('-id_consulta'),
         "mostrar_todas": mostrar_todas
     })
 

@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 
 class Consulta(models.Model):
     id_consulta = models.BigAutoField(primary_key=True)
-    fecha = models.DateField(auto_now_add=True)
+    fecha = models.DateTimeField(auto_now_add=True)
     padecimiento_actual = models.TextField()
     tratamiento_no_farmacologico = models.TextField('Tratamiento no farmacológico', max_length=100, blank=True, null=True)
     tratamiento_farmacologico_recetado = models.CharField('Tratamiento farmacológico recetado', max_length=100, blank=True, null=True)
