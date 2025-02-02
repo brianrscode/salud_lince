@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'sistema_medico.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': env('NAME_BD'),
         'USER': env('USER_BD'),
         'PASSWORD': env('PASSWORD_BD'),
