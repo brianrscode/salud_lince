@@ -4,7 +4,7 @@ from .models import Usuario, HistorialMedico, Role
 
 class UsuarioAdmin(admin.ModelAdmin):
     model = Usuario
-    list_display = ('email', 'nombres', 'role', 'is_staff')
+    list_display = ('clave', 'nombres', 'role', 'is_staff')  # Lo que mostrará en la tabla
     ordering = ('email',)  # Cambiar 'username' por 'email' o el campo que prefieras ordenar
     list_filter = ('role', 'is_staff')  # Eliminar 'is_active' si no existe en tu modelo
 
