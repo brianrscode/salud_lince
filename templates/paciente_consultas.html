@@ -81,6 +81,32 @@
         </div>
     </div>
 </div>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    {% if consultas.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1{% if mostrar_todas %}&todas=1{% endif %}">&laquo; Primera</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ consultas.previous_page_number }}{% if mostrar_todas %}&todas=1{% endif %}">Anterior</a>
+      </li>
+    {% endif %}
+
+    <li class="page-item disabled">
+      <span class="page-link">Página {{ consultas.number }} de {{ consultas.paginator.num_pages }}</span>
+    </li>
+
+    {% if consultas.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ consultas.next_page_number }}{% if mostrar_todas %}&todas=1{% endif %}">Siguiente</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ consultas.paginator.num_pages }}{% if mostrar_todas %}&todas=1{% endif %}">Última &raquo;</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
 {% endblock %}
 
 {% block scripts %}

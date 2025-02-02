@@ -7,6 +7,7 @@ from consultas.models import Consulta, SignosVitales
 from .models import HistorialMedico, Usuario, Area
 from django.db.models import Count
 from .forms import HistorialMedicoForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import plotly.express as px
 import plotly.graph_objects as go
 import re
@@ -48,7 +49,7 @@ def login_view(request):
                 elif user.role.nombre_rol == "paciente":
                     return redirect("paciente_dashboard")  # Nombre de la vista para pacientes
                 elif user.role.nombre_rol == "admin":
-                    return redirect("/admin/")
+                    return redirect("admin")
                 else:
                     messages.error(request, "Rol no reconocido.")
                     return redirect("login")
@@ -134,6 +135,16 @@ def historial_view(request):
 @role_required(["paciente"])
 def paciente_consultas(request):
     consultas = Consulta.objects.filter(clave_paciente=request.user).select_related('signos_vitales')
+
+    paginador = Paginator(consultas, 20)  # Mostrar 10 consultas por páginas
+    pagina = request.GET.get('page', 1)
+    try:
+        consultas = paginador.page(pagina)
+    except PageNotAnInteger:
+        consultas = paginador.page(1)
+    except EmptyPage:
+        consultas = paginador.page(paginador.num_pages)
+
     return render(request, "paciente_consultas.html", {"consultas": consultas})
 
 
@@ -189,12 +200,21 @@ def medico_consultas(request):
     mostrar_todas = request.GET.get('todas', '0') == '1'  # Leer parámetro 'todas'
     if mostrar_todas:
         # Mostrar primero la consulta con el més reciente
-        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').all()
+        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').all().order_by('-id_consulta')
     else:
-        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').filter(clave_medico=request.user)
+        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').filter(clave_medico=request.user).order_by('-id_consulta')
+
+    paginador = Paginator(consultas, 20)  # Mostrar 10 consultas por páginas
+    pagina = request.GET.get('page', 1)
+    try:
+        consultas = paginador.page(pagina)
+    except PageNotAnInteger:
+        consultas = paginador.page(1)
+    except EmptyPage:
+        consultas = paginador.page(paginador.num_pages)
 
     return render(request, "medico_consultas.html", {
-        "consultas": consultas.order_by('-id_consulta'),
+        "consultas": consultas,
         "mostrar_todas": mostrar_todas
     })
 
@@ -205,9 +225,19 @@ def medico_historiales(request):
     query = request.GET.get('search', '')
     # Si hay una consulta, filtrar los historiales de acuerdo a la consulta
     if query:
-        historiales = HistorialMedico.objects.filter(id_historial__icontains=query)
+        historiales = HistorialMedico.objects.filter(id_historial__icontains=query).order_by('id_historial')
     else:
-        historiales = HistorialMedico.objects.all()
+        historiales = HistorialMedico.objects.all().order_by('id_historial')
+
+    paginador = Paginator(historiales, 10)  # Mostrar 10 consultas por páginas
+    pagina = request.GET.get('page', 1)
+    try:
+        historiales = paginador.page(pagina)
+    except PageNotAnInteger:
+        historiales = paginador.page(1)
+    except EmptyPage:
+        historiales = paginador.page(paginador.num_pages)
+
     return render(request, "medico_historiales.html", {"historiales": historiales, "query": query})
 
 
