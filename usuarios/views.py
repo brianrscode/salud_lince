@@ -49,7 +49,7 @@ def login_view(request):
                 elif user.role.nombre_rol == "paciente":
                     return redirect("paciente_dashboard")  # Nombre de la vista para pacientes
                 elif user.role.nombre_rol == "admin":
-                    return redirect("admin")
+                    return redirect("/admin/")
                 else:
                     messages.error(request, "Rol no reconocido.")
                     return redirect("login")

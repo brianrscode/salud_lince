@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.hashers import make_password
 
 
 class UsuarioManager(BaseUserManager):
@@ -117,6 +118,12 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         validators=[password_validator],
         blank=False
     )
+
+    def save(self, *args, **kwargs):
+        """ Sobrescribe el método save() para garantizar que la contraseña se guarde cifrada. """
+        if self.password and not self.password.startswith('pbkdf2_sha256$'):
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.clave} - {self.nombres} - {self.role}'
