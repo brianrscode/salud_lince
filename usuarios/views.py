@@ -8,17 +8,13 @@ from .models import HistorialMedico, Usuario, Area
 from django.db.models import Count
 from .forms import HistorialMedicoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import LoginForm
 import plotly.express as px
 import plotly.graph_objects as go
 import re
 
 
 def login_view(request):
-    token = {
-        "correo": r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|(^admin[0-9]@admin\.com)|^([0-9]{6}@itsatlixco\.edu\.mx)$',
-        "password": r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$'
-    }
-    # Si ya hay una sesión iniciada, redirigir al dashboard del rol correspondiente
     if request.user.is_authenticated:
         if request.user.role.nombre_rol == "medico":
             return redirect("medico_dashboard")  # Nombre de la vista para médicos
@@ -28,20 +24,10 @@ def login_view(request):
             return redirect("/admin/")  # Acceso para administradores
 
     if request.method == "POST":
-        ''' Si el formulario es enviado se autentica el usuario '''
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        token_email_valido = re.match(token["correo"], email)
-        token_password_valido = re.match(token["password"], password)
-
-        if not token_email_valido:
-            messages.error(request, "Correo no válido.")
-            return redirect("login")
-        if not token_password_valido:
-            messages.error(request, "Contraseña no válida.")
-            return redirect("login")
-
-        if token_email_valido and token_password_valido:
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
             user = authenticate(request, email=email, password=password)
 
             if user is not None:
@@ -55,10 +41,15 @@ def login_view(request):
                     return redirect("/admin/")
                 else:
                     messages.error(request, "Rol no reconocido.")
-                    return redirect("login")
             else:
                 messages.error(request, "Credenciales inválidas.")
-    return render(request, "login.html")
+        else:
+            messages.error(request, "Formulario inválido.")
+    else:
+        form = LoginForm()
+
+    return render(request, "login.html", {"form": form})
+
 
 
 def logout_view(request):
