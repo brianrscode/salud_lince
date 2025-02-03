@@ -12,6 +12,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import re
 
+
 def login_view(request):
     token = {
         "correo": r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|(^admin[0-9]@admin\.com)|^([0-9]{6}@itsatlixco\.edu\.mx)$',
@@ -23,6 +24,8 @@ def login_view(request):
             return redirect("medico_dashboard")  # Nombre de la vista para médicos
         elif request.user.role.nombre_rol == "paciente":
             return redirect("paciente_dashboard")  # Nombre de la vista para pacientes
+        elif request.user.role.nombre_rol == "admin":
+            return redirect("/admin/")  # Acceso para administradores
 
     if request.method == "POST":
         ''' Si el formulario es enviado se autentica el usuario '''
