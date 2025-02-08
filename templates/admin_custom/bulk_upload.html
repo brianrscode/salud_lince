@@ -1,0 +1,37 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Cargar usuarios en masa</h2>
+            </div>
+            <div class="card-body">
+                <p>Sube un archivo .csv o .xls con los siguientes campos:</p>
+                <pre class="p-3 mb-3 bg-light rounded">clave, email, nombres, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, usuario_activo, is_staff, carrera_o_puesto, role, password</pre>
+                <p>Los campos obligatorios son:</p>
+                <ul>
+                    <li>clave</li>
+                    <li>email</li>
+                    <li>nombres</li>
+                    <li>apellido_paterno</li>
+                    <li>carrera_o_puesto</li>
+                    <li>password</li>
+                </ul>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.file.label_tag }}
+                        {{ form.file }}
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Subir archivo</button>
+                </form>
+                <a href="../" class="btn btn-secondary mt-3">Volver</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

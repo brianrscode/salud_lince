@@ -50,3 +50,7 @@ class LoginForm(forms.Form):
         if not re.match(token_password, password):
             raise forms.ValidationError("Contraseña no válida.")
         return password
+
+
+class BulkUserUploadForm(forms.Form):
+    file = forms.FileField(label="Selecciona un archivo (.csv o .xls)")
