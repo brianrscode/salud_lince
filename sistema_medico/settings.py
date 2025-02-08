@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'usuarios',
     'consultas',
+    'admin_extra_buttons',
 ]
 
 MIDDLEWARE = [

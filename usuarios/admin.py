@@ -4,43 +4,29 @@ from .models import Usuario, HistorialMedico, Role
 from django.shortcuts import render, redirect
 from django.urls import path, reverse
 from .forms import BulkUserUploadForm
+from admin_extra_buttons.api import ExtraButtonsMixin, button
 
-# class UsuarioAdmin(admin.ModelAdmin):
-#     model = Usuario
-#     list_display = ('clave', 'nombres', 'role', 'is_staff')  # Lo que mostrará en la tabla
-#     ordering = ('email',)  # Cambiar 'username' por 'email' o el campo que prefieras ordenar
-#     list_filter = ('role', 'is_staff')  # Eliminar 'is_active' si no existe en tu modelo
 
-#     def save_model(self, request, obj, form, change):
-#         if not change:
-#             obj.set_password(form.cleaned_data['password'])
-#         super().save_model(request, obj, form, change)
-class UsuarioAdmin(admin.ModelAdmin):
+class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     model = Usuario
-    list_display = ('clave', 'nombres', 'role', 'is_staff')
-    ordering = ('email',)
-    list_filter = ('role', 'is_staff')
+    list_display = ('clave', 'nombres', 'role', 'is_staff')  # Lo que mostrará en la tabla
+    ordering = ('email',)  # Cambiar 'username' por 'email' o el campo que prefieras ordenar
+    list_filter = ('role', 'is_staff')  # Eliminar 'is_active' si no existe en tu modelo
 
     def save_model(self, request, obj, form, change):
         if not change:
             obj.set_password(form.cleaned_data['password'])
         super().save_model(request, obj, form, change)
 
-    # 📌 Agregar botón en la parte superior de la lista de usuarios
-    def changelist_view(self, request, extra_context=None):
-        extra_context = extra_context or {}
-        extra_context["bulk_upload_url"] = reverse("admin:bulk_upload")
-        return super().changelist_view(request, extra_context=extra_context)
-
-    # 📌 Agregar URL personalizada para carga masiva
     def get_urls(self):
+        """ Sobrescribe el método get_urls() para agregar la URL personalizada."""
         urls = super().get_urls()
         custom_urls = [
-            path("bulk_upload/", self.admin_site.admin_view(self.bulk_upload), name="bulk_upload"),
+            path("bulk_upload", self.admin_site.admin_view(self.bulk_upload), name="bulk_upload"),
         ]
         return custom_urls + urls
 
-    # 📌 Lógica de carga masiva de usuarios
+    @button(label="Carga Masiva de Usuarios", html_attrs={"style": "background-color:#417690; color:white;"})
     def bulk_upload(self, request):
         if request.method == "POST":
             form = BulkUserUploadForm(request.POST, request.FILES)
@@ -106,7 +92,6 @@ class UsuarioAdmin(admin.ModelAdmin):
             form = BulkUserUploadForm()
 
         return render(request, "admin_custom/bulk_upload.html", {"form": form, "opts": self.model._meta})
-
 
 
 class HistorialAdmin(admin.ModelAdmin):
