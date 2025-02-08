@@ -51,7 +51,6 @@ def login_view(request):
     return render(request, "login.html", {"form": form})
 
 
-
 def logout_view(request):
     # if request.user.is_authenticated:
     logout(request)
@@ -128,7 +127,7 @@ def historial_view(request):
 @login_required
 @role_required(["paciente"])
 def paciente_consultas(request):
-    consultas = Consulta.objects.filter(clave_paciente=request.user).select_related('signos_vitales')
+    consultas = Consulta.objects.filter(clave_paciente=request.user).select_related('signos_vitales').order_by('-id_consulta')
 
     paginador = Paginator(consultas, 20)  # Mostrar 10 consultas por páginas
     pagina = request.GET.get('page', 1)
