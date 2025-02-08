@@ -28,7 +28,7 @@
                             <li class="nav-item"><a class="nav-link" href="{% url 'medico_historiales' %}">Historiales</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'medico_consultas' %}">Consultas</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'informacion' %}">Cuenta {% if user.role.nombre_rol == "paciente" %}paciente{% else %}médico{% endif %}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'informacion' %}">Cuenta {% if user.role.nombre_rol == "paciente" %}paciente{% elif user.role.nombre_rol == "medico" %}medico {% else %}admin{% endif %}</a></li>
                         <li class="nav-item"><a class="nav-link" href="">{% if user.is_authenticated %}{{ user.nombres }}{% else %}N/A{% endif %}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
                     </ul>
@@ -40,6 +40,8 @@
     <main class="container">
         {% block content %}
         {% endblock %}
+
+        <br><br>
     </main>
 
     {% include "./partials/footer.html" %}
