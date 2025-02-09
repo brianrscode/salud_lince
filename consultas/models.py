@@ -24,6 +24,10 @@ class Consulta(models.Model):
         limit_choices_to={'role__nombre_rol': 'medico'}
     )
 
+    class Meta:
+        ordering = ["-fecha", "-id_consulta"]
+        indexes = [models.Index(fields=["-fecha", "-id_consulta"]),]
+
     def __str__(self):
         return f"Consulta {self.id_consulta} - {self.fecha} - {self.clave_paciente} - {self.clave_medico}"
 

@@ -127,7 +127,7 @@ def historial_view(request):
 @login_required
 @role_required(["paciente"])
 def paciente_consultas(request):
-    consultas = Consulta.objects.filter(clave_paciente=request.user).select_related('signos_vitales').order_by('-id_consulta')
+    consultas = Consulta.objects.filter(clave_paciente=request.user).select_related('signos_vitales')
 
     paginador = Paginator(consultas, 20)  # Mostrar 10 consultas por páginas
     pagina = request.GET.get('page', 1)
@@ -193,9 +193,9 @@ def medico_consultas(request):
     mostrar_todas = request.GET.get('todas', '0') == '1'  # Leer parámetro 'todas'
     if mostrar_todas:
         # Mostrar primero la consulta con el més reciente
-        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').all().order_by('-id_consulta')
+        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').all()
     else:
-        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').filter(clave_medico=request.user).order_by('-id_consulta')
+        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').filter(clave_medico=request.user)
 
     paginador = Paginator(consultas, 20)  # Mostrar 10 consultas por páginas
     pagina = request.GET.get('page', 1)
