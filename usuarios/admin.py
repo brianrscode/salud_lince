@@ -56,7 +56,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                                     "apellido_materno": row.get("apellido_materno", ""),
                                     "fecha_nacimiento": row.get("fecha_nacimiento", None),
                                     "sexo": row.get("sexo", None),
-                                    "usuario_activo": row.get("usuario_activo", "True") == "True",
+                                    "is_active": row.get("is_active", "True") == "True",
                                     "is_staff": row.get("is_staff", "False") == "True",
                                     "carrera_o_puesto_id": row.get("carrera_o_puesto", None),
                                     "role_id": row.get("role", None),
