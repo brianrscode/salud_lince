@@ -95,7 +95,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', blank=True, null=True)
     sexos = [('M', 'Masculino'), ('F', 'Femenino')]
     sexo = models.CharField('Sexo', max_length=1, choices=sexos, blank=True, null=True)
-    usuario_activo = models.BooleanField(default=True)
+    is_active = models.BooleanField("Usuario activo", default=True)
     is_staff = models.BooleanField(default=False)
 
     carrera_o_puesto = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True)
