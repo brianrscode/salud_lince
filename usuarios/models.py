@@ -75,6 +75,10 @@ class Role(models.Model):
         return self.nombre_rol
 
 
+def rol_por_defecto():
+    return Role.objects.filter(nombre_rol='paciente').first()
+
+
 class Usuario(AbstractBaseUser, PermissionsMixin):
     clave = models.CharField('clave', max_length=9, primary_key=True, unique=True,
                              validators=[RegexValidator(
@@ -99,7 +103,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
 
     carrera_o_puesto = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True)
-    role = models.ForeignKey(Role, on_delete=models.SET_NULL, default=0, null=True)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, default=rol_por_defecto)
 
     objects = UsuarioManager()
 
