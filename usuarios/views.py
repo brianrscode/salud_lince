@@ -60,54 +60,49 @@ def logout_view(request):
 @login_required
 @role_required(["medico"])
 def medico_dashboard(request):
-    usuarios = Usuario.objects.filter(role__nombre_rol='paciente')  # Filtrar solo pacientes
-    cantidad_usuarios = usuarios.count()
-    cant_hombres = usuarios.filter(sexo='M').count()  # Cantidad de hombres
-    cant_mujeres = usuarios.filter(sexo='F').count()  # Cantidad de mujeres
-    genero_data = usuarios.values('sexo').annotate(total=Count('sexo'))  # Cantidad de usuarios por género
-    genero_fig = px.pie(  # Gráfica de pastel
-        values=[g['total'] for g in genero_data],  # Cantidad de usuarios por género
-        names=['Masculino' if g['sexo'] == 'M' else 'Femenino' for g in genero_data],  # Nombres de género
-        title="Distribución de Género"
-    )
+    usuarios = Usuario.objects.filter(role__nombre_rol='paciente', is_active=True)  # Filtrar solo pacientes
 
-    # Pacientes con hábitos
-    historiales = HistorialMedico.objects.all()  # Todos los historiales médicos
+    ####### Gráfica para hábitos de los pacientes #######
+    historiales = HistorialMedico.objects.filter(paciente__is_active=True)  # Todos los historiales médicos activos
     habitos = {  # Filtro de los hábitos de los pacientes
         'Fuman': historiales.filter(usa_cigarro=True).count(),  # Cantidad de pacientes que fuman
         'Ingiere Alcohol': historiales.filter(ingiere_alcohol=True).count(),  # Cantidad de pacientes que ingieren alcohol
         'Usa Drogas': historiales.filter(usa_drogas=True).count(),  # Cantidad de pacientes que usan drogas
         'Embarazadas': historiales.filter(es_embarazada=True).count(),  # Cantidad de pacientes embarazadas
+        'Usa Lentes': historiales.filter(usa_lentes=True).count(),  # Cantidad de pacientes que usan lentes
+        'vida sexual activa': historiales.filter(vida_sexual_activa=True).count(),  # Cantidad de pacientes que tienen vida sexual activa
+        'Usa Métodos anticonceptivos': historiales.filter(usa_metodos_anticonceptivos=True).count(),  # Cantidad de pacientes que usan metodos anticonceptivos
     }
-    # Gráfica de barras
     habitos_fig = go.Figure([go.Bar(x=list(habitos.keys()), y=list(habitos.values()), marker_color='indianred')])
-    # Personalización de gráfica
     habitos_fig.update_layout(title_text="Pacientes con Hábitos", xaxis_title="Hábito", yaxis_title="Cantidad")
 
-    # Tipos de consultas
-    # Cantidad de pacientes por tipo de consulta
-    consultas = Consulta.objects.values('tipo_de_consulta').annotate(total=Count('tipo_de_consulta'))
+    ####### Gráfica para tipos de consultas #######
+    consultas = Consulta.objects.values('motivo_de_consulta').annotate(total=Count('motivo_de_consulta'))
     consultas_fig = px.pie(  # Gráfica de pastel
         values=[c['total'] for c in consultas],  # Cantidad de pacientes por tipo de consulta
-        names=['Médica' if c['tipo_de_consulta'] == 'M' else 'Asesoría' for c in consultas],  # Nombres de tipos de consulta
+        names=['Médica' if c['motivo_de_consulta'] == 'M' else 'Asesoría' for c in consultas],  # Nombres de tipos de consulta
         title="Distribución de Tipos de Consultas"
     )
 
-    # Gráfica de barras de cantidad de pacientes por area
+    ####### Gráfica de barras de cantidad de pacientes por area #######
     carrera_o_puesto = Usuario.objects.values('carrera_o_puesto_id').annotate(total=Count('carrera_o_puesto_id'))
     areas_fig = go.Figure([go.Bar(x=[c['carrera_o_puesto_id'] for c in carrera_o_puesto], y=[c['total'] for c in carrera_o_puesto], marker_color='indianred')])
     areas_fig.update_layout(title_text="Distribución de Areas", xaxis_title="Area", yaxis_title="Cantidad")
 
+    ####### Gráfica de barras de cantidad de pacientes por tipo de consulta #######
+    # Traer número de pacientes por area y tipo de consulta
+    datos = Consulta.objects.values("clave_paciente__carrera_o_puesto_id", "motivo_de_consulta").annotate(total=Count("clave_paciente__carrera_o_puesto_id"))
+
+    # for dato in datos:
+    #     print(dato)
+
     # Pasar gráficas como HTML al template
     return render(request, 'medico_dashboard.html', {
-        'genero_graph': genero_fig.to_html(full_html=False),  # Gráfica de pastel
-        'cantidad_usuarios': cantidad_usuarios,
-        'cant_hombres': cant_hombres,
-        'cant_mujeres': cant_mujeres,
         'habitos_graph': habitos_fig.to_html(full_html=False),  # Gráfica de barras
         'consultas_graph': consultas_fig.to_html(full_html=False),  # Gráfica de pastel
         'areas_graph': areas_fig.to_html(full_html=False),
-        'pacientes_areas': areas_fig.to_html(full_html=False),
+        # 'fig': fig.to_html(full_html=False),
+        # 'datos': datos,
     })
 
 @login_required

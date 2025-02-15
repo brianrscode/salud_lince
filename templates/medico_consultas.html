@@ -56,7 +56,7 @@
             data-padecimiento="{{ consulta.padecimiento_actual }}"
             data-tratamiento-no-farmacologico="{{ consulta.tratamiento_no_farmacologico }}"
             data-tratamiento-farmacologico="{{ consulta.tratamiento_farmacologico_recetado }}"
-            data-tipo-consulta="{{ consulta.tipo_de_consulta }}"
+            data-motivo-consulta="{{ consulta.motivo_de_consulta }}"
             data-clave-paciente="{{ consulta.clave_paciente }}"
             data-clave-medico="{{ consulta.clave_medico }}"
             data-signos='{
@@ -88,7 +88,7 @@
                 <p><strong>Padecimiento Actual:</strong> <span id="detallePadecimiento"></span></p>
                 <p><strong>Tratamiento No Farmacológico:</strong> <span id="detalleTratamientoNoFarmacologico"></span></p>
                 <p><strong>Tratamiento Farmacológico:</strong> <span id="detalleTratamientoFarmacologico"></span></p>
-                <p><strong>Tipo de Consulta:</strong> <span id="detalleTipoConsulta"></span></p>
+                <p><strong>Motivo de la Consulta:</strong> <span id="detalleMotivoConsulta"></span></p>
                 <p><strong>Clave Paciente:</strong> <span id="detalleClavePaciente"></span></p>
                 <p><strong>Clave Médico:</strong> <span id="detalleClaveMedico"></span></p>
                 <h5>Signos Vitales</h5>
@@ -150,7 +150,7 @@
             document.getElementById('detallePadecimiento').textContent = data.padecimiento;
             document.getElementById('detalleTratamientoNoFarmacologico').textContent = data.tratamientoNoFarmacologico;
             document.getElementById('detalleTratamientoFarmacologico').textContent = data.tratamientoFarmacologico;
-            document.getElementById('detalleTipoConsulta').textContent = data.tipoConsulta;
+            document.getElementById('detalleMotivoConsulta').textContent = data.motivoConsulta;
             document.getElementById('detalleClavePaciente').textContent = data.clavePaciente;
             document.getElementById('detalleClaveMedico').textContent = data.claveMedico;
 

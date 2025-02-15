@@ -3,14 +3,20 @@ from usuarios.models import Usuario
 from django.core.validators import RegexValidator
 
 
+class MotivoConsulta(models.Model):
+    motivo = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.motivo
+
+
 class Consulta(models.Model):
     id_consulta = models.BigAutoField(primary_key=True)
     fecha = models.DateTimeField(auto_now_add=True)
     padecimiento_actual = models.TextField()
     tratamiento_no_farmacologico = models.TextField('Tratamiento no farmacológico', max_length=100, blank=True, null=True)
     tratamiento_farmacologico_recetado = models.CharField('Tratamiento farmacológico recetado', max_length=100, blank=True, null=True)
-    CHOICES = [("M", "Médica"), ("A", "Asesoría")]
-    tipo_de_consulta = models.CharField('Tipo de consulta', max_length=1, choices=CHOICES, default="M")
+    motivo_de_consulta = models.ForeignKey(MotivoConsulta, on_delete=models.SET_NULL, null=True, default=0)
     clave_paciente = models.ForeignKey(
         Usuario,
         on_delete=models.CASCADE,

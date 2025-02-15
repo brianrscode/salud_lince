@@ -9,14 +9,14 @@ class ConsultaForm(forms.ModelForm):
             'padecimiento_actual',
             'tratamiento_no_farmacologico',
             'tratamiento_farmacologico_recetado',
-            'tipo_de_consulta',
+            'motivo_de_consulta',
             'clave_paciente'
         ]
         widgets = {
             'padecimiento_actual': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
             'tratamiento_no_farmacologico': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
             'tratamiento_farmacologico_recetado': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
-            'tipo_de_consulta': forms.Select(attrs={'class': 'form-select'}),
+            'motivo_de_consulta ': forms.Select(attrs={'class': 'form-select'}),
             'clave_paciente': forms.Select(attrs={'class': 'form-select'}),
         }
 
