@@ -136,7 +136,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
 
 class HistorialMedico(models.Model):
-    id_historial = models.CharField('Id Historial', max_length=9, primary_key=True, unique=True)
+    id_historial = models.CharField('Id Historial', max_length=9, primary_key=True, unique=True, editable=False)
     enfermedades_cronicas = models.CharField('Enfermedades crónicas', max_length=150, blank=True, null=True)
     alergias = models.CharField('Alergias', max_length=150, blank=True, null=True)
     medicamento_usado = models.CharField('Medicamento usado', max_length=150, blank=True, null=True)
@@ -144,6 +144,9 @@ class HistorialMedico(models.Model):
     usa_drogas = models.BooleanField(default=False)
     usa_cigarro = models.BooleanField(default=False)
     ingiere_alcohol = models.BooleanField(default=False)
+    usa_lentes = models.BooleanField(default=False)
+    vida_sexual_activa = models.BooleanField(default=False)
+    usa_metodos_anticonceptivos = models.BooleanField("Usa métodos anticonceptivos", default=False)
 
     paciente = models.OneToOneField('Usuario', on_delete=models.CASCADE, related_name='historial', null=True, editable=False)
 

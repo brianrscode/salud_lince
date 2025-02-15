@@ -63,6 +63,24 @@
                                 <span>{{ historial.ingiere_alcohol|yesno:"Sí,No" }}</span>
                             </div>
                         </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <strong>¿Usa lentes?</strong>
+                                <span>{{ historial.usa_lentes|yesno:"Sí,No" }}</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <strong>¿Tiene vida sexual activa?</strong>
+                                <span>{{ historial.vida_sexual_activa |yesno:"Sí,No" }}</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-column">
+                                <strong>¿Usa un método anticonceptivo?</strong>
+                                <span>{{ historial.usa_metodos_anticonceptivos |yesno:"Sí,No" }}</span>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

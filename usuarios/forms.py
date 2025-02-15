@@ -5,15 +5,7 @@ import re
 class HistorialMedicoForm(forms.ModelForm):
     class Meta:
         model = HistorialMedico
-        fields = [
-            'enfermedades_cronicas',
-            'alergias',
-            'medicamento_usado',
-            'es_embarazada',
-            'usa_drogas',
-            'usa_cigarro',
-            'ingiere_alcohol'
-        ]
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         usuario = kwargs.get('instance').paciente  # Obtener el paciente asociado al historial
