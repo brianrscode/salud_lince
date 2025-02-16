@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .decorators import role_required
-from consultas.models import Consulta, SignosVitales
+from consultas.models import Consulta, CategoriaPadecimiento, SignosVitales
 from .models import HistorialMedico, Usuario, Area
 from django.db.models import Count
 from .forms import HistorialMedicoForm
@@ -77,10 +77,10 @@ def medico_dashboard(request):
     habitos_fig.update_layout(title_text="Pacientes con Hábitos", xaxis_title="Hábito", yaxis_title="Cantidad")
 
     ####### Gráfica para tipos de consultas #######
-    consultas = Consulta.objects.values('motivo_de_consulta').annotate(total=Count('motivo_de_consulta'))
+    consultas = Consulta.objects.values('categoria_de_padecimiento').annotate(total=Count('categoria_de_padecimiento'))
     consultas_fig = px.pie(  # Gráfica de pastel
         values=[c['total'] for c in consultas],  # Cantidad de pacientes por tipo de consulta
-        names=['Médica' if c['motivo_de_consulta'] == 'M' else 'Asesoría' for c in consultas],  # Nombres de tipos de consulta
+        names=[c['categoria_de_padecimiento'] for c in consultas],  # Nombres de tipos de consulta
         title="Distribución de Tipos de Consultas"
     )
 
@@ -91,7 +91,7 @@ def medico_dashboard(request):
 
     ####### Gráfica de barras de cantidad de pacientes por tipo de consulta #######
     # Traer número de pacientes por area y tipo de consulta
-    datos = Consulta.objects.values("clave_paciente__carrera_o_puesto_id", "motivo_de_consulta").annotate(total=Count("clave_paciente__carrera_o_puesto_id"))
+    datos = Consulta.objects.values("clave_paciente__carrera_o_puesto_id", "categoria_de_padecimiento").annotate(total=Count("clave_paciente__carrera_o_puesto_id"))
 
     # for dato in datos:
     #     print(dato)

@@ -3,9 +3,9 @@ from .models import Consulta, SignosVitales
 
 
 class ConsultaAdmin(admin.ModelAdmin):
-    list_display = ('id_consulta', 'fecha', 'padecimiento_actual', 'motivo_de_consulta', 'clave_paciente', 'clave_medico')
+    list_display = ('id_consulta', 'fecha', 'padecimiento_actual', 'categoria_de_padecimiento', 'clave_paciente', 'clave_medico')
     ordering = ('id_consulta',)
-    list_filter = ('fecha', 'motivo_de_consulta', 'clave_paciente', 'clave_medico')
+    list_filter = ('fecha', 'categoria_de_padecimiento', 'clave_paciente', 'clave_medico')
 
 
 class SignosVitalesAdmin(admin.ModelAdmin):

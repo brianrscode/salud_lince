@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
-from .models import Consulta, SignosVitales, MotivoConsulta
+from .models import Consulta, SignosVitales, CategoriaPadecimiento
 
 
 # @receiver(post_save, sender=Consulta)
@@ -12,7 +12,7 @@ from .models import Consulta, SignosVitales, MotivoConsulta
 
 @receiver(post_migrate)
 def crear_motivos_de_consultas(sender, **kwargs):
-    motivos = [
+    padecimientos = [
         "IRAS",
         "GASTROINTESTINALES",
         "CONTROL PARENTAL",
@@ -32,5 +32,5 @@ def crear_motivos_de_consultas(sender, **kwargs):
         "ASESORÍA",
     ]
 
-    for motivoC in motivos:
-        MotivoConsulta.objects.get_or_create(motivo=motivoC)
+    for padecimientoC in padecimientos:
+        CategoriaPadecimiento.objects.get_or_create(padecimiento=padecimientoC)
