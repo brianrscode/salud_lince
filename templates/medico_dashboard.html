@@ -10,6 +10,12 @@
 {% block content %}
 
 <h2>Estadísticas de Pacientes</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Distribución de carreras de pacientes</h5>
+            <div>{{ fig|safe}}</div>
+        </div>
+    </div>
 
     {% comment %} Gráfica de Hábitos {% endcomment %}
     <div class="card mb-4">

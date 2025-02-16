@@ -11,6 +11,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import LoginForm
 import plotly.express as px
 import plotly.graph_objects as go
+import pandas as pd
 import re
 
 
@@ -78,9 +79,17 @@ def medico_dashboard(request):
 
     ####### Gráfica para tipos de consultas #######
     consultas = Consulta.objects.values('categoria_de_padecimiento').annotate(total=Count('categoria_de_padecimiento'))
-    consultas_fig = px.pie(  # Gráfica de pastel
-        values=[c['total'] for c in consultas],  # Cantidad de pacientes por tipo de consulta
-        names=[c['categoria_de_padecimiento'] for c in consultas],  # Nombres de tipos de consulta
+    padecimientos = CategoriaPadecimiento.objects.filter(id_padecimiento__in=[c['categoria_de_padecimiento'] for c in consultas])
+    padecimientos_dict = {p.id_padecimiento: p.padecimiento for p in CategoriaPadecimiento.objects.all()}
+
+    # consultas_fig = px.pie(  # Gráfica de pastel
+    #     values=[c['total'] for c in consultas],  # Cantidad de pacientes por tipo de consulta
+    #     names=[p.padecimiento for p in padecimientos],  # Nombres de tipos de consulta
+    #     title="Distribución de Tipos de Consultas"
+    # )
+    consultas_fig = px.bar(
+        x=[p.padecimiento for p in padecimientos],  # Nombres de tipos de consulta
+        y=[c['total'] for c in consultas],  # Cantidad de pacientes por tipo de consulta
         title="Distribución de Tipos de Consultas"
     )
 
@@ -91,17 +100,32 @@ def medico_dashboard(request):
 
     ####### Gráfica de barras de cantidad de pacientes por tipo de consulta #######
     # Traer número de pacientes por area y tipo de consulta
+    # datos = Consulta.objects.values("clave_paciente__carrera_o_puesto_id", "categoria_de_padecimiento").annotate(total=Count("clave_paciente__carrera_o_puesto_id"))
     datos = Consulta.objects.values("clave_paciente__carrera_o_puesto_id", "categoria_de_padecimiento").annotate(total=Count("clave_paciente__carrera_o_puesto_id"))
 
-    # for dato in datos:
-    #     print(dato)
+    df = pd.DataFrame(datos)
+    df["categoria_de_padecimiento"] = df["categoria_de_padecimiento"].map(padecimientos_dict)
+
+    padecimientos_fig = px.bar(
+        df,
+        x="categoria_de_padecimiento",
+        y="total",
+        color="clave_paciente__carrera_o_puesto_id",
+        barmode="group",
+        title="Distribución de Pacientes por Área y Tipo de Consulta"
+    )
+
+    # df_total = df.groupby("categoria_de_padecimiento")["total"].sum().reset_index()
+
+    # padecimientos_fig = px.bar(df_total, x="categoria_de_padecimiento", y="total",
+    #                         title="Total de Pacientes por Tipo de Padecimiento")
 
     # Pasar gráficas como HTML al template
     return render(request, 'medico_dashboard.html', {
         'habitos_graph': habitos_fig.to_html(full_html=False),  # Gráfica de barras
         'consultas_graph': consultas_fig.to_html(full_html=False),  # Gráfica de pastel
         'areas_graph': areas_fig.to_html(full_html=False),
-        # 'fig': fig.to_html(full_html=False),
+        'fig': padecimientos_fig.to_html(full_html=False),
         # 'datos': datos,
     })
 
