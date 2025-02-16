@@ -61,8 +61,6 @@ def logout_view(request):
 @login_required
 @role_required(["medico"])
 def medico_dashboard(request):
-    # usuarios = Usuario.objects.filter(role__nombre_rol='paciente', is_active=True)  # Filtrar solo pacientes
-
     ##################### Gráfica para hábitos de los pacientes #####################
     historiales = HistorialMedico.objects.filter(paciente__is_active=True)  # Todos los historiales médicos activos
     habitos = {  # Filtro de los hábitos de los pacientes
@@ -79,11 +77,10 @@ def medico_dashboard(request):
 
     #####################Gráfica para tipos de consultas #####################
     consultas = Consulta.objects.values('categoria_de_padecimiento').annotate(total=Count('categoria_de_padecimiento'))
-    padecimientos = CategoriaPadecimiento.objects.filter(id_padecimiento__in=[c['categoria_de_padecimiento'] for c in consultas])
     padecimientos_dict = {p.id_padecimiento: p.padecimiento for p in CategoriaPadecimiento.objects.all()}
 
     consultas_fig = px.bar(
-        x=[p.padecimiento for p in padecimientos],  # Nombres de tipos de consulta
+        x=[padecimientos_dict.get(c['categoria_de_padecimiento'], "OTROS") for c in consultas],  # Nombres de tipos de consulta
         y=[c['total'] for c in consultas],  # Cantidad de pacientes por tipo de consulta
         title="Distribución de Tipos de Consultas"
     )
@@ -118,7 +115,6 @@ def medico_dashboard(request):
         'consultas_graph': consultas_fig.to_html(full_html=False),  # Gráfica de pastel
         'areas_graph': areas_fig.to_html(full_html=False),
         'padecimientos_graph': padecimientos_fig.to_html(full_html=False),
-        # 'datos': datos,
     })
 
 @login_required
@@ -229,9 +225,9 @@ def medico_historiales(request):
     query = request.GET.get('search', '')
     # Si hay una consulta, filtrar los historiales de acuerdo a la consulta
     if query:
-        historiales = HistorialMedico.objects.filter(id_historial__icontains=query).order_by('id_historial')
+        historiales = HistorialMedico.objects.filter(id_historial__icontains=query, paciente__role__nombre_rol='paciente', paciente__is_active=True).order_by('id_historial')
     else:
-        historiales = HistorialMedico.objects.all().order_by('id_historial')
+        historiales = HistorialMedico.objects.filter(paciente__role__nombre_rol='paciente', paciente__is_active=True).order_by('id_historial')
 
     paginador = Paginator(historiales, 10)  # Mostrar 10 consultas por páginas
     pagina = request.GET.get('page', 1)
