@@ -63,7 +63,7 @@ def logout_view(request):
 def medico_dashboard(request):
     # usuarios = Usuario.objects.filter(role__nombre_rol='paciente', is_active=True)  # Filtrar solo pacientes
 
-    ####### Gráfica para hábitos de los pacientes #######
+    ##################### Gráfica para hábitos de los pacientes #####################
     historiales = HistorialMedico.objects.filter(paciente__is_active=True)  # Todos los historiales médicos activos
     habitos = {  # Filtro de los hábitos de los pacientes
         'Fuman': historiales.filter(usa_cigarro=True).count(),  # Cantidad de pacientes que fuman
@@ -77,7 +77,7 @@ def medico_dashboard(request):
     habitos_fig = go.Figure([go.Bar(x=list(habitos.keys()), y=list(habitos.values()), marker_color='indianred')])
     habitos_fig.update_layout(title_text="Pacientes con Hábitos", xaxis_title="Hábito", yaxis_title="Cantidad")
 
-    ####### Gráfica para tipos de consultas #######
+    #####################Gráfica para tipos de consultas #####################
     consultas = Consulta.objects.values('categoria_de_padecimiento').annotate(total=Count('categoria_de_padecimiento'))
     padecimientos = CategoriaPadecimiento.objects.filter(id_padecimiento__in=[c['categoria_de_padecimiento'] for c in consultas])
     padecimientos_dict = {p.id_padecimiento: p.padecimiento for p in CategoriaPadecimiento.objects.all()}
@@ -88,14 +88,13 @@ def medico_dashboard(request):
         title="Distribución de Tipos de Consultas"
     )
 
-    ####### Gráfica de barras de cantidad de pacientes por area #######
+    ##################### Gráfica de barras de cantidad de pacientes por area #####################
     carrera_o_puesto = Usuario.objects.values('carrera_o_puesto_id').annotate(total=Count('carrera_o_puesto_id'))
     areas_fig = go.Figure([go.Bar(x=[c['carrera_o_puesto_id'] for c in carrera_o_puesto], y=[c['total'] for c in carrera_o_puesto], marker_color='indianred')])
     areas_fig.update_layout(title_text="Distribución de Areas", xaxis_title="Area", yaxis_title="Cantidad")
 
-    ####### Gráfica de barras de cantidad de pacientes por tipo de consulta #######
+    ##################### Gráfica de barras de cantidad de pacientes categoría de padecimiento #####################
     datos = Consulta.objects.values("clave_paciente__carrera_o_puesto_id", "categoria_de_padecimiento").annotate(total=Count("clave_paciente__carrera_o_puesto_id"))
-
     df = pd.DataFrame(datos)
     df["categoria_de_padecimiento"] = df["categoria_de_padecimiento"].map(padecimientos_dict)
     labels = {
@@ -112,16 +111,13 @@ def medico_dashboard(request):
         title="Distribución de Pacientes por Área y Tipo de Consulta",
         labels=labels
     )
-    # df_total = df.groupby("categoria_de_padecimiento")["total"].sum().reset_index()
-    # padecimientos_fig = px.bar(df_total, x="categoria_de_padecimiento", y="total",
-    #                         title="Total de Pacientes por Tipo de Padecimiento")
 
 
     return render(request, 'medico_dashboard.html', {
         'habitos_graph': habitos_fig.to_html(full_html=False),  # Gráfica de barras
         'consultas_graph': consultas_fig.to_html(full_html=False),  # Gráfica de pastel
         'areas_graph': areas_fig.to_html(full_html=False),
-        'fig': padecimientos_fig.to_html(full_html=False),
+        'padecimientos_graph': padecimientos_fig.to_html(full_html=False),
         # 'datos': datos,
     })
 
