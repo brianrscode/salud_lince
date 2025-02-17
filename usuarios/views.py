@@ -8,6 +8,7 @@ from .models import HistorialMedico, Usuario, Area
 from django.db.models import Count
 from .forms import HistorialMedicoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django_ratelimit.decorators import ratelimit
 from .forms import LoginForm
 import plotly.express as px
 import plotly.graph_objects as go
@@ -15,6 +16,8 @@ import pandas as pd
 import re
 
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
+@ratelimit(key='ip', rate='5/m', method='GET', block=True)
 def login_view(request):
     if request.user.is_authenticated:
         if request.user.role.nombre_rol == "medico":
