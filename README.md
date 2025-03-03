@@ -11,13 +11,14 @@ Este proyecto tiene como objetivo crear un sistema medico web que facilite la re
 
 ### Librerías
 - asgiref==3.8.1
-- Django==4.1.13
+- Django==4.2.7
+- django-admin-extra-buttons==1.6.0
 - django-environ==0.11.2
+- django-ratelimit==4.1.0
 - numpy==2.1.3
 - packaging==24.2
 - pandas==2.2.3
 - plotly==5.24.1
-- PyMySQL==1.1.1
 - python-dateutil==2.9.0.post0
 - pytz==2024.2
 - six==1.16.0
@@ -80,3 +81,23 @@ python manage.py migrate
 ```bash
 python manage.py runserver
 ```
+
+## Vistas del sistema
+<table>
+    <tr>
+        <td>
+            <img src="imgs_proyecto/login.png" width=800>
+        </td>
+        <td>
+            <img src="imgs_proyecto/dashboard_paciente.png" width=800>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="imgs_proyecto/historial_paciente.png" width=800>
+        </td>
+        <td>
+            <img src="imgs_proyecto/consultas_medico.png" width=800>
+        </td>
+    </tr>
+</table>
