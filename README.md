@@ -4,11 +4,6 @@
 ## Descripción
 Este proyecto tiene como objetivo crear un sistema medico web que facilite la realización de consultas médicas
 
-
-## Requisitos
-### Aplicaciones
-- XAMPP
-
 ### Librerías
 - asgiref==3.8.1
 - Django==4.2.7
