@@ -15,7 +15,7 @@ def crear_motivos_de_consultas(sender, **kwargs):
     padecimientos = [
         "IRAS",
         "GASTROINTESTINALES",
-        "CONTROL PARENTAL",
+        "CONTROL PRENATAL",
         "CEFALEA",
         "QUEMADURAS",
         "LESIONES/HERIDAS",
