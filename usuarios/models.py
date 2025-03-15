@@ -13,6 +13,10 @@ class UsuarioManager(BaseUserManager):
         # if not password or len(password) < 8:
         #     raise ValueError('La contraseña debe tener al menos 8 caracteres')
 
+        # Asignar el rol por defecto si no se proporciona uno
+        if role is None:
+            role = Role.objects.get(nombre_rol='paciente')
+
         # Buscar role y carrera
         try:
             role_obj = Role.objects.get(nombre_rol=role)
@@ -99,7 +103,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
 
     carrera_o_puesto = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True)
-    role = models.ForeignKey(Role, on_delete=models.SET_NULL, default=0, null=True)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
 
     objects = UsuarioManager()
 
@@ -123,6 +127,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         """ Sobrescribe el método save() para garantizar que la contraseña se guarde cifrada. """
         if self.password and not self.password.startswith('pbkdf2_sha256$'):
             self.password = make_password(self.password)
+
+        if self.role is None:
+            self.role = Role.objects.get(nombre_rol='paciente')
+
         super().save(*args, **kwargs)
 
     def __str__(self):
