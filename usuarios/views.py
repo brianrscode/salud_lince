@@ -228,9 +228,16 @@ def medico_historiales(request):
     query = request.GET.get('search', '')
     # Si hay una consulta, filtrar los historiales de acuerdo a la consulta
     if query:
-        historiales = HistorialMedico.objects.filter(id_historial__icontains=query, paciente__role__nombre_rol='paciente', paciente__is_active=True).order_by('id_historial')
+        historiales = HistorialMedico.objects.filter(
+            id_historial__icontains=query,
+            paciente__role__nombre_rol='paciente',
+            paciente__is_active=True
+        ).exclude(paciente__carrera_o_puesto__carrera_o_puesto="Médico").order_by('id_historial')
     else:
-        historiales = HistorialMedico.objects.filter(paciente__role__nombre_rol='paciente', paciente__is_active=True).order_by('id_historial')
+        historiales = HistorialMedico.objects.filter(
+            paciente__role__nombre_rol='paciente',
+            paciente__is_active=True
+        ).exclude(paciente__carrera_o_puesto__carrera_o_puesto="Médico").order_by('id_historial')
 
     paginador = Paginator(historiales, 10)  # Mostrar 10 consultas por páginas
     pagina = request.GET.get('page', 1)

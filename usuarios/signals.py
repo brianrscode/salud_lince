@@ -79,8 +79,8 @@ def asignar_grupo_y_crear_historial(sender, instance, created, **kwargs):
         elif instance.role == Role.objects.get(nombre_rol='paciente'):
             paciente_group = Group.objects.get(name='Paciente')
             instance.groups.add(paciente_group)
-            # Crear el historial médico para el paciente
-            HistorialMedico.objects.create(id_historial=instance.clave, paciente=instance)
+            if instance.carrera_o_puesto and instance.carrera_o_puesto != 'Médico':
+                HistorialMedico.objects.create(id_historial=instance.clave, paciente=instance)
         elif instance.role == Role.objects.get(nombre_rol='admin'):
             admin_group = Group.objects.get(name='Administrador')
             instance.groups.add(admin_group)

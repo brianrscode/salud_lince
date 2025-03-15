@@ -23,7 +23,10 @@ class ConsultaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Filtrar solo pacientes en el queryset
-        self.fields['clave_paciente'].queryset = Usuario.objects.filter(role__nombre_rol='paciente')
+        self.fields['clave_paciente'].queryset = Usuario.objects.filter(
+            role__nombre_rol='paciente',
+            is_active=True
+        ).exclude(paciente__carrera_o_puesto__carrera_o_puesto="Médico")
 
 class SignosVitalesForm(forms.ModelForm):
     class Meta:
