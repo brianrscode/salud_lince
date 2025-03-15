@@ -1,19 +1,22 @@
-from django.shortcuts import render, redirect, get_object_or_404
+import re
+
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .decorators import role_required
-from consultas.models import Consulta, CategoriaPadecimiento, SignosVitales
-from .models import HistorialMedico, Usuario, Area
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
-from .forms import HistorialMedicoForm
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import get_object_or_404, redirect, render
 from django_ratelimit.decorators import ratelimit
-from .forms import LoginForm
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import pandas as pd
-import re
+
+from consultas.models import CategoriaPadecimiento, Consulta, SignosVitales
+
+from .decorators import role_required
+from .forms import HistorialMedicoForm
+from .forms import LoginForm
+from .models import Area, HistorialMedico, Usuario
 
 
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)

@@ -1,8 +1,12 @@
-from django.db import models
-from django.core.validators import RegexValidator
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.validators import RegexValidator
+from django.db import models
 
 
 class UsuarioManager(BaseUserManager):

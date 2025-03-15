@@ -1,10 +1,11 @@
-import pandas as pd
-from django.contrib import admin, messages
-from .models import Usuario, HistorialMedico, Role
-from django.shortcuts import render, redirect
-from django.urls import path, reverse
-from .forms import BulkUserUploadForm
 from admin_extra_buttons.api import ExtraButtonsMixin, button
+from django.contrib import admin, messages
+from django.shortcuts import redirect, render
+from django.urls import path, reverse
+import pandas as pd
+
+from .forms import BulkUserUploadForm
+from .models import HistorialMedico, Role, Usuario
 
 
 class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):

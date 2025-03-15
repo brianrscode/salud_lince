@@ -1,9 +1,11 @@
-from django.db.models.signals import post_migrate, post_save
-from django.dispatch import receiver
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from .models import HistorialMedico, Usuario, Role, Area
+from django.db.models.signals import post_migrate, post_save
+from django.dispatch import receiver
+
 from consultas.models import Consulta
+
+from .models import Area, HistorialMedico, Role, Usuario
 
 
 @receiver(post_migrate)

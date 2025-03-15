@@ -1,6 +1,8 @@
 from django import forms
-from .models import Consulta, SignosVitales
+
 from usuarios.models import Usuario
+
+from .models import Consulta, SignosVitales
 
 class ConsultaForm(forms.ModelForm):
     class Meta:

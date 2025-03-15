@@ -1,6 +1,7 @@
-from django.db import models
-from usuarios.models import Usuario
 from django.core.validators import RegexValidator
+from django.db import models
+
+from usuarios.models import Usuario
 
 
 class CategoriaPadecimiento(models.Model):
