@@ -28,7 +28,7 @@ class ConsultaForm(forms.ModelForm):
         self.fields['clave_paciente'].queryset = Usuario.objects.filter(
             role__nombre_rol='paciente',
             is_active=True
-        ).exclude(paciente__carrera_o_puesto__carrera_o_puesto="Médico")
+        )
 
 class SignosVitalesForm(forms.ModelForm):
     class Meta:
