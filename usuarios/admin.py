@@ -13,6 +13,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     list_display = ('clave', 'nombres', 'role', 'is_staff')  # Lo que mostrará en la tabla
     ordering = ('email',)  # Cambiar 'username' por 'email' o el campo que prefieras ordenar
     list_filter = ('role', 'is_staff')  # Eliminar 'is_active' si no existe en tu modelo
+    search_fields = ('clave', 'email', 'nombres',)
 
     def save_model(self, request, obj, form, change):
         if not change:
@@ -100,6 +101,7 @@ class HistorialAdmin(admin.ModelAdmin):
     list_display = ('id_historial', 'enfermedades_cronicas', 'alergias', 'medicamento_usado', 'es_embarazada', 'usa_drogas', 'usa_cigarro', 'ingiere_alcohol')
     ordering = ('id_historial',)
     list_filter = ('es_embarazada', 'usa_drogas', 'usa_cigarro', 'ingiere_alcohol')
+    search_fields = ('id_historial',)
 
 
 class RoleAdmin(admin.ModelAdmin):

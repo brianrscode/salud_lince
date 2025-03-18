@@ -6,6 +6,7 @@ class ConsultaAdmin(admin.ModelAdmin):
     list_display = ('id_consulta', 'fecha', 'padecimiento_actual', 'categoria_de_padecimiento', 'clave_paciente', 'clave_medico')
     ordering = ('id_consulta',)
     list_filter = ('fecha', 'categoria_de_padecimiento', 'clave_paciente', 'clave_medico')
+    search_fields = ('id_consulta',)
 
 
 class SignosVitalesAdmin(admin.ModelAdmin):
