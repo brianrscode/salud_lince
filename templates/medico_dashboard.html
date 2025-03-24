@@ -9,7 +9,23 @@
 
 {% block content %}
 
-<h2>Estadísticas de Pacientes</h2>
+    <h2>Estadísticas de Pacientes</h2>
+    {% comment %} <p>{{ prueba }}</p> {% endcomment %}
+    {% comment %} Gráfica de Generos {% endcomment %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Genero de pacientes</h5>
+            <div>{{ genero_pastel|safe }}</div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Pacientes con Hábitos</h5>
+            <div>{{ genero_graph|safe }}</div>
+        </div>
+    </div>
+
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">Distribución de carreras de pacientes</h5>

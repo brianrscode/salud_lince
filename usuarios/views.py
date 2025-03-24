@@ -115,10 +115,37 @@ def medico_dashboard(request):
         labels=labels
     )
 
+    ##################### Gráfica de barras con el genero de pacientes a partir de las consultas #####################
+    pacientes_por_consultas = Consulta.objects.values('clave_paciente__clave', 'clave_paciente__sexo', 'clave_paciente__carrera_o_puesto_id')
+    df_genero_por_carrera = pd.DataFrame(pacientes_por_consultas)
+    df_genero_por_carrera = df_genero_por_carrera.drop_duplicates(subset=['clave_paciente__clave'])
+    # print(df_genero_por_carrera)
+    # Filtrar datos duplicados por paciente
+    df_genero_por_carrera = df_genero_por_carrera.drop_duplicates(subset=['clave_paciente__clave'])
+    cantidad_hombres = df_genero_por_carrera[df_genero_por_carrera['clave_paciente__sexo'] == 'M'].count()['clave_paciente__clave']
+    cantidad_mujeres = df_genero_por_carrera[df_genero_por_carrera['clave_paciente__sexo'] == 'F'].count()['clave_paciente__clave']
+    # Contar hombres y mujeres por carrera/puesto
+    df_genero_por_carrera = df_genero_por_carrera.groupby(['clave_paciente__carrera_o_puesto_id', 'clave_paciente__sexo']).size().reset_index(name='cantidad')
+
+    # Crear la gráfica de barras
+    genero_fig = px.bar(
+        df_genero_por_carrera,
+        x="clave_paciente__carrera_o_puesto_id",
+        y="cantidad",
+        color="clave_paciente__sexo",
+        barmode="group",  # Agrupa por género
+        title="Cantidad de Pacientes por Carrera/Puesto y Género",
+        labels={"clave_paciente__carrera_o_puesto_id": "Carrera/Puesto", "cantidad": "Cantidad de Pacientes", "clave_paciente__sexo": "Género"}
+    )
+    ##################### Pastel de genero de pacientes #####################
+    genero_pastel = go.Figure(data=[go.Pie(labels=['Hombres', 'Mujeres'], values=[cantidad_hombres, cantidad_mujeres])])
+    genero_pastel.update_layout(title_text="Distribución de Pacientes por Género", title_x=0.5)
 
     return render(request, 'medico_dashboard.html', {
-        'habitos_graph': habitos_fig.to_html(full_html=False),  # Gráfica de barras
-        'consultas_graph': consultas_fig.to_html(full_html=False),  # Gráfica de pastel
+        'genero_pastel': genero_pastel.to_html(full_html=False),
+        'genero_graph': genero_fig.to_html(full_html=False),
+        'habitos_graph': habitos_fig.to_html(full_html=False),
+        'consultas_graph': consultas_fig.to_html(full_html=False),
         'areas_graph': areas_fig.to_html(full_html=False),
         'padecimientos_graph': padecimientos_fig.to_html(full_html=False),
     })
@@ -129,6 +156,7 @@ def paciente_dashboard(request):
     return render(request, "paciente_dashboard.html")
 
 
+@ratelimit(key='ip', rate='5/m', method='GET', block=True)
 @login_required
 @role_required(["paciente"])
 def historial_view(request):
@@ -137,6 +165,7 @@ def historial_view(request):
     return render(request, "historial_medico.html", {"historial": historial})
 
 
+@ratelimit(key='ip', rate='10/m', method='GET', block=True)
 @login_required
 @role_required(["paciente"])
 def paciente_consultas(request):
@@ -154,7 +183,7 @@ def paciente_consultas(request):
     return render(request, "paciente_consultas.html", {"consultas": consultas})
 
 
-
+@ratelimit(key='ip', rate='5/m', method='GET', block=True)
 @login_required
 @role_required(["paciente", "medico"])
 def usuario_informacion(request):
@@ -162,6 +191,8 @@ def usuario_informacion(request):
     return render(request, "informacion.html", {"informacion": informacion})
 
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
+@ratelimit(key='ip', rate='10/m', method='GET', block=True)
 @login_required
 @role_required(["paciente", "medico"])
 def cambiar_contrasena(request):
@@ -199,7 +230,7 @@ def cambiar_contrasena(request):
 
     return redirect("informacion")
 
-
+@ratelimit(key='ip', rate='10/m', method='GET', block=True)
 @login_required
 @role_required(["medico"])
 def medico_consultas(request):
