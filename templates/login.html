@@ -32,11 +32,11 @@
                     <h2 class="text-center mb-4">Iniciar Sesión</h2>
                     {% comment %} Inputs {% endcomment %}
                     <div class="mb-3">
-                        <label for="{{ form.email.id_for_label }}" class="form-label">Correo:</label>
-                        {{ form.email }}
-                        {% if form.email.errors %}
+                        <label for="{{ form.clave.id_for_label }}" class="form-label">Clave:</label>
+                        {{ form.clave }}
+                        {% if form.clave.errors %}
                             <div class="text-danger">
-                                {{ form.email.errors.0 }}
+                                {{ form.clave.errors.0 }}
                             </div>
                         {% endif %}
                     </div>

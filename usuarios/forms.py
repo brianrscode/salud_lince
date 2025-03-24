@@ -19,9 +19,10 @@ class HistorialMedicoForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(
-        label='Correo',
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Correo', "id": "email"})
+    clave = forms.CharField(
+        label='Clave',
+        max_length=9,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Clave', "id": "clave"})
     )
 
     password = forms.CharField(
@@ -29,13 +30,13 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Contraseña', "id": "password"})
     )
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        token_email = r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6}@itsatlixco\.edu\.mx)|(^admin[0-9]@admin\.com)|^([0-9]{6}@itsatlixco\.edu\.mx)$'
+    def clean_clave(self):
+        clave = self.cleaned_data.get('clave')
+        token_clave = r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6})|^(admin[0-9])|^([0-9]{6})$'
 
-        if not re.match(token_email, email):
-            raise forms.ValidationError("Correo no válido.")
-        return email
+        if not re.match(token_clave, clave):
+            raise forms.ValidationError("Clave no válida.")
+        return clave
 
     def clean_password(self):
         password = self.cleaned_data.get('password')

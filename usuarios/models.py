@@ -111,8 +111,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     objects = UsuarioManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['clave', 'nombres', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento']
+    USERNAME_FIELD = 'clave'
+    REQUIRED_FIELDS = ['email', 'nombres', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento']
 
     # Validador para la contraseña, asegura que tenga al menos 8 caracteres
     password_validator = RegexValidator(
