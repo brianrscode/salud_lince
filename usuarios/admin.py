@@ -10,9 +10,9 @@ from .models import HistorialMedico, Role, Usuario
 
 class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     model = Usuario
-    list_display = ('clave', 'nombres', 'role', 'is_staff')  # Lo que mostrará en la tabla
-    ordering = ('email',)  # Cambiar 'username' por 'email' o el campo que prefieras ordenar
-    list_filter = ('role', 'is_staff')  # Eliminar 'is_active' si no existe en tu modelo
+    list_display = ('clave', 'nombres', 'role', 'is_staff')
+    ordering = ('email',)
+    list_filter = ('role', 'is_staff')
     search_fields = ('clave', 'email', 'nombres',)
 
     def save_model(self, request, obj, form, change):
@@ -21,7 +21,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
     def get_urls(self):
-        """ Sobrescribe el método get_urls() para agregar la URL personalizada."""
+        """Sobrescribe el método get_urls() para agregar la URL personalizada."""
         urls = super().get_urls()
         custom_urls = [
             path("bulk_upload", self.admin_site.admin_view(self.bulk_upload), name="bulk_upload"),
@@ -44,12 +44,12 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                         return redirect("..")
 
                     usuarios_creados = 0
-                    usuarios_omitidos = 0
+                    usuarios_actualizados = 0
                     errores = []
 
                     for index, row in df.iterrows():
                         try:
-                            usuario, creado = Usuario.objects.get_or_create(
+                            usuario, creado = Usuario.objects.update_or_create(
                                 clave=row["clave"],
                                 defaults={
                                     "email": row["email"],
@@ -65,25 +65,25 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                                 }
                             )
 
-                            # Si el usuario ya existía, lo omitimos
-                            if not creado:
-                                usuarios_omitidos += 1
-                                continue
+                            if creado:
+                                # Si es un usuario nuevo, le asignamos contraseña
+                                usuario.set_password(row.get("password", "Default@123"))
+                                usuarios_creados += 1
+                            else:
+                                usuarios_actualizados += 1
 
-                            # Solo establecer la contraseña para usuarios nuevos
-                            usuario.set_password(row.get("password", "Default@123"))
                             usuario.save()
-                            usuarios_creados += 1
 
                         except Exception as e:
                             errores.append(f"Error en la fila {index + 1}: {e}")
 
+                    # Mensajes de éxito o advertencia
                     if errores:
-                        messages.warning(request, f"Usuarios creados: {usuarios_creados}, omitidos: {usuarios_omitidos}. Errores en {len(errores)} filas.")
+                        messages.warning(request, f"Usuarios creados: {usuarios_creados}, actualizados: {usuarios_actualizados}. Errores en {len(errores)} filas.")
                         for error in errores[:5]:  # Mostrar solo los primeros 5 errores
                             messages.error(request, error)
                     else:
-                        messages.success(request, f"Se han creado {usuarios_creados} usuarios. {usuarios_omitidos} ya existían y fueron ignorados.")
+                        messages.success(request, f"Usuarios creados: {usuarios_creados}, actualizados: {usuarios_actualizados}.")
 
                     return redirect("..")
 
