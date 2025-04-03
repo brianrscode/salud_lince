@@ -36,26 +36,29 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                 file = request.FILES["file"]
                 try:
                     if file.name.endswith(".csv"):
-                        df = pd.read_csv(file, dtype=str)
+                        df = pd.read_csv(file, dtype=str)  # Leer archivo como string
                     elif file.name.endswith(".xls") or file.name.endswith(".xlsx"):
-                        df = pd.read_excel(file, dtype=str)
+                        df = pd.read_excel(file, dtype=str)  # Leer archivo como string
                     else:
                         messages.error(request, "Formato de archivo no compatible.")
                         return redirect("..")
 
                     usuarios_creados = 0
                     usuarios_actualizados = 0
-                    errores = []
 
                     for index, row in df.iterrows():
                         try:
+                            # Validar valores vacíos y corregir tipos de datos
+                            apellido_materno = str(row.get("apellido_materno", "")).strip() or None
+                            pas = str(row.get("password", "")).strip() or "P@ssword123"
+
                             usuario, creado = Usuario.objects.update_or_create(
                                 clave=row["clave"],
                                 defaults={
                                     "email": row["email"],
                                     "nombres": row["nombres"],
                                     "apellido_paterno": row["apellido_paterno"],
-                                    "apellido_materno": row.get("apellido_materno", ""),
+                                    "apellido_materno": apellido_materno,
                                     "fecha_nacimiento": row.get("fecha_nacimiento", None),
                                     "sexo": row.get("sexo", None),
                                     "is_active": row.get("is_active", "True") == "True",
@@ -65,9 +68,9 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                                 }
                             )
 
+                            # Si es un usuario nuevo, se le asigna contraseña
                             if creado:
-                                # Si es un usuario nuevo, le asignamos contraseña
-                                usuario.set_password(row.get("password", "Default@123"))
+                                usuario.set_password(pas)
                                 usuarios_creados += 1
                             else:
                                 usuarios_actualizados += 1
@@ -75,16 +78,9 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                             usuario.save()
 
                         except Exception as e:
-                            errores.append(f"Error en la fila {index + 1}: {e}")
+                            messages.error(request, f"Error en la fila {index + 1}: {e}")
 
-                    # Mensajes de éxito o advertencia
-                    if errores:
-                        messages.warning(request, f"Usuarios creados: {usuarios_creados}, actualizados: {usuarios_actualizados}. Errores en {len(errores)} filas.")
-                        for error in errores[:5]:  # Mostrar solo los primeros 5 errores
-                            messages.error(request, error)
-                    else:
-                        messages.success(request, f"Usuarios creados: {usuarios_creados}, actualizados: {usuarios_actualizados}.")
-
+                    messages.success(request, f"Usuarios creados: {usuarios_creados}, actualizados: {usuarios_actualizados}.")
                     return redirect("..")
 
                 except Exception as e:
