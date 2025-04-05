@@ -68,78 +68,121 @@ def logout_view(request):
 @role_required(["medico"])
 def medico_dashboard(request):
     ##################### Gráfica para hábitos de los pacientes #####################
-    historiales = HistorialMedico.objects.filter(paciente__is_active=True)  # Todos los historiales médicos activos
-    habitos = {  # Filtro de los hábitos de los pacientes
-        'Fuman': historiales.filter(usa_cigarro=True).count(),  # Cantidad de pacientes que fuman
-        'Ingiere Alcohol': historiales.filter(ingiere_alcohol=True).count(),  # Cantidad de pacientes que ingieren alcohol
-        'Usa Drogas': historiales.filter(usa_drogas=True).count(),  # Cantidad de pacientes que usan drogas
-        'Embarazadas': historiales.filter(es_embarazada=True).count(),  # Cantidad de pacientes embarazadas
-        'Usa Lentes': historiales.filter(usa_lentes=True).count(),  # Cantidad de pacientes que usan lentes
-        'vida sexual activa': historiales.filter(vida_sexual_activa=True).count(),  # Cantidad de pacientes que tienen vida sexual activa
-        'Usa Métodos anticonceptivos': historiales.filter(usa_metodos_anticonceptivos=True).count(),  # Cantidad de pacientes que usan metodos anticonceptivos
+    historiales = HistorialMedico.objects.filter(paciente__is_active=True)
+    habitos = {
+        'Fuman': historiales.filter(usa_cigarro=True).count(),
+        'Ingiere Alcohol': historiales.filter(ingiere_alcohol=True).count(),
+        'Usa Drogas': historiales.filter(usa_drogas=True).count(),
+        'Embarazadas': historiales.filter(es_embarazada=True).count(),
+        'Usa Lentes': historiales.filter(usa_lentes=True).count(),
+        'vida sexual activa': historiales.filter(vida_sexual_activa=True).count(),
+        'Usa Métodos anticonceptivos': historiales.filter(usa_metodos_anticonceptivos=True).count(),
     }
     habitos_fig = go.Figure([go.Bar(x=list(habitos.keys()), y=list(habitos.values()), marker_color='indianred')])
     habitos_fig.update_layout(title_text="Pacientes con Hábitos", xaxis_title="Hábito", yaxis_title="Cantidad")
 
-    #####################Gráfica para tipos de consultas #####################
+    ##################### Gráfica para tipos de consultas #####################
     consultas = Consulta.objects.values('categoria_de_padecimiento').annotate(total=Count('categoria_de_padecimiento'))
     padecimientos_dict = {p.id_padecimiento: p.padecimiento for p in CategoriaPadecimiento.objects.all()}
 
-    consultas_fig = px.bar(
-        x=[padecimientos_dict.get(c['categoria_de_padecimiento'], "OTROS") for c in consultas],  # Nombres de tipos de consulta
-        y=[c['total'] for c in consultas],  # Cantidad de pacientes por tipo de consulta
-        title="Distribución de Tipos de Consultas"
-    )
+    if consultas:
+        consultas_fig = px.bar(
+            x=[padecimientos_dict.get(c['categoria_de_padecimiento'], "OTROS") for c in consultas],
+            y=[c['total'] for c in consultas],
+            title="Distribución de Tipos de Consultas"
+        )
+    else:
+        consultas_fig = go.Figure()
+        consultas_fig.update_layout(
+            title="Distribución de Tipos de Consultas",
+            annotations=[{
+                'text': "No hay datos de consultas",
+                'xref': "paper", 'yref': "paper",
+                'showarrow': False, 'font': {'size': 18}
+            }]
+        )
 
-    ##################### Gráfica de barras de cantidad de pacientes por area #####################
+    ##################### Gráfica de barras de cantidad de pacientes por área #####################
     carrera_o_puesto = Usuario.objects.values('carrera_o_puesto_id').annotate(total=Count('carrera_o_puesto_id'))
-    areas_fig = go.Figure([go.Bar(x=[c['carrera_o_puesto_id'] for c in carrera_o_puesto], y=[c['total'] for c in carrera_o_puesto], marker_color='indianred')])
-    areas_fig.update_layout(title_text="Distribución de Areas", xaxis_title="Area", yaxis_title="Cantidad")
+    areas_fig = go.Figure([go.Bar(
+        x=[c['carrera_o_puesto_id'] for c in carrera_o_puesto],
+        y=[c['total'] for c in carrera_o_puesto],
+        marker_color='indianred'
+    )])
+    areas_fig.update_layout(title_text="Distribución de Áreas", xaxis_title="Área", yaxis_title="Cantidad")
 
-    ##################### Gráfica de barras de cantidad de pacientes categoría de padecimiento #####################
+    ##################### Gráfica por área y tipo de consulta #####################
     datos = Consulta.objects.values("clave_paciente__carrera_o_puesto_id", "categoria_de_padecimiento").annotate(total=Count("clave_paciente__carrera_o_puesto_id"))
-    df = pd.DataFrame(datos)
-    df["categoria_de_padecimiento"] = df["categoria_de_padecimiento"].map(padecimientos_dict)
-    labels = {
-        "categoria_de_padecimiento": "Categoría de Padecimiento",  # Personaliza el label del eje x
-        "total": "Total de Pacientes",  # Personaliza el label del eje y
-        "clave_paciente__carrera_o_puesto_id": "Área o Puesto"  # Personaliza el label de la leyenda
-    }
-    padecimientos_fig = px.bar(
-        df,
-        x="categoria_de_padecimiento",
-        y="total",
-        color="clave_paciente__carrera_o_puesto_id",
-        barmode="group",
-        title="Distribución de Pacientes por Área y Tipo de Consulta",
-        labels=labels
-    )
+    if datos:
+        df = pd.DataFrame(datos)
+        df["categoria_de_padecimiento"] = df["categoria_de_padecimiento"].map(padecimientos_dict)
+        labels = {
+            "categoria_de_padecimiento": "Categoría de Padecimiento",
+            "total": "Total de Pacientes",
+            "clave_paciente__carrera_o_puesto_id": "Área o Puesto"
+        }
+        padecimientos_fig = px.bar(
+            df,
+            x="categoria_de_padecimiento",
+            y="total",
+            color="clave_paciente__carrera_o_puesto_id",
+            barmode="group",
+            title="Distribución de Pacientes por Área y Tipo de Consulta",
+            labels=labels
+        )
+    else:
+        padecimientos_fig = go.Figure()
+        padecimientos_fig.update_layout(
+            title="Distribución de Pacientes por Área y Tipo de Consulta",
+            annotations=[{
+                'text': "No hay datos suficientes",
+                'xref': "paper", 'yref': "paper",
+                'showarrow': False, 'font': {'size': 18}
+            }]
+        )
 
-    ##################### Gráfica de barras con el genero de pacientes a partir de las consultas #####################
+    ##################### Gráfica de género #####################
     pacientes_por_consultas = Consulta.objects.values('clave_paciente__clave', 'clave_paciente__sexo', 'clave_paciente__carrera_o_puesto_id')
     df_genero_por_carrera = pd.DataFrame(pacientes_por_consultas)
     df_genero_por_carrera = df_genero_por_carrera.drop_duplicates(subset=['clave_paciente__clave'])
-    # print(df_genero_por_carrera)
-    # Filtrar datos duplicados por paciente
-    df_genero_por_carrera = df_genero_por_carrera.drop_duplicates(subset=['clave_paciente__clave'])
-    cantidad_hombres = df_genero_por_carrera[df_genero_por_carrera['clave_paciente__sexo'] == 'M'].count()['clave_paciente__clave']
-    cantidad_mujeres = df_genero_por_carrera[df_genero_por_carrera['clave_paciente__sexo'] == 'F'].count()['clave_paciente__clave']
-    # Contar hombres y mujeres por carrera/puesto
-    df_genero_por_carrera = df_genero_por_carrera.groupby(['clave_paciente__carrera_o_puesto_id', 'clave_paciente__sexo']).size().reset_index(name='cantidad')
 
-    # Crear la gráfica de barras
-    genero_fig = px.bar(
-        df_genero_por_carrera,
-        x="clave_paciente__carrera_o_puesto_id",
-        y="cantidad",
-        color="clave_paciente__sexo",
-        barmode="group",  # Agrupa por género
-        title="Cantidad de Pacientes por Carrera/Puesto y Género",
-        labels={"clave_paciente__carrera_o_puesto_id": "Carrera/Puesto", "cantidad": "Cantidad de Pacientes", "clave_paciente__sexo": "Género"}
-    )
-    ##################### Pastel de genero de pacientes #####################
-    genero_pastel = go.Figure(data=[go.Pie(labels=['Hombres', 'Mujeres'], values=[cantidad_hombres, cantidad_mujeres])])
-    genero_pastel.update_layout(title_text="Distribución de Pacientes por Género", title_x=0.5)
+    if not df_genero_por_carrera.empty:
+        cantidad_hombres = df_genero_por_carrera[df_genero_por_carrera['clave_paciente__sexo'] == 'M'].count()['clave_paciente__clave']
+        cantidad_mujeres = df_genero_por_carrera[df_genero_por_carrera['clave_paciente__sexo'] == 'F'].count()['clave_paciente__clave']
+        df_genero_por_carrera = df_genero_por_carrera.groupby(['clave_paciente__carrera_o_puesto_id', 'clave_paciente__sexo']).size().reset_index(name='cantidad')
+
+        genero_fig = px.bar(
+            df_genero_por_carrera,
+            x="clave_paciente__carrera_o_puesto_id",
+            y="cantidad",
+            color="clave_paciente__sexo",
+            barmode="group",
+            title="Cantidad de Pacientes por Carrera/Puesto y Género",
+            labels={"clave_paciente__carrera_o_puesto_id": "Carrera/Puesto", "cantidad": "Cantidad de Pacientes", "clave_paciente__sexo": "Género"}
+        )
+
+        genero_pastel = go.Figure(data=[go.Pie(labels=['Hombres', 'Mujeres'], values=[cantidad_hombres, cantidad_mujeres])])
+        genero_pastel.update_layout(title_text="Distribución de Pacientes por Género", title_x=0.5)
+    else:
+        genero_fig = go.Figure()
+        genero_fig.update_layout(
+            title="Cantidad de Pacientes por Carrera/Puesto y Género",
+            annotations=[{
+                'text': "No hay datos de género",
+                'xref': "paper", 'yref': "paper",
+                'showarrow': False, 'font': {'size': 18}
+            }]
+        )
+
+        genero_pastel = go.Figure()
+        genero_pastel.update_layout(
+            title="Distribución de Pacientes por Género",
+            annotations=[{
+                'text': "No hay datos disponibles",
+                'xref': "paper", 'yref': "paper",
+                'showarrow': False, 'font': {'size': 18}
+            }]
+        )
 
     return render(request, 'medico_dashboard.html', {
         'genero_pastel': genero_pastel.to_html(full_html=False),
@@ -149,6 +192,7 @@ def medico_dashboard(request):
         'areas_graph': areas_fig.to_html(full_html=False),
         'padecimientos_graph': padecimientos_fig.to_html(full_html=False),
     })
+
 
 @login_required
 @role_required(["paciente"])
