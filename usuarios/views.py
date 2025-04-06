@@ -22,6 +22,15 @@ from .models import Area, HistorialMedico, Usuario
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)
 @ratelimit(key='ip', rate='5/m', method='GET', block=True)
 def login_view(request):
+    """
+    Vista para iniciar sesión de usuarios según su rol.
+
+    Si el usuario ya está autenticado, lo redirige a su panel correspondiente.
+    Si no, procesa el formulario de inicio de sesión (LoginForm).
+
+    Returns:
+        HttpResponse: Redirección al panel de usuario correspondiente o renderizado del formulario de login.
+    """
     if request.user.is_authenticated:
         if request.user.role.nombre_rol == "medico":
             return redirect("medico_dashboard")  # Nombre de la vista para médicos
@@ -145,6 +154,7 @@ def medico_dashboard(request):
                 'showarrow': False, 'font': {'size': 18}
             }]
         )
+
 
     ##################### Gráfica de género #####################
     pacientes_por_consultas = Consulta.objects.values('clave_paciente__clave', 'clave_paciente__sexo', 'clave_paciente__carrera_o_puesto_id')
