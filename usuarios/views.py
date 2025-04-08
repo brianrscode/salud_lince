@@ -65,7 +65,12 @@ def login_view(request):
 
 
 def logout_view(request):
-    # if request.user.is_authenticated:
+    """
+    vista desloguiar al usuario 
+
+    Returns: 
+        HttpResponse: respuesta http dirigida a la vista de inicio de sesión
+    """
     logout(request)
     return redirect("login")
 
