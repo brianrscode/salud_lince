@@ -81,6 +81,20 @@ def logout_view(request):
 @login_required
 @role_required(["medico"])
 def medico_dashboard(request):
+    """
+    Vista del panel principal para los médicos.
+
+    Genera dos gráficas:
+    1. Distribución de hábitos en los pacientes activos.
+    2. Distribución de tipos de consultas realizadas.
+
+    Requiere:
+        - Que el usuario esté autenticado.
+        - Que el usuario tenga el rol de 'medico'.
+
+    Returns:
+        HttpResponse: Renderizado de la plantilla con las gráficas.
+    """
     ##################### Gráfica para hábitos de los pacientes #####################
     historiales = HistorialMedico.objects.filter(paciente__is_active=True)
     habitos = {
@@ -117,16 +131,21 @@ def medico_dashboard(request):
         )
 
     ##################### Gráfica de barras de cantidad de pacientes por área #####################
+    # Obtenemos la cantidad de usuarios agrupados por su carrera o puesto
     carrera_o_puesto = Usuario.objects.values('carrera_o_puesto_id').annotate(total=Count('carrera_o_puesto_id'))
+    # Creamos la gráfica de barras con Plotly para mostrar cuántos pacientes hay por área
     areas_fig = go.Figure([go.Bar(
         x=[c['carrera_o_puesto_id'] for c in carrera_o_puesto],
         y=[c['total'] for c in carrera_o_puesto],
         marker_color='indianred'
     )])
+    # Configuramos los títulos de la gráfica
     areas_fig.update_layout(title_text="Distribución de Áreas", xaxis_title="Área", yaxis_title="Cantidad")
 
     ##################### Gráfica por área y tipo de consulta #####################
+    # Obtenemos la cantidad de consultas agrupadas por área (carrera/puesto) y tipo de padecimiento
     datos = Consulta.objects.values("clave_paciente__carrera_o_puesto_id", "categoria_de_padecimiento").annotate(total=Count("clave_paciente__carrera_o_puesto_id"))
+    # Verificamos si existen datos para construir la gráfica
     if datos:
         df = pd.DataFrame(datos)
         df["categoria_de_padecimiento"] = df["categoria_de_padecimiento"].map(padecimientos_dict)
@@ -157,15 +176,20 @@ def medico_dashboard(request):
 
 
     ##################### Gráfica de género #####################
+    # Obtener los datos de los pacientes que han tenido consultas, incluyendo clave, sexo y carrera/puesto
     pacientes_por_consultas = Consulta.objects.values('clave_paciente__clave', 'clave_paciente__sexo', 'clave_paciente__carrera_o_puesto_id')
+    # Convertimos los datos a un DataFrame de pandas para facilitar el análisis
     df_genero_por_carrera = pd.DataFrame(pacientes_por_consultas)
+    # Eliminamos duplicados para contar solo una vez a cada paciente
     df_genero_por_carrera = df_genero_por_carrera.drop_duplicates(subset=['clave_paciente__clave'])
 
+    # Verificamos si hay datos disponibles antes de generar las gráficas
     if not df_genero_por_carrera.empty:
         cantidad_hombres = df_genero_por_carrera[df_genero_por_carrera['clave_paciente__sexo'] == 'M'].count()['clave_paciente__clave']
         cantidad_mujeres = df_genero_por_carrera[df_genero_por_carrera['clave_paciente__sexo'] == 'F'].count()['clave_paciente__clave']
         df_genero_por_carrera = df_genero_por_carrera.groupby(['clave_paciente__carrera_o_puesto_id', 'clave_paciente__sexo']).size().reset_index(name='cantidad')
 
+        # Creamos la gráfica de barras para mostrar la distribución por carrera/puesto y género
         genero_fig = px.bar(
             df_genero_por_carrera,
             x="clave_paciente__carrera_o_puesto_id",
@@ -179,6 +203,7 @@ def medico_dashboard(request):
         genero_pastel = go.Figure(data=[go.Pie(labels=['Hombres', 'Mujeres'], values=[cantidad_hombres, cantidad_mujeres])])
         genero_pastel.update_layout(title_text="Distribución de Pacientes por Género", title_x=0.5)
     else:
+        # Si no hay datos, se muestran gráficas vacías con un mensaje correspondiente
         genero_fig = go.Figure()
         genero_fig.update_layout(
             title="Cantidad de Pacientes por Carrera/Puesto y Género",
@@ -212,6 +237,16 @@ def medico_dashboard(request):
 @login_required
 @role_required(["paciente"])
 def paciente_dashboard(request):
+    """
+    Vista del panel principal para los pacientes.
+
+    Requiere:
+        - Que el usuario esté autenticado.
+        - Que el usuario tenga el rol de 'paciente'.
+
+    Returns:
+        HttpResponse: Renderizado de la plantilla del dashboard del paciente.
+    """
     return render(request, "paciente_dashboard.html")
 
 
@@ -219,6 +254,17 @@ def paciente_dashboard(request):
 @login_required
 @role_required(["paciente"])
 def historial_view(request):
+    """
+    Vista para mostrar el historial médico del paciente.
+
+    Requiere:
+        - Autenticación del usuario.
+        - Que el usuario tenga el rol de 'paciente'.
+        - No más de 5 solicitudes GET por minuto por IP.
+
+    Returns:
+        HttpResponse: Renderizado de la plantilla con el historial médico del paciente.
+    """
     # obtener el historial médico del paciente
     historial = request.user.historial
     return render(request, "historial_medico.html", {"historial": historial})
@@ -228,6 +274,11 @@ def historial_view(request):
 @login_required
 @role_required(["paciente"])
 def paciente_consultas(request):
+    """
+    Vista para mostrar las consultas médicas del paciente autenticado.
+
+    Aplica paginación para mostrar un número limitado de consultas por página.
+    """
     consultas = Consulta.objects.filter(clave_paciente=request.user).select_related('signos_vitales')
 
     paginador = Paginator(consultas, 20)  # Mostrar 10 consultas por páginas
@@ -246,26 +297,47 @@ def paciente_consultas(request):
 @login_required
 @role_required(["paciente", "medico"])
 def usuario_informacion(request):
+    """
+    Vista para mostrar la información básica del usuario autenticado.
+
+    Esta vista es accesible tanto para pacientes como médicos.
+    """
     informacion = request.user
     return render(request, "informacion.html", {"informacion": informacion})
 
 
+# Restricción de tasas de solicitudes para evitar abusos de los endpoints
+# Limita a 5 solicitudes POST por minuto por IP
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)
+# Asegura que el usuario esté autenticado antes de acceder a la vista
 @ratelimit(key='ip', rate='10/m', method='GET', block=True)
 @login_required
+# Restringe el acceso a usuarios con roles de 'paciente' o 'medico'
 @role_required(["paciente", "medico"])
 def cambiar_contrasena(request):
-    if request.method == 'POST':
+    """
+    Vista que permite al usuario cambiar su contraseña.
+
+    Solo es accesible para usuarios autenticados con los roles 'paciente' o 'medico'.
+    La contraseña debe cumplir con ciertos requisitos de seguridad.
+    """
+    if request.method == 'POST': # Solo se ejecuta si la solicitud es de tipo POST
+        # Obtención de las contraseñas ingresadas por el usuario desde el formulario
         current_password = request.POST.get('current_password')
         new_password = request.POST.get('new_password')
         confirm_password = request.POST.get('confirm_password')
+        # Validación de la nueva contraseña con expresión regular (mínimo 8 y máximo 15 caracteres,
+        # debe incluir al menos una letra mayúscula, un número y un carácter especial)
         if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$', new_password):
             messages.error(request, "La contraseña debe tener al entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un caracter especial.")
-            return redirect("informacion")
+            return redirect("informacion") # Redirige si no cumple con los requisitos
+        
+         # Validación para la confirmación de la nueva contraseña
         if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$', confirm_password):
             messages.error(request, "La contraseña debe tener al entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un caracter especial.")
-            return redirect("informacion")
+            return redirect("informacion") # Redirige si no cumple con los requisitos
 
+        # Verificación de que la contraseña actual ingresada por el usuario sea correcta
         if not request.user.check_password(current_password):
             error_message = 'La contraseña actual es incorrecta.'
             return render(request, "informacion.html", {
@@ -273,6 +345,7 @@ def cambiar_contrasena(request):
                 'error': error_message
             })
 
+        # Verificación de que la nueva contraseña y la confirmación coincidan
         if new_password != confirm_password:
             error_message = 'Las contraseñas no coinciden.'
             return render(request, "informacion.html", {
@@ -280,6 +353,7 @@ def cambiar_contrasena(request):
                 'error': error_message
             })
 
+        # Si todo es correcto, se cambia la contraseña del usuario
         request.user.set_password(new_password)
         request.user.save()
         # Mantener la sesión activa después del cambio de contraseña
@@ -289,10 +363,19 @@ def cambiar_contrasena(request):
 
     return redirect("informacion")
 
+# Restricción de tasas de solicitudes para evitar abusos de los endpoints
+# Limita a 10 solicitudes GET por minuto por IP
 @ratelimit(key='ip', rate='10/m', method='GET', block=True)
 @login_required
+# Restringe el acceso solo a usuarios con el rol 'medico'
 @role_required(["medico"])
 def medico_consultas(request):
+    """
+    Vista para que los médicos vean sus consultas o todas las consultas si así lo desean.
+
+    Si el parámetro 'todas' está presente en la URL, se mostrarán todas las consultas.
+    Si no, se mostrarán solo las consultas relacionadas con el médico autenticado.
+    """
     mostrar_todas = request.GET.get('todas', '0') == '1'  # Leer parámetro 'todas'
     if mostrar_todas:
         # Mostrar primero la consulta con el més reciente
@@ -318,6 +401,12 @@ def medico_consultas(request):
 @login_required
 @role_required(["medico"])
 def medico_historiales(request):
+    """
+    Vista para que los médicos vean los historiales médicos de los pacientes.
+
+    Si se proporciona un parámetro de búsqueda, los historiales se filtrarán de acuerdo al ID del historial.
+    También se paginan los resultados para mostrar solo una cantidad limitada por página.
+    """
     query = request.GET.get('search', '')
     # Si hay una consulta, filtrar los historiales de acuerdo a la consulta
     if query:
@@ -347,6 +436,13 @@ def medico_historiales(request):
 @login_required
 @role_required(["medico"])
 def editar_historial(request, pk):
+    """
+    Vista que permite al médico editar un historial médico existente.
+
+    Solo se permite a los médicos editar los historiales de los pacientes. 
+    Si la solicitud es de tipo POST, se guarda el formulario con los nuevos datos, 
+    de lo contrario, se muestra el formulario con los datos actuales del historial.
+    """
     historial = get_object_or_404(HistorialMedico, id_historial=pk)
     if request.method == 'POST':
         form = HistorialMedicoForm(request.POST, instance=historial)
