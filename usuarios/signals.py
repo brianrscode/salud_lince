@@ -10,6 +10,12 @@ from .models import Area, HistorialMedico, Role, Usuario
 
 @receiver(post_migrate)
 def crear_roles_por_defecto(sender, **kwargs):
+    """
+    Esta función crea los roles por defecto en la base de datos después de que se haya realizado una migración.
+
+    Los roles por defecto son: 'paciente', 'medico', y 'admin'.
+    Si ya existen en la base de datos, no se crean nuevamente.
+    """
     roles = ["paciente", "medico", "admin"]
     for role in roles:
         Role.objects.get_or_create(nombre_rol=role)
@@ -17,6 +23,12 @@ def crear_roles_por_defecto(sender, **kwargs):
 
 @receiver(post_migrate)
 def crear_areas_por_defecto(sender, **kwargs):
+    """
+    Esta función crea áreas por defecto en la base de datos después de que se haya realizado una migración.
+
+    Las áreas por defecto incluyen diferentes disciplinas y puestos relacionados con la institución.
+    Si ya existen en la base de datos, no se crean nuevamente.
+    """
     areas = [
         "Sistemas",
         "Bioquímica",
@@ -35,25 +47,31 @@ def crear_areas_por_defecto(sender, **kwargs):
 
 @receiver(post_migrate)
 def crear_grupos_permisos(sender, **kwargs):
+    """
+    Esta función crea los grupos de usuarios y asigna los permisos correspondientes a cada uno después de una migración.
+    
+    Los grupos creados son: 'Medico', 'Paciente', y 'Administrador'.
+    Además, se asignan permisos específicos a cada grupo según el modelo al que se refieren.
+    """
     # Crear grupos si no existen
-    medico_group, _ = Group.objects.get_or_create(name="Medico")
-    paciente_group, _ = Group.objects.get_or_create(name="Paciente")
-    admin_group, _ = Group.objects.get_or_create(name="Administrador")
+    medico_group, _ = Group.objects.get_or_create(name="Medico")  # Crear el grupo 'Medico'
+    paciente_group, _ = Group.objects.get_or_create(name="Paciente")  # Crear el grupo 'Paciente'
+    admin_group, _ = Group.objects.get_or_create(name="Administrador")  # Crear el grupo 'Administrador'
 
     # Definir permisos y grupos
     permisos_medico = [
-        ('view_consulta', Consulta),
-        ('add_consulta', Consulta),
-        ('view_historialmedico', HistorialMedico),
-        ('view_usuario', Usuario),
-        ('change_usuario', Usuario),
+        ('view_consulta', Consulta),  # Permiso para ver consultas
+        ('add_consulta', Consulta),  # Permiso para agregar consultas
+        ('view_historialmedico', HistorialMedico),  # Permiso para ver historial médico
+        ('view_usuario', Usuario),  # Permiso para ver usuarios
+        ('change_usuario', Usuario),  # Permiso para cambiar usuarios
     ]
     permisos_paciente = [
-        ('view_consulta', Consulta),
-        ('view_historialmedico', HistorialMedico),
-        ('change_historialmedico', HistorialMedico),
-        ('view_usuario', Usuario),
-        ('change_usuario', Usuario),
+        ('view_consulta', Consulta),  # Permiso para ver consultas
+        ('view_historialmedico', HistorialMedico),  # Permiso para ver historial médico
+        ('change_historialmedico', HistorialMedico),  # Permiso para cambiar historial médico
+        ('view_usuario', Usuario),  # Permiso para ver usuarios
+        ('change_usuario', Usuario),  # Permiso para cambiar usuarios
     ]
 
     # Asignar permisos a los grupos
@@ -74,16 +92,28 @@ def crear_grupos_permisos(sender, **kwargs):
 
 @receiver(post_save, sender=Usuario)
 def asignar_grupo_y_crear_historial(sender, instance, created, **kwargs):
+    """
+    Esta función se ejecuta automáticamente después de que se cree un nuevo usuario ('Usuario').
+    
+    Dependiendo del rol del usuario, se asigna a un grupo correspondiente (Medico, Paciente, Administrador).
+    Si el rol es 'paciente', también se crea un historial médico para el paciente si corresponde.
+    """
+    # Verificar si el usuario ha sido creado (no actualizado)
     if created:
+        # Si el usuario es un médico, asignarlo al grupo 'Medico'
         if instance.role == Role.objects.get(nombre_rol='medico'):
             medico_group = Group.objects.get(name='Medico')
             instance.groups.add(medico_group)
+        # Si el usuario es un paciente, asignarlo al grupo 'Paciente' y crear un historial médico
         elif instance.role == Role.objects.get(nombre_rol='paciente'):
             paciente_group = Group.objects.get(name='Paciente')
             instance.groups.add(paciente_group)
+            # Si el paciente tiene una carrera o puesto (y no es médico), crear su historial médico
             if instance.carrera_o_puesto and instance.carrera_o_puesto != 'Médico':
                 HistorialMedico.objects.create(id_historial=instance.clave, paciente=instance)
+        # Si el usuario es un administrador, asignarlo al grupo 'Administrador'
         elif instance.role == Role.objects.get(nombre_rol='admin'):
             admin_group = Group.objects.get(name='Administrador')
             instance.groups.add(admin_group)
+        # Guardar el usuario con los cambios de grupo
         instance.save()
