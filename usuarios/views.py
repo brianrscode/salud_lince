@@ -75,9 +75,9 @@ def login_view(request):
 
 def logout_view(request):
     """
-    vista desloguiar al usuario 
+    vista desloguear al usuario
 
-    Returns: 
+    Returns:
         HttpResponse: respuesta http dirigida a la vista de inicio de sesión
     """
     logout(request)
