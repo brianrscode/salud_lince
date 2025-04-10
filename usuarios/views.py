@@ -32,46 +32,52 @@ def login_view(request):
         HttpResponse: Redirección al panel de usuario correspondiente o renderizado del formulario de login.
     """
     if request.user.is_authenticated:
-        if request.user.role.nombre_rol == "medico":
-            return redirect("medico_dashboard")  # Nombre de la vista para médicos
-        elif request.user.role.nombre_rol == "paciente":
-            return redirect("paciente_dashboard")  # Nombre de la vista para pacientes
-        elif request.user.role.nombre_rol == "admin":
-            return redirect("/admin/")  # Acceso para administradores
+        rol = request.user.role.nombre_rol
+        if rol == "medico":
+            return redirect("medico_dashboard")
+        if rol == "paciente":
+            return redirect("paciente_dashboard")
+        if rol == "admin":
+            return redirect("/admin/")
+
+        messages.error(request, "Rol no reconocido.")
+        return redirect("login")
 
     if request.method == "POST":
         form = LoginForm(request.POST)
-        if form.is_valid():
-            clave = form.cleaned_data["clave"]
-            password = form.cleaned_data["password"]
-            user = authenticate(request, clave=clave, password=password)
-
-            if user is not None:
-                login(request, user)
-                # Redirigir según el rol del usuario
-                if user.role.nombre_rol == "medico":
-                    return redirect("medico_dashboard")  # Nombre de la vista para médicos
-                elif user.role.nombre_rol == "paciente":
-                    return redirect("paciente_dashboard")  # Nombre de la vista para pacientes
-                elif user.role.nombre_rol == "admin":
-                    return redirect("/admin/")
-                else:
-                    messages.error(request, "Rol no reconocido.")
-            else:
-                messages.error(request, "Credenciales inválidas.")
-        else:
+        if not form.is_valid():
             messages.error(request, "Formulario inválido.")
-    else:
-        form = LoginForm()
+            return render(request, "login.html", {"form": form})
 
+        clave = form.cleaned_data["clave"]
+        password = form.cleaned_data["password"]
+        user = authenticate(request, clave=clave, password=password)
+
+        if user is None:
+            messages.error(request, "Credenciales inválidas.")
+            return render(request, "login.html", {"form": form})
+
+        login(request, user)
+        rol = user.role.nombre_rol
+        if rol == "medico":
+            return redirect("medico_dashboard")
+        if rol == "paciente":
+            return redirect("paciente_dashboard")
+        if rol == "admin":
+            return redirect("/admin/")
+
+        messages.error(request, "Rol no reconocido.")
+        return redirect("login")
+
+    form = LoginForm()
     return render(request, "login.html", {"form": form})
 
 
 def logout_view(request):
     """
-    vista desloguiar al usuario 
+    vista desloguear al usuario
 
-    Returns: 
+    Returns:
         HttpResponse: respuesta http dirigida a la vista de inicio de sesión
     """
     logout(request)
