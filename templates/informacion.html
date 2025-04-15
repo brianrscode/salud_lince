@@ -13,43 +13,43 @@
             {% comment %}  Columna izquierda: Información del paciente  {% endcomment %}
             <div class="col-md-6">
                 {% if user.role.nombre_rol == "paciente" %}
-                    <h2>Información de paciente</h2>
+                    <h2 class= "fuente-seasons">Información de paciente</h2>
                 {% elif user.role.nombre_rol == "medico" %}
-                    <h2>Información de médico</h2>
+                    <h2 class= "fuente-seasons">Información de médico</h2>
                 {% endif %}
-                <p><strong>Nombres:</strong> {{ informacion.nombres }}</p>
-                <p><strong>Apellido paterno:</strong> {{ informacion.apellido_paterno }}</p>
-                <p><strong>Apellido materno:</strong> {{ informacion.apellido_materno }}</p>
-                <p><strong>Correo:</strong> {{ informacion.email }}</p>
-                <p><strong>Sexo:</strong> {{ informacion.sexo }}</p>
-                <p><strong>Fecha de nacimiento:</strong> {{ informacion.fecha_nacimiento }}</p>
-                <p><strong>Carrera o puesto:</strong> {{ informacion.carrera_o_puesto }}</p>
+                <p><strong class= "fuente-belleza">Nombres:</strong> {{ informacion.nombres }}</p>
+                <p><strong class= "fuente-belleza">Apellido paterno:</strong> {{ informacion.apellido_paterno }}</p>
+                <p><strong class= "fuente-belleza">Apellido materno:</strong> {{ informacion.apellido_materno }}</p>
+                <p><strong class= "fuente-belleza">Correo:</strong> {{ informacion.email }}</p>
+                <p><strong class= "fuente-belleza">Sexo:</strong> {{ informacion.sexo }}</p>
+                <p><strong class= "fuente-belleza">Fecha de nacimiento:</strong> {{ informacion.fecha_nacimiento }}</p>
+                <p><strong class= "fuente-belleza">Carrera o puesto:</strong> {{ informacion.carrera_o_puesto }}</p>
             </div>
 
             {% comment %} Columna derecha: Formulario de cambio de contraseña {% endcomment %}
             <div class="col-md-6">
-                <h2>Cambiar contraseña</h2>
+                <h2 class= "fuente-seasons">Cambiar contraseña</h2>
                 <form method="POST" action="{% url 'cambiar_contrasena' %}">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="current_password" class="form-label">Contraseña actual:</label>
+                        <label for="current_password" class="form-label fuente-belleza">Contraseña actual:</label>
                         <input type="password" id="current_password" name="current_password" class="form-control" required>
                         <input type="checkbox" name="showPassword1" id="showPassword1" class="form-check-input">
-                        <label for="showPassword1" class="text-muted">Mostrar contraseña</label>
+                        <label for="showPassword1" class="text-muted fuente-belleza">Mostrar contraseña</label>
                     </div>
                     <div class="mb-3">
-                        <label for="new_password" class="form-label">Nueva contraseña:</label>
+                        <label for="new_password" class="form-label fuente-belleza">Nueva contraseña:</label>
                         <input type="password" id="new_password" name="new_password" class="form-control" required>
                         <input type="checkbox" name="showPassword2" id="showPassword2" class="form-check-input">
-                        <label for="showPassword2" class="text-muted">Mostrar contraseña</label>
+                        <label for="showPassword2" class="text-muted fuente-belleza">Mostrar contraseña</label>
                     </div>
                     <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Confirmar nueva contraseña:</label>
+                        <label for="confirm_password" class="form-label fuente-belleza">Confirmar nueva contraseña:</label>
                         <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
                         <input type="checkbox" name="showPassword3" id="showPassword3" class="form-check-input">
-                        <label for="showPassword3" class="text-muted">Mostrar contraseña</label>
+                        <label for="showPassword3" class="text-muted fuente-belleza">Mostrar contraseña</label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
+                    <button type="submit" class="btn btn-primary fuente-belleza">Cambiar contraseña</button>
                 </form>
             </div>
         </div>
