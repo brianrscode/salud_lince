@@ -2,10 +2,11 @@
     font-family: 'The Seasons', serif;
   }
   
-  .fuente-cardo {
-    font-family: 'Cardo', serif;
-  }
-  
   .fuente-belleza {
     font-family: 'Belleza', sans-serif;
   }
+
+  .fuente-navbar {
+    font-family: 'Cardo', sans-serif;
+  }
+  
