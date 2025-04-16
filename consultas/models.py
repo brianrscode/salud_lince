@@ -49,7 +49,7 @@ class SignosVitales(models.Model):
                                )])  # en kg
     talla = models.DecimalField('Talla (m)', max_digits=4, decimal_places=2, blank=True, null=True,
                                 validators=[RegexValidator(
-                                    regex=r'(1\.[0-9][0-9]|2\.[0-2][0-9])',
+                                    regex=r'^(1\.\d{1,2}|2\.[0-2]\d?)',
                                     message='Formato de talla no valido (ej: "1.00-2.29")'
                                 )])  # en cm
     temperatura = models.DecimalField('Temperatura (°C)', max_digits=3, decimal_places=1, blank=True, null=True,
