@@ -17,74 +17,77 @@
                         <div class="card shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title text-primary fuente-belleza">Datos Personales</h5>
-                                <ul class="list-group list-group-flush">
+                                <ul class="list-group list-group-flush fuente-belleza">
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong class =" fuente-belleza">Enfermedades crónicas:</strong>
-                                            <span class =" fuente-belleza">{{ historial.enfermedades_cronicas }}</span>
+                                            <strong>Enfermedades crónicas:</strong>
+                                            <span>{{ historial.enfermedades_cronicas }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong class =" fuente-belleza">Alergias:</strong>
-                                            <span class =" fuente-belleza">{{ historial.alergias }}</span>
+                                            <strong >Alergias:</strong>
+                                            <span>{{ historial.alergias }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong class =" fuente-belleza">Medicamentos usados:</strong>
-                                            <span class =" fuente-belleza">{{ historial.medicamento_usado }}</span>
+                                            <strong >Medicamentos usados:</strong>
+                                            <span >{{ historial.medicamento_usado }}</span>
                                         </div>
                                     </li>
             
                                     {% if user.sexo == "F" %}
                                         <li class="list-group-item">
                                             <div class="d-flex flex-column">
-                                                <strong class =" fuente-belleza">¿Es embarazada?</strong>
-                                                <span class =" fuente-belleza">{{ historial.es_embarazada|yesno:"Sí,No" }}</span>
+                                                <strong >¿Es embarazada?</strong>
+                                                <span >{{ historial.es_embarazada|yesno:"Sí,No" }}</span>
                                             </div>
                                         </li>
                                     {% endif %}
             
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong class =" fuente-belleza">¿Usa drogas?</strong>
-                                            <span class =" fuente-belleza">{{ historial.usa_drogas|yesno:"Sí,No" }}</span>
+                                            <strong >¿Usa drogas?</strong>
+                                            <span >{{ historial.usa_drogas|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong class =" fuente-belleza">¿Fuma cigarro?</strong>
-                                            <span class =" fuente-belleza">{{ historial.usa_cigarro|yesno:"Sí,No" }}</span>
+                                            <strong >¿Fuma cigarro?</strong>
+                                            <span >{{ historial.usa_cigarro|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong class =" fuente-belleza">¿Ingiere alcohol?</strong>
-                                            <span class =" fuente-belleza">{{ historial.ingiere_alcohol|yesno:"Sí,No" }}</span>
+                                            <strong >¿Ingiere alcohol?</strong>
+                                            <span >{{ historial.ingiere_alcohol|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong class =" fuente-belleza">¿Usa lentes?</strong>
-                                            <span class =" fuente-belleza">{{ historial.usa_lentes|yesno:"Sí,No" }}</span>
+                                            <strong >¿Usa lentes?</strong>
+                                            <span >{{ historial.usa_lentes|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong class =" fuente-belleza">¿Tiene vida sexual activa?</strong>
-                                            <span class =" fuente-belleza">{{ historial.vida_sexual_activa |yesno:"Sí,No" }}</span>
+                                            <strong >¿Tiene vida sexual activa?</strong>
+                                            <span >{{ historial.vida_sexual_activa |yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong class =" fuente-belleza">¿Usa un método anticonceptivo?</strong>
-                                            <span class =" fuente-belleza">{{ historial.usa_metodos_anticonceptivos |yesno:"Sí,No" }}</span>
+                                            <strong >¿Usa un método anticonceptivo?</strong>
+                                            <span >{{ historial.usa_metodos_anticonceptivos |yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-4"> 
+                        <img src="{% static 'imgs/historial.gif' %}" class="card-img-top">
                     </div>
                 </div>
             </div>
