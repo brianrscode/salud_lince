@@ -8,13 +8,13 @@
 {% block title %}Historiales de pacientes{% endblock %}
 
 {% block content %}
-    <h1>Historiales de todos los pacientes</h1>
+    <h1 class="modal-title fuente-seasons"> Historiales de todos los pacientes</h1>
 
     {% comment %} Barra de búsqueda {% endcomment %}
     <form method="GET" action="" class="mb-4">
         <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Buscar por ID del historial" value="{{ query }}">
-            <button type="submit" class="btn btn-primary">Buscar</button>
+            <input type="text" name="search" class="form-control fuente-belleza" placeholder="Buscar por ID del historial" value="{{ query }}">
+            <button type="submit" class="btn btn-primary fuente-belleza">Buscar</button>
         </div>
     </form>
 
@@ -25,28 +25,28 @@
                 <div class="col-md-6 mb-4">  <!-- Cambié el tamaño de las columnas a 6 (2 por fila) -->
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Paciente: {{ historial.paciente }}</h5>
-                            <p class="card-text mb-1" ><strong>ID:</strong> {{ historial.id_historial }}</p>
-                            <p class="card-text mb-1"><strong>Enfermedades crónicas:</strong> {{ historial.enfermedades_cronicas }}</p>
-                            <p class="card-text mb-1"><strong>Alergias:</strong> {{ historial.alergias }}</p>
-                            <p class="card-text mb-1"><strong>Medicamentos usados:</strong> {{ historial.medicamento_usado }}</p>
+                            <h5 class="card-title fuente-belleza">Paciente: {{ historial.paciente }}</h5>
+                            <p class="card-text mb-1 fuente-belleza" ><strong>ID:</strong> {{ historial.id_historial }}</p>
+                            <p class="card-text mb-1 fuente-belleza"><strong>Enfermedades crónicas:</strong> {{ historial.enfermedades_cronicas }}</p>
+                            <p class="card-text mb-1 fuente-belleza"><strong>Alergias:</strong> {{ historial.alergias }}</p>
+                            <p class="card-text mb-1 fuente-belleza"><strong>Medicamentos usados:</strong> {{ historial.medicamento_usado }}</p>
                             {% if historial.paciente.sexo == "F" %}
-                                <p class="card-text mb-1"><strong>¿Está embarazada?:</strong> {{ historial.es_embarazada|yesno:"Sí,No" }}</p>
+                                <p class="card-text mb-1 fuente-belleza"><strong>¿Está embarazada?:</strong> {{ historial.es_embarazada|yesno:"Sí,No" }}</p>
                             {% endif %}
-                            <p class="card-text mb-1"><strong>¿Usa drogas?:</strong> {{ historial.usa_drogas|yesno:"Sí,No" }}</p>
-                            <p class="card-text mb-1"><strong>¿Fuma cigarro?:</strong> {{ historial.usa_cigarro|yesno:"Sí,No" }}</p>
-                            <p class="card-text mb-1"><strong>¿Ingiere alcohol?:</strong> {{ historial.ingiere_alcohol|yesno:"Sí,No" }}</p>
-                            <p class="card-text mb-1"><strong>¿Usa lentes?:</strong> {{ historial.usa_lentes|yesno:"Sí,No" }}</p>
-                            <p class="card-text mb-1"><strong>¿Tiene vida sexual activa?:</strong> {{ historial.vida_sexual_activa|yesno:"Sí,No" }}</p>
-                            <p class="card-text mb-1"><strong>¿Usa un método anticonceptivo?:</strong> {{ historial.usa_metodos_anticonceptivos|yesno:"Sí,No" }}</p>
+                            <p class="card-text mb-1 fuente-belleza"><strong>¿Usa drogas?:</strong> {{ historial.usa_drogas|yesno:"Sí,No" }}</p>
+                            <p class="card-text mb-1 fuente-belleza"><strong>¿Fuma cigarro?:</strong> {{ historial.usa_cigarro|yesno:"Sí,No" }}</p>
+                            <p class="card-text mb-1 fuente-belleza"><strong>¿Ingiere alcohol?:</strong> {{ historial.ingiere_alcohol|yesno:"Sí,No" }}</p>
+                            <p class="card-text mb-1 fuente-belleza"><strong>¿Usa lentes?:</strong> {{ historial.usa_lentes|yesno:"Sí,No" }}</p>
+                            <p class="card-text mb-1 fuente-belleza"><strong>¿Tiene vida sexual activa?:</strong> {{ historial.vida_sexual_activa|yesno:"Sí,No" }}</p>
+                            <p class="card-text mb-1 fuente-belleza"><strong>¿Usa un método anticonceptivo?:</strong> {{ historial.usa_metodos_anticonceptivos|yesno:"Sí,No" }}</p>
                         </div>
-                        <a href="{% url 'editar_historial' historial.id_historial %}" class="btn btn-primary mt-2">Editar</a>
+                        <a href="{% url 'editar_historial' historial.id_historial %}" class="btn btn-primary mt-2 fuente-belleza">Editar</a>
                     </div>
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        <p class="text-muted">No se encontraron historiales que coincidan con la búsqueda.</p>
+        <p class="text-muted fuente-belleza">No se encontraron historiales que coincidan con la búsqueda.</p>
     {% endif %}
 
 <nav aria-label="Page navigation">
