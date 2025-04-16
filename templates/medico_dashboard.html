@@ -9,26 +9,26 @@
 
 {% block content %}
 
-    <h2>Estadísticas de Pacientes</h2>
+    <h2 clss="modal-title fuente-seasons">Estadísticas de Pacientes</h2>
     {% comment %} <p>{{ prueba }}</p> {% endcomment %}
     {% comment %} Gráfica de Generos {% endcomment %}
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">Genero de pacientes</h5>
+            <h5 class="card-title fuente-belleza">Genero de pacientes</h5>
             <div>{{ genero_pastel|safe }}</div>
         </div>
     </div>
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">Distribución de generos</h5>
+            <h5 class="card-title fuente-belleza">Distribución de generos</h5>
             <div>{{ genero_graph|safe }}</div>
         </div>
     </div>
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">Distribución de carreras de pacientes</h5>
+            <h5 class="card-title fuente-belleza">Distribución de carreras de pacientes</h5>
             <div>{{ padecimientos_graph|safe}}</div>
         </div>
     </div>
@@ -36,7 +36,7 @@
     {% comment %} Gráfica de Hábitos {% endcomment %}
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">Pacientes con Hábitos</h5>
+            <h5 class="card-title fuente-belleza">Pacientes con Hábitos</h5>
             <div>{{ habitos_graph|safe }}</div>
         </div>
     </div>
@@ -44,14 +44,14 @@
     {% comment %} Gráfica de Tipos de Consultas {% endcomment %}
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">Distribución de Tipos de Consultas</h5>
+            <h5 class="card-title fuente-belleza">Distribución de Tipos de Consultas</h5>
             <div>{{ consultas_graph|safe }}</div>
         </div>
     </div>
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title">Distribución de areas de pacientes</h5>
+            <h5 class="card-title fuente-belleza">Distribución de areas de pacientes</h5>
             <div>{{ areas_graph|safe }}</div>
         </div>
     </div>
