@@ -8,11 +8,11 @@
 {% block title %}Editar Historial{% endblock %}
 
 {% block content %}
-    <h1>Editar Historial: {{ historial.paciente }}</h1>
+    <h1 class=" modal-title fuente-seasons mt-3">Editar Historial: {{ historial.paciente }}</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Guardar cambios</button>
-        <a href="{% url 'medico_historiales' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-success fuente-belleza">Guardar cambios</button>
+        <a href="{% url 'medico_historiales' %}" class="btn btn-secondary fuente-belleza">Cancelar</a>
     </form>
 {% endblock %}
