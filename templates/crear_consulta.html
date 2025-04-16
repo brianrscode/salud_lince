@@ -8,7 +8,7 @@
 {% block title %}Crear Consulta{% endblock %}
 
 {% block content %}
-    <h1>Crear Nueva Consulta</h1>
+    <h1 class="modal-title fuente-seasons">Crear Nueva Consulta</h1>
 
     {% comment %} Mensajes y errores {% endcomment %}
     {% if messages %}
@@ -30,18 +30,18 @@
         {% csrf_token %}
 
         {% comment %}  Barra de búsqueda  {% endcomment %}
-        <label for="search-clave">Buscar Paciente por Clave:</label>
-        <input type="text" id="search-clave" class="form-control" placeholder="Ingrese clave del paciente">
-        <button type="button" class="btn btn-secondary mt-2" onclick="buscarPaciente()">Buscar</button>
+        <label for="search-clave fuente-belleza">Buscar Paciente por Clave:</label>
+        <input type="text" id="search-clave" class="form-control fuente-belleza" placeholder="Ingrese clave del paciente">
+        <button type="button" class="btn btn-secondary mt-3 fuente-belleza" onclick="buscarPaciente()">Buscar</button>
         <small id="search-result" class="text-muted"></small>
 
-        <h2>Datos de la Consulta</h2>
+        <h2 class="modal-title fuente-seasons mt-1">Datos de la Consulta</h2>
         {{ consulta_form.as_p }}
 
-        <h2>Signos Vitales</h2>
+        <h2 class="modal-title fuente-seasons mt-1">Signos Vitales</h2>
         {{ signos_form.as_p }}
 
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="submit" class="btn btn-primary fuente-belleza">Guardar</button>
     </form>
     <a href="{% url 'medico_consultas' %}">Volver al listado de consultas</a>
 
