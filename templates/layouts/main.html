@@ -22,7 +22,10 @@
     {% if user.is_authenticated %}
         <nav class="navbar navbar-expand-lg bg-body-tertiary fuente-navbar">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Salud Lince</a>
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="{% static 'imgs/itsa-logo.png' %}" width="120" height="40" class="me-2">
+                    Salud Lince
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
