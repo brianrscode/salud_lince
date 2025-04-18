@@ -1,7 +1,7 @@
 {% extends "layouts/main.html" %}
 {% load static %}
 
-{% block styles %}   
+{% block styles %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 {% endblock %}
 
@@ -10,10 +10,11 @@
 {% block content %}
     <div class="container mt-4">
         <h1 class="text-center fuente-seasons fw-bold mb-4">Historial Médico</h1>
-            {% if historial %}
-            <div class = "container mt-3">
-                <div class = "row">
-                    <div class = "col-8"> 
+        {% if historial %}
+            <div class="container mt-3">
+                <div class="row">
+                    <!-- Contenedor del historial médico -->
+                    <div class="col-md-8 col-12">
                         <div class="card shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title text-primary fuente-belleza">Datos Personales</h5>
@@ -26,68 +27,70 @@
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong >Alergias:</strong>
+                                            <strong>Alergias:</strong>
                                             <span>{{ historial.alergias }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong >Medicamentos usados:</strong>
-                                            <span >{{ historial.medicamento_usado }}</span>
+                                            <strong>Medicamentos usados:</strong>
+                                            <span>{{ historial.medicamento_usado }}</span>
                                         </div>
                                     </li>
-            
+
                                     {% if user.sexo == "F" %}
                                         <li class="list-group-item">
                                             <div class="d-flex flex-column">
-                                                <strong >¿Es embarazada?</strong>
-                                                <span >{{ historial.es_embarazada|yesno:"Sí,No" }}</span>
+                                                <strong>¿Es embarazada?</strong>
+                                                <span>{{ historial.es_embarazada|yesno:"Sí,No" }}</span>
                                             </div>
                                         </li>
                                     {% endif %}
-            
+
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong >¿Usa drogas?</strong>
-                                            <span >{{ historial.usa_drogas|yesno:"Sí,No" }}</span>
+                                            <strong>¿Usa drogas?</strong>
+                                            <span>{{ historial.usa_drogas|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong >¿Fuma cigarro?</strong>
-                                            <span >{{ historial.usa_cigarro|yesno:"Sí,No" }}</span>
+                                            <strong>¿Fuma cigarro?</strong>
+                                            <span>{{ historial.usa_cigarro|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong >¿Ingiere alcohol?</strong>
-                                            <span >{{ historial.ingiere_alcohol|yesno:"Sí,No" }}</span>
+                                            <strong>¿Ingiere alcohol?</strong>
+                                            <span>{{ historial.ingiere_alcohol|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong >¿Usa lentes?</strong>
-                                            <span >{{ historial.usa_lentes|yesno:"Sí,No" }}</span>
+                                            <strong>¿Usa lentes?</strong>
+                                            <span>{{ historial.usa_lentes|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong >¿Tiene vida sexual activa?</strong>
-                                            <span >{{ historial.vida_sexual_activa |yesno:"Sí,No" }}</span>
+                                            <strong>¿Tiene vida sexual activa?</strong>
+                                            <span>{{ historial.vida_sexual_activa|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex flex-column">
-                                            <strong >¿Usa un método anticonceptivo?</strong>
-                                            <span >{{ historial.usa_metodos_anticonceptivos |yesno:"Sí,No" }}</span>
+                                            <strong>¿Usa un método anticonceptivo?</strong>
+                                            <span>{{ historial.usa_metodos_anticonceptivos|yesno:"Sí,No" }}</span>
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="col-4"> 
-                        <img src="{% static 'imgs/historial.gif' %}" class="card-img-top">
+
+                    <!-- Contenedor del GIF, solo en pantallas medianas en adelante -->
+                    <div class="col-md-4 d-none d-md-block">
+                        <img src="{% static 'imgs/historial.gif' %}" class="card-img-top" alt="GIF historial">
                     </div>
                 </div>
             </div>
