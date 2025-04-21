@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.views.decorators.cache import never_cache
 
 from usuarios.decorators import role_required
 
 from .forms import ConsultaForm, SignosVitalesForm
 
 
-# Decoradores para asegurarse de que el usuario esté autenticado y tenga el rol de 'medico'
+@never_cache
 @login_required
 @role_required(['medico'])
 def crear_consulta(request):

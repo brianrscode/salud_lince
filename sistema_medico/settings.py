@@ -131,3 +131,14 @@ AUTHENTICATION_BACKENDS = [
     'usuarios.authentication.ClaveBackend',  # Reemplaza 'tu_app' con el nombre de tu aplicación
     'django.contrib.auth.backends.ModelBackend',  # Mantén el backend por defecto
 ]
+
+# Opción segura por defecto
+X_FRAME_OPTIONS = 'DENY'
+
+# Opción si se usan iframes en el mismo dominio
+# X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+# SESSION_COOKIE_SECURE = True     # Solo si usas HTTPS
+# CSRF_COOKIE_SECURE = True        # Solo si usas HTTPS

@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.cache import never_cache
 from django_ratelimit.decorators import ratelimit
 import pandas as pd
 import plotly.express as px
@@ -19,6 +20,7 @@ from .forms import LoginForm
 from .models import Area, HistorialMedico, Usuario
 
 
+@never_cache
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)
 @ratelimit(key='ip', rate='5/m', method='GET', block=True)
 def login_view(request):
@@ -73,6 +75,7 @@ def login_view(request):
     return render(request, "login.html", {"form": form})
 
 
+@never_cache
 def logout_view(request):
     """
     vista desloguear al usuario
@@ -84,6 +87,7 @@ def logout_view(request):
     return redirect("login")
 
 
+@never_cache
 @login_required
 @role_required(["medico"])
 def medico_dashboard(request):
@@ -240,6 +244,7 @@ def medico_dashboard(request):
     })
 
 
+@never_cache
 @login_required
 @role_required(["paciente"])
 def paciente_dashboard(request):
@@ -256,6 +261,7 @@ def paciente_dashboard(request):
     return render(request, "paciente_dashboard.html")
 
 
+@never_cache
 @ratelimit(key='ip', rate='5/m', method='GET', block=True)
 @login_required
 @role_required(["paciente"])
@@ -276,6 +282,7 @@ def historial_view(request):
     return render(request, "historial_medico.html", {"historial": historial})
 
 
+@never_cache
 @ratelimit(key='ip', rate='10/m', method='GET', block=True)
 @login_required
 @role_required(["paciente"])
@@ -299,6 +306,7 @@ def paciente_consultas(request):
     return render(request, "paciente_consultas.html", {"consultas": consultas})
 
 
+@never_cache
 @ratelimit(key='ip', rate='5/m', method='GET', block=True)
 @login_required
 @role_required(["paciente", "medico"])
@@ -312,13 +320,10 @@ def usuario_informacion(request):
     return render(request, "informacion.html", {"informacion": informacion})
 
 
-# Restricción de tasas de solicitudes para evitar abusos de los endpoints
-# Limita a 5 solicitudes POST por minuto por IP
-@ratelimit(key='ip', rate='5/m', method='POST', block=True)
-# Asegura que el usuario esté autenticado antes de acceder a la vista
-@ratelimit(key='ip', rate='10/m', method='GET', block=True)
+@never_cache
+@ratelimit(key='ip', rate='5/m', method='POST', block=True) # Limite 5 solicitudes POST por minuto por IP
+@ratelimit(key='ip', rate='10/m', method='GET', block=True) # Limite 10 solicitudes GET por minuto por IP
 @login_required
-# Restringe el acceso a usuarios con roles de 'paciente' o 'medico'
 @role_required(["paciente", "medico"])
 def cambiar_contrasena(request):
     """
@@ -337,7 +342,7 @@ def cambiar_contrasena(request):
         if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$', new_password):
             messages.error(request, "La contraseña debe tener al entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un caracter especial.")
             return redirect("informacion") # Redirige si no cumple con los requisitos
-        
+
          # Validación para la confirmación de la nueva contraseña
         if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$', confirm_password):
             messages.error(request, "La contraseña debe tener al entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un caracter especial.")
@@ -369,11 +374,10 @@ def cambiar_contrasena(request):
 
     return redirect("informacion")
 
-# Restricción de tasas de solicitudes para evitar abusos de los endpoints
-# Limita a 10 solicitudes GET por minuto por IP
-@ratelimit(key='ip', rate='10/m', method='GET', block=True)
+
+@never_cache
+@ratelimit(key='ip', rate='10/m', method='GET', block=True) # Limite 10 solicitudes GET por minuto por IP
 @login_required
-# Restringe el acceso solo a usuarios con el rol 'medico'
 @role_required(["medico"])
 def medico_consultas(request):
     """
@@ -404,6 +408,7 @@ def medico_consultas(request):
     })
 
 
+@never_cache
 @login_required
 @role_required(["medico"])
 def medico_historiales(request):
@@ -439,14 +444,16 @@ def medico_historiales(request):
     return render(request, "medico_historiales.html", {"historiales": historiales, "query": query})
 
 
+
+@never_cache
 @login_required
 @role_required(["medico"])
 def editar_historial(request, pk):
     """
     Vista que permite al médico editar un historial médico existente.
 
-    Solo se permite a los médicos editar los historiales de los pacientes. 
-    Si la solicitud es de tipo POST, se guarda el formulario con los nuevos datos, 
+    Solo se permite a los médicos editar los historiales de los pacientes.
+    Si la solicitud es de tipo POST, se guarda el formulario con los nuevos datos,
     de lo contrario, se muestra el formulario con los datos actuales del historial.
     """
     historial = get_object_or_404(HistorialMedico, id_historial=pk)
