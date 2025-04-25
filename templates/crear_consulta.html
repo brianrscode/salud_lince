@@ -48,6 +48,7 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function buscarPaciente() {
             const claveInput = document.getElementById("search-clave").value.toLowerCase();
@@ -76,5 +77,32 @@
                 resultText.textContent = "Ingrese una clave para buscar el paciente.";
             }
         }
+    </script>
+    <script>
+        // Función para actualizar la frecuencia cardíaca
+        $(document).ready(function() {
+            function actualizarFrecuenciaCardiaca() {
+                $.ajax({
+                    url: '/consultas/api/obtener-ultima-frecuencia/',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.frecuencia_cardiaca !== null) {
+                            $('#id_frecuencia_cardiaca').val(data.frecuencia_cardiaca); // Actualiza el valor del input
+                            $('#frecuencia_cardiaca_actual').text('Frecuencia actual: ' + data.frecuencia_cardiaca + ' bpm');
+                        } else {
+                            $('#frecuencia_cardiaca_actual').text('Esperando lectura de frecuencia cardíaca...');
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error al obtener la frecuencia cardíaca:', error);
+                        $('#frecuencia_cardiaca_actual').text('Error al obtener la frecuencia cardíaca.');
+                    }
+                });
+            }
+
+            // Ejecutar la función cada 5 segundos (5000 milisegundos)
+            setInterval(actualizarFrecuenciaCardiaca, 5000);
+        });
     </script>
 {% endblock %}

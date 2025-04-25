@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_exempt
 
 from usuarios.decorators import role_required
 
@@ -57,3 +59,27 @@ def crear_consulta(request):
         'consulta_form': consulta_form,
         'signos_form': signos_form
     })
+
+
+frecuencia_cardiaca_temporal = {} # Diccionario para almacenar temporalmente la frecuencia
+
+@csrf_exempt # Necesario para peticiones POST desde fuera del formulario de Django
+def recibir_frecuencia(request):
+    if request.method == 'POST':
+        try:
+            frecuencia = request.POST.get('frecuencia_cardiaca')
+            # Aquí podrías implementar lógica para identificar la consulta o el médico
+            # Por ahora, simplemente almacenamos la última frecuencia recibida
+            frecuencia_cardiaca_temporal['ultima_lectura'] = frecuencia
+            return JsonResponse({'status': 'success', 'mensaje': 'Frecuencia cardíaca recibida'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'mensaje': str(e)}, status=400)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+def obtener_ultima_frecuencia(request):
+    if 'ultima_lectura' in frecuencia_cardiaca_temporal:
+        frecuencia = frecuencia_cardiaca_temporal['ultima_lectura']
+        return JsonResponse({'frecuencia_cardiaca': frecuencia})
+    else:
+        return JsonResponse({'frecuencia_cardiaca': None})
