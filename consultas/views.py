@@ -9,7 +9,6 @@ from usuarios.decorators import role_required
 
 from .forms import ConsultaForm, SignosVitalesForm
 
-
 @never_cache
 @login_required
 @role_required(['medico'])
@@ -22,13 +21,12 @@ def crear_consulta(request):
     if not request.user.role.nombre_rol == 'medico':
         messages.error(request, 'Solo los médicos pueden crear consultas.')
         return redirect('dashboard')
+    # Crear las instancias de los formularios con los datos enviados
+    consulta_form = ConsultaForm(data=request.POST or None)
+    signos_form = SignosVitalesForm(data=request.POST or None)
 
     # Si el método es POST (es decir, el usuario está enviando el formulario)
     if request.method == 'POST':
-        # Crear las instancias de los formularios con los datos enviados
-        consulta_form = ConsultaForm(request.POST)
-        signos_form = SignosVitalesForm(request.POST)
-
         # Validar ambos formularios
         if consulta_form.is_valid() and signos_form.is_valid():
             # Si ambos formularios son válidos, proceder con la creación de los objetos
@@ -47,13 +45,9 @@ def crear_consulta(request):
             return redirect('medico_consultas')
         else:
             # Si los formularios no son válidos, mostrar un mensaje de error
-            messages.error(request, 'Por favor corrige los errores en el formulario.')
-
+            messages.error(request, 'Por favor corrige los errores en el formulario.')      
     # Si el método no es POST, solo mostrar los formularios vacíos
-    else:
-        consulta_form = ConsultaForm()
-        signos_form = SignosVitalesForm()
-
+    
     # Renderizar la plantilla con los formularios
     return render(request, 'crear_consulta.html', {
         'consulta_form': consulta_form,
