@@ -457,11 +457,11 @@ def editar_historial(request, pk):
     de lo contrario, se muestra el formulario con los datos actuales del historial.
     """
     historial = get_object_or_404(HistorialMedico, id_historial=pk)
-    if request.method == 'POST':
-        form = HistorialMedicoForm(request.POST, instance=historial)
-        if form.is_valid():
+    datos = request.POST if request.method == 'POST' else None
+    form = HistorialMedicoForm(datos, instance=historial)
+
+    if request.method == 'POST' and form.is_valid():
             form.save()
-            return redirect('medico_historiales')  # Cambia a la URL de tu vista principal
-    else:
-        form = HistorialMedicoForm(instance=historial)
+            return redirect('medico_historiales')
+
     return render(request, 'editar_historial.html', {'form': form, 'historial': historial})
