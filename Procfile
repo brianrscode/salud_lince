@@ -1,0 +1,1 @@
+web: guinicorn sistema_medico.wsgi
