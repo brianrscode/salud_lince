@@ -31,10 +31,12 @@ INSTALLED_APPS = [
     'usuarios',
     'consultas',
     'admin_extra_buttons',
+    'whiteNoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -142,3 +144,9 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 # SESSION_COOKIE_SECURE = True     # Solo si usas HTTPS
 # CSRF_COOKIE_SECURE = True        # Solo si usas HTTPS
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
