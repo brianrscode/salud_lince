@@ -1,1 +1,1 @@
-web: python manage.py collectstatic && gunicorn sistema_medico.wsgi
+web: python manage.py collectstatic --noinput && gunicorn sistema_medico.wsgi
