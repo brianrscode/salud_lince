@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://web-production-cbf2.up.railway.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://web-production-d8f7d.up.railway.app']
 
 
 # Application definition
@@ -150,4 +150,4 @@ STORAGES = {
     },
 }
 
-CSRF_TRUSTED_ORIGINS = ['http://*', 'https://web-production-cbf2.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['http://*', 'https://web-production-d8f7d.up.railway.app']
