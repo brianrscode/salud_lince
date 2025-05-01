@@ -142,7 +142,7 @@ def medico_dashboard(request):
 
     ##################### Gráfica de barras de cantidad de pacientes por área #####################
     # Obtenemos la cantidad de usuarios agrupados por su carrera o puesto
-    carrera_o_puesto = Usuario.objects.values('carrera_o_puesto_id').annotate(total=Count('carrera_o_puesto_id'))
+    carrera_o_puesto = Usuario.objects.values('carrera_o_puesto_id').annotate(total=Count('carrera_o_puesto_id')).exclude(carrera_o_puesto_id="Médico")
     # Creamos la gráfica de barras con Plotly para mostrar cuántos pacientes hay por área
     areas_fig = go.Figure([go.Bar(
         x=[c['carrera_o_puesto_id'] for c in carrera_o_puesto],
