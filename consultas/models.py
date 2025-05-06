@@ -45,7 +45,6 @@ class SignosVitales(models.Model):
     peso = models.DecimalField('Peso (kg)', max_digits=4, decimal_places=1, blank=True, null=True,
                                validators=[RegexValidator(
                                    regex=r'([4-9][0-9]|1[0-9][0-9])(\.[0-9])?',
-                                   message='Formato de peso no valido (ej: "40.0-199.9")'
                                )])  # en kg
     talla = models.DecimalField('Talla (m)', max_digits=4, decimal_places=2, blank=True, null=True,
                                 validators=[RegexValidator(
