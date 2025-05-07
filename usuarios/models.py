@@ -86,7 +86,7 @@ class Role(models.Model):
 class Usuario(AbstractBaseUser, PermissionsMixin):
     clave = models.CharField('clave', max_length=9, primary_key=True, unique=True,
                              validators=[RegexValidator(
-                                 regex=r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6})|^(admin[0-9])|^([0-9]{4})$',
+                                 regex=r'^((ib|im|ii|ie|isc|lg|am)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4})$',
                                  message='Formato de clave no valido'
                              )])
     email = models.EmailField('Correo', unique=True,
