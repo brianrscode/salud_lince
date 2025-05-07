@@ -32,7 +32,7 @@ class LoginForm(forms.Form):
 
     def clean_clave(self):
         clave = self.cleaned_data.get('clave')
-        token_clave = r'^(?:(?:(?:ib|im|ii|ie|isc|lg|am)\d{6}|\d{4}|[A-Za-z]+(?:\.[A-Za-z]+))@itsatlixco\.edu\.mx|admin\d@admin\.com)$'
+        token_clave = r'^((ib|im|ii|ie|isc|lg|am)[0-9]{6})|^(admin[0-9])|^([0-9]{6})$'
 
         if not re.match(token_clave, clave):
             raise forms.ValidationError("Clave no válida.")
