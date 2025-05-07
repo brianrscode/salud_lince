@@ -91,7 +91,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
                              )])
     email = models.EmailField('Correo', unique=True,
                               validators=[RegexValidator(
-                                  regex=r'^(?:ib|im|ii|ie|isc|lg|am)\.[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+\.[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+@itsatlixco\.edu\.mx$',
+                                  regex=r'^(ib|im|ii|ie|isc|lg|am)\.' r'[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+' r'\.[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+' r'|'  r'[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+' r'\.[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+' r')' r'@itsatlixco\.edu\.mx$',
                                   message='Formato de correo no valido'
                               )])
     nombres = models.CharField('Nombres', max_length=100,
