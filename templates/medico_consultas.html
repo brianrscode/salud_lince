@@ -31,22 +31,75 @@
     </div>
 {% endif %}
 
-<a class="btn btn-primary fuente-belleza" href="{% url 'crear_consulta' %}">Crear nueva consulta</a><br><br>
+<a class="btn btn-success fuente-belleza" href="{% url 'crear_consulta' %}">Crear nueva consulta</a><br><br>
 
 <div class="mb-3 fuente-belleza">
     {% if mostrar_todas %}
         <a href="?todas=0" class="btn btn-primary">Mostrar solo mis consultas</a>
+        <form method="GET" class="mb-3"> <!--Formulario que contiene las opciones busqueda-->
+          <input type = "hidden" name = "todas" value ="1">
+          <div class="row my-4">
+              <div class="col-md-3">
+                  <div class="form-group">
+                      <label for="clave_paciente">Clave del Paciente:</label>
+                      <input type="text" class="form-control-mb" id="clave_paciente" name="clave_paciente" value="{{ request.GET.clave_paciente }}">
+                  </div>
+              </div>
+              <div class="col-md-2">
+                  <div class="form-group">
+                      <label for="fecha_inicio">Fecha de Inicio:</label>
+                      <input type="date" class="form-control-mb" id="fecha_inicio" name="fecha_inicio" value="{{ request.GET.fecha_inicio }}">
+                  </div>
+              </div>
+              <div class="col-md-2">
+                  <div class="form-group">
+                      <label for="fecha_fin">Fecha de Fin:</label>
+                      <input type="date" class="form-control-mb" id="fecha_fin" name="fecha_fin" value="{{ request.GET.fecha_fin }}">
+                  </div>
+              </div>
+              <div class="col-md-3">
+                  <button type="submit" class="btn btn-primary mt-3">Buscar</button>
+                  <a href="{% url 'medico_consultas' %}{% if mostrar_todas %}?todas=1{% endif %}" class="btn btn-danger mt-3 ml-2">Cancelar</a>
+              </div>
+          </div>
+      </form>
     {% else %}
         <a href="?todas=1" class="btn btn-secondary">Mostrar todas las consultas</a>
+        <form method="GET" class="mb-3"> <!--Formulario que contiene las opciones busqueda-->
+          <div class="row my-3">
+              <div class="col-md-3">
+                  <div class="form-group">
+                      <label for="clave_paciente">Clave del Paciente:</label>
+                      <input type="text" class="form-control-mb" id="clave_paciente" name="clave_paciente" value="{{ request.GET.clave_paciente }}">
+                  </div>
+              </div>
+              <div class="col-md-2">
+                  <div class="form-group">
+                      <label for="fecha_inicio">Fecha de Inicio:</label>
+                      <input type="date" class="form-control-mb" id="fecha_inicio" name="fecha_inicio" value="{{ request.GET.fecha_inicio }}">
+                  </div>
+              </div>
+              <div class="col-md-2">
+                  <div class="form-group">
+                      <label for="fecha_fin">Fecha de Fin:</label>
+                      <input type="date" class="form-control-mb" id="fecha_fin" name="fecha_fin" value="{{ request.GET.fecha_fin }}">
+                  </div>
+              </div>
+              <div class="col-md-3">
+                  <button type="submit" class="btn btn-primary mt-3">Buscar</button>
+                  <a href="{% url 'medico_consultas' %}{% if mostrar_todas %}?todas=1{% endif %}" class="btn btn-danger mt-3 ml-2">Cancelar</a>
+              </div>
+          </div>
+      </form>
     {% endif %}
 </div>
 
 <table class="table table-striped fuente-belleza">
     <thead>
         <tr>
-            <th>Fecha</th>
-            <th>Padecimiento Actual</th>
-            <th>Tratamiento</th>
+            <th>Fecha</th> 
+            <th>Paciente</th>
+            <th>Padecimiento/Tratamiento</th>
         </tr>
     </thead>
     <tbody class="table-hover-row fuente-belleza">
@@ -67,9 +120,9 @@
                 "frecuencia_respiratoria": "{{ consulta.signos_vitales.frecuencia_respiratoria }}",
                 "presion_arterial": "{{ consulta.signos_vitales.presion_arterial }}"
             }'>
-            <td>{{ consulta.fecha }}</td>
-            <td>{{ consulta.padecimiento_actual }}</td>
-            <td>{{ consulta.tratamiento_no_farmacologico }} / {{ consulta.tratamiento_farmacologico_recetado }}</td>
+            <td>{{ consulta.fecha }}</td> <!--Datos de la consulta que se previsualizan -->
+            <td>{{ consulta.clave_paciente }}</td>
+            <td>{{ consulta.padecimiento_actual }} / {{ consulta.tratamiento_farmacologico_recetado }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -85,12 +138,12 @@
             </div>
             <div class="modal-body fuente-belleza">
                 <p><strong>Fecha:</strong> <span id="detalleFecha"></span></p>
+                <p><strong>Clave Paciente:</strong> <span id="detalleClavePaciente"></span></p>
+                <p><strong>Clave Médico:</strong> <span id="detalleClaveMedico"></span></p>
                 <p><strong>Padecimiento Actual:</strong> <span id="detallePadecimiento"></span></p>
                 <p><strong>Tratamiento No Farmacológico:</strong> <span id="detalleTratamientoNoFarmacologico"></span></p>
                 <p><strong>Tratamiento Farmacológico:</strong> <span id="detalleTratamientoFarmacologico"></span></p>
                 <p><strong>Categoría del padecimiento:</strong> <span id="detalleCategoriaPadecimiento"></span></p>
-                <p><strong>Clave Paciente:</strong> <span id="detalleClavePaciente"></span></p>
-                <p><strong>Clave Médico:</strong> <span id="detalleClaveMedico"></span></p>
                 <h5 class="modal-title fuente-seasons fw-bold">Signos Vitales</h5>
                 <ul>
                     <li><strong>Peso:</strong> <span id="detallePeso"></span></li>
