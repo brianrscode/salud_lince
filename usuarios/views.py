@@ -8,6 +8,7 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import never_cache
 from django_ratelimit.decorators import ratelimit
+from django.utils import timezone #importar timezone 
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -387,11 +388,39 @@ def medico_consultas(request):
     Si no, se mostrarán solo las consultas relacionadas con el médico autenticado.
     """
     mostrar_todas = request.GET.get('todas', '0') == '1'  # Leer parámetro 'todas'
-    if mostrar_todas:
-        # Mostrar primero la consulta con el més reciente
-        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').all()
-    else:
-        consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales').filter(clave_medico=request.user)
+    consultas = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales')
+    
+    if not mostrar_todas:
+        consultas = consultas.filter(clave_medico=request.user)
+    
+    clave_paciente_con = request.GET.get('clave_paciente') #variables para la busqueda
+    fecha_inicio_con = request.GET.get('fecha_inicio')
+    fecha_fin_con = request.GET.get('fecha_fin')
+
+
+    if clave_paciente_con: #busqueda por clave del paciente
+        consultas = consultas.filter(clave_paciente__clave__icontains=clave_paciente_con)
+    if fecha_inicio_con and fecha_fin_con: #busqueda por fechas 
+        try:
+            fecha_inicio = timezone.datetime.strptime(fecha_inicio_con,'%d-%m-%Y').date()
+            fecha_fin = timezone.datetime.strptime(fecha_fin_con, '%d-%m-%Y').date()
+            consultas = consultas.filter(fecha__date__gte=fecha_inicio, fecha__date__lte=fecha_fin)
+        except ValueError:
+            pass
+    elif fecha_inicio_con:
+        try:
+            fecha_inicio = timezone.datetime.strptime(fecha_fin_con, '%d-%m-%Y').date()
+            consultas = consultas.filter(fecha__date__gte=fecha_inicio)
+        except ValueError:
+            pass
+    elif fecha_fin_con:
+        try:
+            fecha_fin = timezone.datetime.strptime(fecha_fin_con, '%d-%m-%Y').date()
+            consultas = consultas.filter(fecha__date__lte=fecha_fin)
+        except ValueError:
+            pass
+
+    consultas = consultas.order_by('-fecha')
 
     paginador = Paginator(consultas, 20)  # Mostrar 10 consultas por páginas
     pagina = request.GET.get('page', 1)
@@ -404,7 +433,10 @@ def medico_consultas(request):
 
     return render(request, "medico_consultas.html", {
         "consultas": consultas,
-        "mostrar_todas": mostrar_todas
+        "mostrar_todas": mostrar_todas,
+        "clave_paciente": clave_paciente_con,
+        "fecha_inicio": fecha_fin_con,
+        "fecha_fin": fecha_fin_con,
     })
 
 
