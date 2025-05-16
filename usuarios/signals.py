@@ -30,15 +30,15 @@ def crear_areas_por_defecto(sender, **kwargs):
     Si ya existen en la base de datos, no se crean nuevamente.
     """
     areas = [
-        "Sistemas",
-        "Bioquímica",
-        "Mecatrónica",
-        "Industrial",
-        "Electromecánica",
-        "Gastronomía",
+        "ING. SISTEMAS COMP.",
+        "ING. BIOQUÍMICA",
+        "ING. MECATRÓNICA",
+        "ING. INDUSTRIAL",
+        "ELECTROMECÁNICA",
+        "GASTRONOMÍA",
         "Maestría",
         "Médico",
-        "Administración",
+        "ADMINISTRATIVO",
         "Docente"
     ]
     for area in areas:
@@ -49,7 +49,7 @@ def crear_areas_por_defecto(sender, **kwargs):
 def crear_grupos_permisos(sender, **kwargs):
     """
     Esta función crea los grupos de usuarios y asigna los permisos correspondientes a cada uno después de una migración.
-    
+
     Los grupos creados son: 'Medico', 'Paciente', y 'Administrador'.
     Además, se asignan permisos específicos a cada grupo según el modelo al que se refieren.
     """
@@ -94,7 +94,7 @@ def crear_grupos_permisos(sender, **kwargs):
 def asignar_grupo_y_crear_historial(sender, instance, created, **kwargs):
     """
     Esta función se ejecuta automáticamente después de que se cree un nuevo usuario ('Usuario').
-    
+
     Dependiendo del rol del usuario, se asigna a un grupo correspondiente (Medico, Paciente, Administrador).
     Si el rol es 'paciente', también se crea un historial médico para el paciente si corresponde.
     """
