@@ -54,10 +54,10 @@ class SignosVitales(models.Model):
                                       validators=[RegexValidator(
                                           regex=r'(3[5-9]|4[0-3])(\.[0-9])?',
                                       )])  # en °C
-    frecuencia_cardiaca = models.IntegerField('Frecuencia cardíaca (bpm)', blank=True, null=True,
+    frecuencia_cardiaca = models.IntegerField('Frecuencia cardíaca (ppm)', blank=True, null=True, # bpm ahora es ppm
                                               validators=[RegexValidator(
                                                   regex=r'(5[0-9]|[6-9][0-9]|100)',
-                                              )])  # en bpm
+                                              )])  
     frecuencia_respiratoria = models.IntegerField('Frecuencia respiratoria (rpm)', blank=True, null=True,
                                               validators=[RegexValidator(
                                                   regex=r'^(12|1[3-9]|2[0-9]|3[0-9]|40)$',
