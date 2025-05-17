@@ -138,7 +138,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.clave} - {self.nombres} - {self.role}'
+        return f'{self.clave} - {self.nombres} {self.apellido_paterno} {self.apellido_materno}' #datos que se muestran en consultas e historiales 
 
     def has_perm(self, perm, obj=None):
         return True
