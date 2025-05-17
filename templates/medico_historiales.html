@@ -13,7 +13,7 @@
     {% comment %} Barra de búsqueda {% endcomment %}
     <form method="GET" action="" class="mb-4">
         <div class="input-group">
-            <input type="text" name="search" class="form-control fuente-belleza" placeholder="Buscar por ID del historial" value="{{ query }}">
+            <input type="text" name="search" class="form-control fuente-belleza" placeholder="Buscar por clave del paciente" value="{{ query }}">
             <button type="submit" class="btn btn-primary fuente-belleza">Buscar</button>
         </div>
     </form>
@@ -26,7 +26,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title fuente-belleza">Paciente: {{ historial.paciente }}</h5>
-                            <p class="card-text mb-1 fuente-belleza" ><strong>ID:</strong> {{ historial.id_historial }}</p>
+                            <p class="card-text mb-1 fuente-belleza" ><strong>Clave:</strong> {{ historial.id_historial }}</p>
                             <p class="card-text mb-1 fuente-belleza"><strong>Enfermedades crónicas:</strong> {{ historial.enfermedades_cronicas }}</p>
                             <p class="card-text mb-1 fuente-belleza"><strong>Alergias:</strong> {{ historial.alergias }}</p>
                             <p class="card-text mb-1 fuente-belleza"><strong>Medicamentos usados:</strong> {{ historial.medicamento_usado }}</p>
