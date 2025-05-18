@@ -14,7 +14,7 @@ class ConsultaTestCase(TestCase):
             nombres='John',
             apellido_paterno='Doe',
             fecha_nacimiento='1990-01-01',
-            carrera_o_puesto='Sistemas',
+            carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123',
             role='admin'
         )

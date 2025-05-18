@@ -11,9 +11,9 @@ class UsuarioTestCase(TestCase):
             nombres='John',
             apellido_paterno='Doe',
             fecha_nacimiento='1990-01-01',
-            carrera_o_puesto='Sistemas',
+            carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123',
-            role='admin'
+            role='paciente'
         )
 
         cls.user2 = Usuario.objects.create_user(
@@ -22,7 +22,7 @@ class UsuarioTestCase(TestCase):
             nombres='John',
             apellido_paterno='Doe',
             fecha_nacimiento='1990-01-01',
-            carrera_o_puesto='Sistemas',
+            carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123',
             role='medico'
         )
@@ -33,7 +33,7 @@ class UsuarioTestCase(TestCase):
 
     def test_user_role(self):
         usuario = Usuario.objects.get(email='isc221733@itsatlixco.edu.mx')
-        self.assertEqual('admin', usuario.role.nombre_rol)
+        self.assertEqual('paciente', usuario.role.nombre_rol)
 
     def test_user2_exists(self):
         usuario = Usuario.objects.get(email='isc221734@itsatlixco.edu.mx')
@@ -54,7 +54,7 @@ class HistorialMedicoTestCase(TestCase):
             nombres='John',
             apellido_paterno='Doe',
             fecha_nacimiento='1990-01-01',
-            carrera_o_puesto='Sistemas',
+            carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123'
         )
         # Primero verificamos si ya existe un historial para ese paciente.

@@ -19,7 +19,14 @@ class UsuarioManager(BaseUserManager):
 
         # Asignar el rol por defecto si no se proporciona uno
         if role is None:
-            role = Role.objects.get(nombre_rol='paciente')
+            # role = Role.objects.get(nombre_rol='paciente')
+            area_nombre = carrera_o_puesto
+            if area_nombre == 'Médico':
+                role = Role.objects.get(nombre_rol='medico')
+            if area_nombre == 'ADMINISTRATIVO':
+                role = Role.objects.get(nombre_rol='administrador')
+            else:
+                role = Role.objects.get(nombre_rol='paciente')
 
         # Buscar role y carrera
         try:
@@ -49,7 +56,7 @@ class UsuarioManager(BaseUserManager):
         return usuario
 
 
-    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, sexo=None, password=None, role="admin", carrera_o_puesto="Administración"):
+    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, sexo=None, password=None, role="admin", carrera_o_puesto="ADMINISTRATIVO"):
         usuario = self.create_user(
             clave=clave,
             nombres=nombres,

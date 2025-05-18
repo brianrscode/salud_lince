@@ -5,7 +5,7 @@ from django.urls import path, reverse
 import pandas as pd
 
 from .forms import BulkUserUploadForm
-from .models import HistorialMedico, Role, Usuario
+from .models import Area, HistorialMedico, Role, Usuario
 from django.contrib.admin import AdminSite
 
 class SitioAdminSoloSuperusuarios(AdminSite):
@@ -67,7 +67,31 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                         try:
                             # Validar valores vacíos y corregir tipos de datos
                             apellido_materno = str(row.get("apellido_materno", "")).strip() or None
-                            pas = str(row.get("password", "")).strip() or "P@ssword123"
+                            valor_pas = row.get("password", "")
+                            pas = "P@ssword123" if pd.isna(valor_pas) or str(valor_pas).strip() == "" else str(valor_pas).strip()
+
+                            # Obtener el objeto del área
+                            area_obj = Area.objects.get(carrera_o_puesto=row.get("carrera_o_puesto"))
+
+                            # Asignar automáticamente el objeto Role según el área
+                            area_nombre = area_obj.carrera_o_puesto.strip()
+                            role_obj = None
+
+                            if area_nombre == "Médico":
+                                role_obj = Role.objects.get(nombre_rol="medico")
+                            elif area_nombre == "ADMINISTRATIVO":
+                                role_obj = Role.objects.get(nombre_rol="admin")
+                            else:
+                                role_obj = Role.objects.get(nombre_rol="paciente")
+
+
+                            # print("Area y Role obtenidos:")
+                            # print(area_obj.carrera_o_puesto)
+                            # print(area_obj)
+                            # print(role_obj)
+                            # print(f"DEBUG: role_obj: {role_obj}, id: {getattr(role_obj, 'id', 'NO ID')}")
+                            # print("-" * 20)
+
 
                             usuario, creado = Usuario.objects.update_or_create(
                                 clave=row["clave"],
@@ -81,12 +105,15 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                                     "is_active": row.get("is_active", "True") == "True",
                                     "is_staff": row.get("is_staff", "False") == "True",
                                     "carrera_o_puesto_id": row.get("carrera_o_puesto", None),
-                                    "role_id": row.get("role", None),
+                                    "role_id": role_obj.nombre_rol,
                                 }
                             )
 
                             # Si es un usuario nuevo, se le asigna contraseña
                             if creado:
+                                print("+" * 20)
+                                print(f"Contraseña asignada: {pas}")
+                                print("+" * 20)
                                 usuario.set_password(pas)
                                 usuarios_creados += 1
                             else:
