@@ -23,8 +23,18 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     search_fields = ('clave', 'email', 'nombres',)
 
     def save_model(self, request, obj, form, change):
+        # if not change:
+        #     obj.set_password(form.cleaned_data['password'])
+
+        # if not self.pk and not self.has_usable_password():
+        #     self.set_password('P@ssword123')  # Cambia esto por la contraseña que desees
         if not change:
-            obj.set_password(form.cleaned_data['password'])
+            # Si no se proporciona una contraseña, se asigna una por defecto
+            password = form.cleaned_data.get('password')
+            if not password:
+                password = 'P@ssword123'  # Cambia esto por la contraseña que desees
+            obj.set_password(password)
+
         super().save_model(request, obj, form, change)
 
     def get_urls(self):

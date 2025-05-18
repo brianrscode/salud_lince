@@ -124,7 +124,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         'Contraseña',
         max_length=128,
         validators=[password_validator],
-        blank=False
+        blank=True
     )
 
     def save(self, *args, **kwargs):
@@ -132,13 +132,16 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         if self.password and not self.password.startswith('pbkdf2_sha256$'):
             self.password = make_password(self.password)
 
+        if not self.pk and not self.has_usable_password():
+            self.set_password('P@ssword123')  # Cambia esto por la contraseña que desees
+
         if self.role is None:
             self.role = Role.objects.get(nombre_rol='paciente')
 
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.clave} - {self.nombres} {self.apellido_paterno} {self.apellido_materno}' #datos que se muestran en consultas e historiales 
+        return f'{self.clave} - {self.nombres} {self.apellido_paterno} {self.apellido_materno}' #datos que se muestran en consultas e historiales
 
     def has_perm(self, perm, obj=None):
         return True
