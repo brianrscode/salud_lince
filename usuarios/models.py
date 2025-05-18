@@ -10,6 +10,18 @@ from django.db import models
 
 
 class UsuarioManager(BaseUserManager):
+    """
+    Manager personalizado para el modelo de Usuario.
+    Permite la creación de usuarios con campos adicionales como clave,
+    nombres, apellidos, fecha de nacimiento, sexo, rol y carrera o puesto.
+
+    Requiere:
+        - Correo electrónico obligatorio.
+        - Rol y carrera/puesto deben existir previamente en la base de datos.
+    Si no se proporciona un rol, se asigna automáticamente el rol de 'paciente'.
+    Returns:
+        Usuario: Objeto de usuario creado y guardado en la base de datos.
+    """
     def create_user(self, clave, nombres, email, apellido_paterno, fecha_nacimiento, sexo=None, apellido_materno=None, password=None, role=None, carrera_o_puesto=None):
         if not email:
             raise ValueError('El usuario debe tener un correo electrónico')
@@ -27,11 +39,13 @@ class UsuarioManager(BaseUserManager):
         except ObjectDoesNotExist:
             raise ValueError(f"El rol {role} no existe")
 
+        # Buscar objeto de área correspondiente en la base de datos
         try:
             carrera_o_puesto_obj = Area.objects.get(carrera_o_puesto=carrera_o_puesto)
         except ObjectDoesNotExist:
             raise ValueError(f"La carrera o puesto {carrera_o_puesto} no existe")
 
+        # Crear instancia de usuario con los datos proporcionados
         usuario = self.model(
             clave=clave,
             nombres=nombres,
@@ -49,6 +63,15 @@ class UsuarioManager(BaseUserManager):
         return usuario
 
 
+    """
+    Crea y retorna un superusuario para el sistema.
+    Este método extiende el método `create_user`, agregando los privilegios
+    de superusuario y staff necesarios para acceder al panel de administración
+    de Django.
+
+    Returns:
+        Usuario: Objeto de superusuario creado y guardado en la base de datos.
+    """
     def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, sexo=None, password=None, role="admin", carrera_o_puesto="Administración"):
         usuario = self.create_user(
             clave=clave,
@@ -69,21 +92,53 @@ class UsuarioManager(BaseUserManager):
 
 
 class Area(models.Model):
-    carrera_o_puesto = models.CharField(max_length=50, unique=True, primary_key=True)
+    """
+    Modelo que representa las áreas académicas o puestos administrativos.
+    Cada área o puesto está representado por una cadena única. Este modelo
+    se utiliza para asociar a los usuarios con su carrera o función dentro
+    de la institución.
 
+    Atributos:
+        carrera_o_puesto (CharField): Nombre único del área o puesto. Actúa como clave primaria.
+    Métodos:
+        __str__(): Retorna una representación legible del área o puesto.
+    """
+    carrera_o_puesto = models.CharField(max_length=50, unique=True, primary_key=True)
     def __str__(self):
         return self.carrera_o_puesto
 
 
 class Role(models.Model):
+    """
+    Modelo que representa los roles que un usuario puede tener dentro del sistema.
+    Cada rol define el nivel de acceso y funcionalidades disponibles
+    para el usuario (ej. paciente, médico, administrador).
+
+    Atributos:
+        nombre_rol (CharField): Nombre único del rol. Actúa como clave primaria.
+        descripcion (CharField): Descripción opcional del rol.
+    Métodos:
+        __str__(): Retorna una representación legible del rol.
+    """
     nombre_rol = models.CharField(max_length=20, unique=True, primary_key=True)
     descripcion = models.CharField(max_length=50, blank=True, null=True)
-
     def __str__(self):
         return self.nombre_rol
 
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
+    """
+    Modelo personalizado de usuario para el sistema de gestión médica.
+    Este modelo extiende `AbstractBaseUser` y `PermissionsMixin` para soportar
+    autenticación personalizada mediante una clave única institucional y correo
+    validado. Incluye campos para datos personales y de control de acceso.
+
+    Métodos:
+        (Heredados de `AbstractBaseUser` y `PermissionsMixin`)
+    Requiere definir:
+        - USERNAME_FIELD
+        - REQUIRED_FIELDS
+    """
     clave = models.CharField('clave', max_length=9, primary_key=True, unique=True,
                              validators=[RegexValidator(
                                  regex=r'^((ib|im|ii|ie|isc|lg|am)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$',
@@ -148,6 +203,15 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
 
 class HistorialMedico(models.Model):
+    """
+    Modelo que representa el historial médico de un paciente.
+    Contiene información relevante sobre condiciones crónicas, uso de sustancias,
+    hábitos y otros factores clínicos. Cada historial está vinculado
+    uno a uno con un paciente del sistema.
+
+    Métodos:
+        __str__(): Devuelve una representación en texto del identificador del historial.
+    """
     id_historial = models.CharField('Id Historial', max_length=9, primary_key=True, unique=True, editable=False)
     enfermedades_cronicas = models.CharField('Enfermedades crónicas', max_length=150, blank=True, null=True)
     alergias = models.CharField('Alergias', max_length=150, blank=True, null=True)

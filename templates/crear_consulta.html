@@ -8,7 +8,7 @@
 {% block title %}Crear Consulta{% endblock %}
 
 {% block content %}
-    <h1 class="modal-title fuente-seasons">Crear Nueva Consulta</h1>
+    <h1 class="modal-title fuente-seasons">Crear nueva consulta</h1>
 
     {% comment %} Mensajes y errores {% endcomment %}
 
@@ -35,17 +35,17 @@
             </div>
         {% endif %}
         {% comment %}  Barra de búsqueda  {% endcomment %}
-        <label for="search-clave" class="fuente-belleza">Buscar Paciente por Clave:</label>
+        <label for="search-clave" class="fuente-belleza">Buscar paciente por clave:</label>
         <input type="text" id="search-clave" class="form-control fuente-belleza" placeholder="Ingrese clave del paciente">
         <button type="button" class="btn btn-secondary mt-3 fuente-belleza" onclick="buscarPaciente()">Buscar</button>
         <small id="search-result" class="text-muted"></small>
 
         <div class="mb-3 mt-2">
-            <label for="id_clave_paciente_display" class="form-label fuente-belleza">Paciente Seleccionado:</label>
+            <label for="id_clave_paciente_display" class="form-label fuente-belleza">Paciente seleccionado:</label>
             <input type="text" name="clave_paciente_display" id="id_clave_paciente_display" class="form-control" readonly>
         </div>
 
-        <h2 class="modal-title fuente-seasons mt-1">Datos de la Consulta</h2>
+        <h2 class="modal-title fuente-seasons mt-1">Datos de la consulta</h2>
         {% for field in consulta_form %}
             <div class="mb-3">
                 {% if field.errors %}
@@ -60,7 +60,7 @@
             </div>
         {% endfor %}
 
-        <h2 class="modal-title fuente-seasons mt-1">Signos Vitales</h2>
+        <h2 class="modal-title fuente-seasons mt-1">Signos vitales</h2>
         {% for field in signos_form %}
             <div class="mb-3">
                 {% if field.errors %}
