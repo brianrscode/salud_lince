@@ -111,15 +111,15 @@ def medico_dashboard(request):
     historiales = HistorialMedico.objects.filter(paciente__is_active=True)
     habitos = {
         'Fuman': historiales.filter(usa_cigarro=True).count(),
-        'Ingiere Alcohol': historiales.filter(ingiere_alcohol=True).count(),
-        'Usa Drogas': historiales.filter(usa_drogas=True).count(),
+        'Ingiere alcohol': historiales.filter(ingiere_alcohol=True).count(),
+        'Usa drogas': historiales.filter(usa_drogas=True).count(),
         'Embarazadas': historiales.filter(es_embarazada=True).count(),
-        'Usa Lentes': historiales.filter(usa_lentes=True).count(),
-        'vida sexual activa': historiales.filter(vida_sexual_activa=True).count(),
-        'Usa Métodos anticonceptivos': historiales.filter(usa_metodos_anticonceptivos=True).count(),
+        'Usa lentes': historiales.filter(usa_lentes=True).count(),
+        'Vida sexual activa': historiales.filter(vida_sexual_activa=True).count(),
+        'Usa métodos anticonceptivos': historiales.filter(usa_metodos_anticonceptivos=True).count(),
     }
     habitos_fig = go.Figure([go.Bar(x=list(habitos.keys()), y=list(habitos.values()), marker_color='indianred')])
-    habitos_fig.update_layout(title_text="Pacientes con Hábitos", xaxis_title="Hábito", yaxis_title="Cantidad")
+    habitos_fig.update_layout(title_text="Pacientes con hábitos", xaxis_title="Hábito", yaxis_title="Cantidad")
 
     ##################### Gráfica para tipos de consultas #####################
     consultas = Consulta.objects.values('categoria_de_padecimiento').annotate(total=Count('categoria_de_padecimiento'))
@@ -129,12 +129,12 @@ def medico_dashboard(request):
         consultas_fig = px.bar(
             x=[padecimientos_dict.get(c['categoria_de_padecimiento'], "OTROS") for c in consultas],
             y=[c['total'] for c in consultas],
-            title="Distribución de Tipos de Consultas"
+            title="Distribución de tipos de consultas"
         )
     else:
         consultas_fig = go.Figure()
         consultas_fig.update_layout(
-            title="Distribución de Tipos de Consultas",
+            title="Distribución de tipos de consultas",
             annotations=[{
                 'text': "No hay datos de consultas",
                 'xref': "paper", 'yref': "paper",
@@ -152,7 +152,7 @@ def medico_dashboard(request):
         marker_color='indianred'
     )])
     # Configuramos los títulos de la gráfica
-    areas_fig.update_layout(title_text="Distribución de Áreas", xaxis_title="Área", yaxis_title="Cantidad")
+    areas_fig.update_layout(title_text="Distribución de áreas", xaxis_title="Área", yaxis_title="Cantidad")
 
     ##################### Gráfica por área y tipo de consulta #####################
     # Obtenemos la cantidad de consultas agrupadas por área (carrera/puesto) y tipo de padecimiento
@@ -162,9 +162,9 @@ def medico_dashboard(request):
         df = pd.DataFrame(datos)
         df["categoria_de_padecimiento"] = df["categoria_de_padecimiento"].map(padecimientos_dict)
         labels = {
-            "categoria_de_padecimiento": "Categoría de Padecimiento",
-            "total": "Total de Pacientes",
-            "clave_paciente__carrera_o_puesto_id": "Área o Puesto"
+            "categoria_de_padecimiento": "Categoría de padecimiento",
+            "total": "Total de pacientes",
+            "clave_paciente__carrera_o_puesto_id": "Área o puesto"
         }
         padecimientos_fig = px.bar(
             df,
@@ -172,13 +172,13 @@ def medico_dashboard(request):
             y="total",
             color="clave_paciente__carrera_o_puesto_id",
             barmode="group",
-            title="Distribución de Pacientes por Área y Tipo de Consulta",
+            title="Distribución de pacientes por área y tipo de consulta",
             labels=labels
         )
     else:
         padecimientos_fig = go.Figure()
         padecimientos_fig.update_layout(
-            title="Distribución de Pacientes por Área y Tipo de Consulta",
+            title="Distribución de pacientes por área y tipo de consulta",
             annotations=[{
                 'text': "No hay datos suficientes",
                 'xref': "paper", 'yref': "paper",
@@ -208,17 +208,17 @@ def medico_dashboard(request):
             y="cantidad",
             color="clave_paciente__sexo",
             barmode="group",
-            title="Cantidad de Pacientes por Carrera/Puesto y Género",
-            labels={"clave_paciente__carrera_o_puesto_id": "Carrera/Puesto", "cantidad": "Cantidad de Pacientes", "clave_paciente__sexo": "Género"}
+            title="Cantidad de pacientes por carrera/puesto y género",
+            labels={"clave_paciente__carrera_o_puesto_id": "Carrera/puesto", "cantidad": "Cantidad de pacientes", "clave_paciente__sexo": "Género"}
         )
 
         genero_pastel = go.Figure(data=[go.Pie(labels=['Hombres', 'Mujeres'], values=[cantidad_hombres, cantidad_mujeres])])
-        genero_pastel.update_layout(title_text="Distribución de Pacientes por Género", title_x=0.5)
+        genero_pastel.update_layout(title_text="Distribución de pacientes por género", title_x=0.5)
     else:
         # Si no hay datos, se muestran gráficas vacías con un mensaje correspondiente
         genero_fig = go.Figure()
         genero_fig.update_layout(
-            title="Cantidad de Pacientes por Carrera/Puesto y Género",
+            title="Cantidad de Pacientes por Carrera/puesto y género",
             annotations=[{
                 'text': "No hay datos de género",
                 'xref': "paper", 'yref': "paper",

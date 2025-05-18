@@ -9,6 +9,16 @@ from .models import Area, HistorialMedico, Role, Usuario
 from django.contrib.admin import AdminSite
 
 class SitioAdminSoloSuperusuarios(AdminSite):
+    """
+    Sitio de administración personalizado que restringe el acceso
+    exclusivamente a usuarios superusuarios.
+    Esta clase hereda de `AdminSite` y sobrescribe el método `has_permission`
+    para permitir el ingreso solo a usuarios que estén activos y tengan el
+    atributo `is_superuser` en `True`.
+
+    Métodos:
+        has_permission(request): Retorna True solo si el usuario es superusuario activo.
+    """
     def has_permission(self, request):
         return request.user.is_active and request.user.is_superuser
 
@@ -16,18 +26,20 @@ admin_site = SitioAdminSoloSuperusuarios(name='miadmin')
 
 
 class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
+    """
+    Configuración personalizada del modelo Usuario para el sitio de administración.
+    Esta clase define cómo se muestran, ordenan, filtran y buscan los usuarios
+    dentro del panel de Django Admin. Además, agrega soporte para:
+    - Encriptar la contraseña al guardar un nuevo usuario.
+    - Incluir una URL personalizada para carga masiva de usuarios.
+    """
     model = Usuario
-    list_display = ('clave', 'nombres', 'role', 'is_staff')
-    ordering = ('email',)
-    list_filter = ('role', 'is_staff')
-    search_fields = ('clave', 'email', 'nombres',)
+    list_display = ('clave', 'nombres', 'role', 'is_staff') #Campos mostrados en la lista de registros.
+    ordering = ('email',) #Orden predeterminado de los registros.
+    list_filter = ('role', 'is_staff') #Filtros disponibles en la barra lateral.
+    search_fields = ('clave', 'email', 'nombres',) #Campos que pueden ser buscados desde el buscador.
 
     def save_model(self, request, obj, form, change):
-        # if not change:
-        #     obj.set_password(form.cleaned_data['password'])
-
-        # if not self.pk and not self.has_usable_password():
-        #     self.set_password('P@ssword123')  # Cambia esto por la contraseña que desees
         if not change:
             # Si no se proporciona una contraseña, se asigna una por defecto
             password = form.cleaned_data.get('password')
@@ -38,7 +50,11 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
     def get_urls(self):
-        """Sobrescribe el método get_urls() para agregar la URL personalizada."""
+        """
+        Agrega una URL personalizada para la carga masiva de usuarios.
+        Esta URL será accesible desde la interfaz de administración.
+
+        -Sobrescribe el método get_urls() para agregar la URL personalizada."""
         urls = super().get_urls()
         custom_urls = [
             path("bulk_upload", self.admin_site.admin_view(self.bulk_upload), name="bulk_upload"),
@@ -47,6 +63,16 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
 
     @button(label="Carga Masiva de Usuarios", html_attrs={"style": "background-color:#417690; color:white;"})
     def bulk_upload(self, request):
+        """
+        Vista personalizada para la carga masiva de usuarios desde un archivo CSV o Excel.
+
+        Permite al administrador subir un archivo .csv o .xls/.xlsx y registrar o actualizar usuarios en bloque.
+        Utiliza `pandas` para procesar el archivo y `update_or_create` para manejar inserciones o actualizaciones.
+        Comportamiento:
+        - Si el archivo es válido, se procesan todas las filas.
+        - Si hay errores por fila, se muestra un mensaje detallado.
+        - Al finalizar, se notifica cuántos usuarios fueron creados o actualizados.
+        """
         if request.method == "POST":
             form = BulkUserUploadForm(request.POST, request.FILES)
             if form.is_valid():
@@ -137,6 +163,12 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
 
 
 class HistorialAdmin(admin.ModelAdmin):
+    """
+    Configuración personalizada para el modelo HistorialMedico en el panel de administración.
+
+    Esta clase define cómo se presentan los historiales médicos en la interfaz de Django Admin,
+    permitiendo una vista rápida de los principales campos clínicos y el uso de filtros y búsqueda.
+    """
     model = HistorialMedico
     list_display = ('id_historial', 'enfermedades_cronicas', 'alergias', 'medicamento_usado', 'es_embarazada', 'usa_drogas', 'usa_cigarro', 'ingiere_alcohol')
     ordering = ('id_historial',)

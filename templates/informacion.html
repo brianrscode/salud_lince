@@ -13,9 +13,9 @@
             {% comment %}  Columna izquierda: Información del paciente  {% endcomment %}
             <div class="col-md-6">
                 {% if user.role.nombre_rol == "paciente" %}
-                    <h2 class= "fuente-seasons">Información de paciente</h2>
+                    <h2 class= "fuente-seasons">Información del paciente</h2>
                 {% elif user.role.nombre_rol == "medico" %}
-                    <h2 class= "fuente-seasons">Información de médico</h2>
+                    <h2 class= "fuente-seasons">Información del médico</h2>
                 {% endif %}
                 <p><strong class= "fuente-belleza">Nombres:</strong> {{ informacion.nombres }}</p>
                 <p><strong class= "fuente-belleza">Apellido paterno:</strong> {{ informacion.apellido_paterno }}</p>
