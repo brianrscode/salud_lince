@@ -342,12 +342,12 @@ def cambiar_contrasena(request):
         # Validación de la nueva contraseña con expresión regular (mínimo 8 y máximo 15 caracteres,
         # debe incluir al menos una letra mayúscula, un número y un carácter especial)
         if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$', new_password):
-            messages.error(request, "La contraseña debe tener al entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un caracter especial.")
+            messages.error(request, "Contraseña inválida")
             return redirect("informacion") # Redirige si no cumple con los requisitos
 
          # Validación para la confirmación de la nueva contraseña
         if not re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$', confirm_password):
-            messages.error(request, "La contraseña debe tener al entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un caracter especial.")
+            messages.error(request, "Contraseña inválida")
             return redirect("informacion") # Redirige si no cumple con los requisitos
 
         # Verificación de que la contraseña actual ingresada por el usuario sea correcta
@@ -390,10 +390,10 @@ def medico_consultas(request):
     """
     mostrar_todas = request.GET.get('todas', '0') == '1'  # Leer parámetro 'todas'
     consultas_base = Consulta.objects.select_related('clave_medico', 'clave_paciente', 'signos_vitales')
-    
+
     if not mostrar_todas:
         consultas_base = consultas_base.filter(clave_medico=request.user)
-    
+
     clave_paciente_query = request.GET.get('clave_paciente') #variables para la busqueda
     fecha_inicio_query = request.GET.get('fecha_inicio')
     fecha_fin_query = request.GET.get('fecha_fin')
@@ -401,7 +401,7 @@ def medico_consultas(request):
 
     if clave_paciente_query: #busqueda por clave del paciente
         consultas_base = consultas_base.filter(clave_paciente__clave__icontains=clave_paciente_query)
-    
+
     if fecha_inicio_query and fecha_fin_query:
         try:
             fecha_inicio = datetime.strptime(fecha_inicio_query, '%Y-%m-%d')

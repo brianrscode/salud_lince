@@ -28,6 +28,21 @@
 
             {% comment %} Columna derecha: Formulario de cambio de contraseña {% endcomment %}
             <div class="col-md-6">
+                {% comment %} Mensajes {% endcomment %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% if error %}
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        {{ error }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
                 <h2 class= "fuente-seasons">Cambiar contraseña</h2>
                 <form method="POST" action="{% url 'cambiar_contrasena' %}">
                     {% csrf_token %}
@@ -38,6 +53,7 @@
                         <label for="showPassword1" class="text-muted fuente-belleza">Mostrar contraseña</label>
                     </div>
                     <div class="mb-3">
+                        <p style="color: gray;">La contraseña debe tener de 8 a 15 caracteres, incluir una mayúscula, un número y un caracter especial.</p>
                         <label for="new_password" class="form-label fuente-belleza">Nueva contraseña:</label>
                         <input type="password" id="new_password" name="new_password" class="form-control" required>
                         <input type="checkbox" name="showPassword2" id="showPassword2" class="form-check-input">
@@ -56,21 +72,6 @@
 
         <br><br><br>
 
-        {% comment %} Mensajes {% endcomment %}
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-primary" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-        {% if error %}
-            <div class="alert alert-danger d-flex align-items-center" role="alert">
-                {{ error }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
     </div>
 {% endblock %}
 
