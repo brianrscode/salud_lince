@@ -6,10 +6,10 @@ class UsuarioTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = Usuario.objects.create_user(
-            clave='isc221733',
+            clave='ISC221733',
             email='isc221733@itsatlixco.edu.mx',
-            nombres='John',
-            apellido_paterno='Doe',
+            nombres='JOHN',
+            apellido_paterno='DOE',
             fecha_nacimiento='1990-01-01',
             carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123',
@@ -17,10 +17,10 @@ class UsuarioTestCase(TestCase):
         )
 
         cls.user2 = Usuario.objects.create_user(
-            clave='isc221734',
+            clave='ISC221734',
             email='isc221734@itsatlixco.edu.mx',
-            nombres='John',
-            apellido_paterno='Doe',
+            nombres='JOHN',
+            apellido_paterno='DOE',
             fecha_nacimiento='1990-01-01',
             carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123',
@@ -49,10 +49,10 @@ class HistorialMedicoTestCase(TestCase):
     def setUpTestData(cls):
         cls.paciente_role = Role.objects.get_or_create(nombre_rol='paciente')
         cls.user = Usuario.objects.create_user(
-            clave='isc221744',
+            clave='ISC221744',
             email='isc221744@itsatlixco.edu.mx',
-            nombres='John',
-            apellido_paterno='Doe',
+            nombres='JOHN',
+            apellido_paterno='DOE',
             fecha_nacimiento='1990-01-01',
             carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123'

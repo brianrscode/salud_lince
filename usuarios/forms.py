@@ -60,10 +60,12 @@ class LoginForm(forms.Form):
             str: Clave validada.
         """
         clave = self.cleaned_data.get('clave')
-        token_clave = r'^((ib|im|ii|ie|isc|lg|am)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$'
+        if not str(clave).startswith('admin'):
+            clave = clave.upper()
+        token_clave = r'^((IB|IM|II|IE|ISC|LG|AM)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$'
 
         if not re.match(token_clave, clave):
-            raise forms.ValidationError("Clave no válida.")
+            raise forms.ValidationError("Ingrese su matrícula o número de trabajador.")
         return clave
 
     def clean_password(self):

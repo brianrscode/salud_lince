@@ -9,20 +9,20 @@ class ConsultaTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.paciente = Usuario.objects.create_user(
-            clave='isc221733',
+            clave='ISC221733',
             email='isc221733@itsatlixco.edu.mx',
-            nombres='John',
-            apellido_paterno='Doe',
+            nombres='JOHN',
+            apellido_paterno='DOE',
             fecha_nacimiento='1990-01-01',
             carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123',
             role='admin'
         )
         cls.medico = Usuario.objects.create_user(
-            clave='isc221734',
+            clave='ISC221734',
             email='isc221734@itsatlixco.edu.mx',
-            nombres='John',
-            apellido_paterno='Doe',
+            nombres='JOHN',
+            apellido_paterno='DOE',
             fecha_nacimiento='1990-01-01',
             carrera_o_puesto='Médico',
             password='P@ssword123',

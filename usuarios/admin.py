@@ -95,6 +95,8 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                             apellido_materno = str(row.get("apellido_materno", "")).strip() or None
                             valor_pas = row.get("password", "")
                             pas = "P@ssword123" if pd.isna(valor_pas) or str(valor_pas).strip() == "" else str(valor_pas).strip()
+                            valor_activo = row.get("is_active", "")
+                            activo = True if pd.isna(valor_activo) or str(valor_activo).strip() == "" else str(valor_activo).strip()
 
                             # Obtener el objeto del área
                             area_obj = Area.objects.get(carrera_o_puesto=row.get("carrera_o_puesto"))
@@ -111,14 +113,6 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                                 role_obj = Role.objects.get(nombre_rol="paciente")
 
 
-                            # print("Area y Role obtenidos:")
-                            # print(area_obj.carrera_o_puesto)
-                            # print(area_obj)
-                            # print(role_obj)
-                            # print(f"DEBUG: role_obj: {role_obj}, id: {getattr(role_obj, 'id', 'NO ID')}")
-                            # print("-" * 20)
-
-
                             usuario, creado = Usuario.objects.update_or_create(
                                 clave=row["clave"],
                                 defaults={
@@ -128,7 +122,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                                     "apellido_materno": apellido_materno,
                                     "fecha_nacimiento": row.get("fecha_nacimiento", None),
                                     "sexo": row.get("sexo", None),
-                                    "is_active": row.get("is_active", "True") == "True",
+                                    "is_active": activo,
                                     "is_staff": row.get("is_staff", "False") == "True",
                                     "carrera_o_puesto_id": row.get("carrera_o_puesto", None),
                                     "role_id": role_obj.nombre_rol,
@@ -137,9 +131,6 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
 
                             # Si es un usuario nuevo, se le asigna contraseña
                             if creado:
-                                print("+" * 20)
-                                print(f"Contraseña asignada: {pas}")
-                                print("+" * 20)
                                 usuario.set_password(pas)
                                 usuarios_creados += 1
                             else:
