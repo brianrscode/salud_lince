@@ -5,6 +5,7 @@ from django.urls import path, reverse
 import pandas as pd
 
 from .forms import BulkUserUploadForm
+from .forms import ValidarForm
 from .models import HistorialMedico, Role, Usuario
 from django.contrib.admin import AdminSite
 
@@ -38,7 +39,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     ordering = ('email',) #Orden predeterminado de los registros.
     list_filter = ('role', 'is_staff') #Filtros disponibles en la barra lateral.
     search_fields = ('clave', 'email', 'nombres',) #Campos que pueden ser buscados desde el buscador.
-
+    form = ValidarForm  #vincula el formulario de las validaciones de fechas, claves, carreras y rol
     def save_model(self, request, obj, form, change):
         """
         Encripta la contraseña al guardar un nuevo usuario.
