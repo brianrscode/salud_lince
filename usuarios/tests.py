@@ -6,23 +6,23 @@ class UsuarioTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = Usuario.objects.create_user(
-            clave='isc221733',
+            clave='ISC221733',
             email='isc221733@itsatlixco.edu.mx',
-            nombres='John',
-            apellido_paterno='Doe',
+            nombres='JOHN',
+            apellido_paterno='DOE',
             fecha_nacimiento='1990-01-01',
-            carrera_o_puesto='Sistemas',
+            carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123',
-            role='admin'
+            role='paciente'
         )
 
         cls.user2 = Usuario.objects.create_user(
-            clave='isc221734',
+            clave='ISC221734',
             email='isc221734@itsatlixco.edu.mx',
-            nombres='John',
-            apellido_paterno='Doe',
+            nombres='JOHN',
+            apellido_paterno='DOE',
             fecha_nacimiento='1990-01-01',
-            carrera_o_puesto='Sistemas',
+            carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123',
             role='medico'
         )
@@ -33,7 +33,7 @@ class UsuarioTestCase(TestCase):
 
     def test_user_role(self):
         usuario = Usuario.objects.get(email='isc221733@itsatlixco.edu.mx')
-        self.assertEqual('admin', usuario.role.nombre_rol)
+        self.assertEqual('paciente', usuario.role.nombre_rol)
 
     def test_user2_exists(self):
         usuario = Usuario.objects.get(email='isc221734@itsatlixco.edu.mx')
@@ -49,12 +49,12 @@ class HistorialMedicoTestCase(TestCase):
     def setUpTestData(cls):
         cls.paciente_role = Role.objects.get_or_create(nombre_rol='paciente')
         cls.user = Usuario.objects.create_user(
-            clave='isc221744',
+            clave='ISC221744',
             email='isc221744@itsatlixco.edu.mx',
-            nombres='John',
-            apellido_paterno='Doe',
+            nombres='JOHN',
+            apellido_paterno='DOE',
             fecha_nacimiento='1990-01-01',
-            carrera_o_puesto='Sistemas',
+            carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123'
         )
         # Primero verificamos si ya existe un historial para ese paciente.

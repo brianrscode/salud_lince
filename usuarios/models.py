@@ -31,7 +31,14 @@ class UsuarioManager(BaseUserManager):
 
         # Asignar el rol por defecto si no se proporciona uno
         if role is None:
-            role = Role.objects.get(nombre_rol='paciente')
+            # role = Role.objects.get(nombre_rol='paciente')
+            area_nombre = carrera_o_puesto
+            if area_nombre == 'Médico':
+                role = Role.objects.get(nombre_rol='medico')
+            if area_nombre == 'ADMINISTRATIVO':
+                role = Role.objects.get(nombre_rol='administrador')
+            else:
+                role = Role.objects.get(nombre_rol='paciente')
 
         # Buscar role y carrera
         try:
@@ -72,7 +79,7 @@ class UsuarioManager(BaseUserManager):
     Returns:
         Usuario: Objeto de superusuario creado y guardado en la base de datos.
     """
-    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, sexo=None, password=None, role="admin", carrera_o_puesto="Administración"):
+    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, sexo=None, password=None, role="admin", carrera_o_puesto="ADMINISTRATIVO"):
         usuario = self.create_user(
             clave=clave,
             nombres=nombres,
@@ -141,7 +148,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     """
     clave = models.CharField('clave', max_length=9, primary_key=True, unique=True,
                              validators=[RegexValidator(
-                                 regex=r'^((ib|im|ii|ie|isc|lg|am)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$',
+                                 regex=r'^((IB|IM|II|IE|ISC|LG|AM)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$',
                                  message='Formato de clave no valido'
                              )])
     email = models.EmailField('Correo', unique=True,
@@ -150,11 +157,20 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
                                   message='Formato de correo no valido'
                               )])
     nombres = models.CharField('Nombres', max_length=100,
-                               validators=[RegexValidator(r'^([A-ZÑÁÉÍÓÚ][a-zñáéíóú]+)( [A-ZÑÁÉÍÓÚ][a-zñáéíóú]+)?$')])
+                               validators=[RegexValidator(
+                                   regex=r'^([A-ZÑÁÉÍÓÚ][A-ZÑÁÉÍÓÚ]+)( [A-ZÑÁÉÍÓÚ][A-ZÑÁÉÍÓÚ]+)?$',
+                                   message='El nombre debe ser en mayúsculas y no contener números'
+                               )])
     apellido_paterno = models.CharField('Apellido Paterno', max_length=30,
-                                        validators=[RegexValidator(r'^[A-ZÑÁÉÍÓÚ][a-zñáéíóú]+')])
+                                        validators=[RegexValidator(
+                                            regex=r'^[A-ZÑÁÉÍÓÚ][A-ZÑÁÉÍÓÚ]+',
+                                            message='El apellido paterno debe ser en mayúsculas'
+                                        )])
     apellido_materno = models.CharField('Apellido Materno', max_length=30, blank=True, null=True,
-                                        validators=[RegexValidator(r'^[A-ZÑÁÉÍÓÚ][a-zñáéíóú]+')])
+                                        validators=[RegexValidator(
+                                            regex=r'^[A-ZÑÁÉÍÓÚ][A-ZÑÁÉÍÓÚ]+',
+                                            message='El apellido materno debe ser en mayúsculas'
+                                        )])
     fecha_nacimiento = models.DateField('Fecha de Nacimiento', blank=True, null=True)
     sexos = [('M', 'Masculino'), ('F', 'Femenino')]
     sexo = models.CharField('Sexo', max_length=1, choices=sexos, blank=True, null=True)
@@ -179,7 +195,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         'Contraseña',
         max_length=128,
         validators=[password_validator],
-        blank=False
+        blank=True
     )
 
     def save(self, *args, **kwargs):
@@ -187,13 +203,16 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         if self.password and not self.password.startswith('pbkdf2_sha256$'):
             self.password = make_password(self.password)
 
+        if not self.pk and not self.has_usable_password():
+            self.set_password('P@ssword123')  # Cambia esto por la contraseña que desees
+
         if self.role is None:
             self.role = Role.objects.get(nombre_rol='paciente')
 
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.clave} - {self.nombres} {self.apellido_paterno} {self.apellido_materno}' #datos que se muestran en consultas e historiales 
+        return f'{self.clave} - {self.nombres} {self.apellido_paterno} {self.apellido_materno}' #datos que se muestran en consultas e historiales
 
     def has_perm(self, perm, obj=None):
         return True

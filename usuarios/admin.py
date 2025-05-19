@@ -5,8 +5,7 @@ from django.urls import path, reverse
 import pandas as pd
 
 from .forms import BulkUserUploadForm
-from .forms import ValidarForm
-from .models import HistorialMedico, Role, Usuario
+from .models import Area, HistorialMedico, Role, Usuario
 from django.contrib.admin import AdminSite
 
 class SitioAdminSoloSuperusuarios(AdminSite):
@@ -41,19 +40,20 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     search_fields = ('clave', 'email', 'nombres',) #Campos que pueden ser buscados desde el buscador.
     form = ValidarForm  #vincula el formulario de las validaciones de fechas, claves, carreras y rol
     def save_model(self, request, obj, form, change):
-        """
-        Encripta la contraseña al guardar un nuevo usuario.
-        Solo se aplica si el objeto no está siendo editado (i.e., es nuevo).
-        """
         if not change:
-            obj.set_password(form.cleaned_data['password'])
+            # Si no se proporciona una contraseña, se asigna una por defecto
+            password = form.cleaned_data.get('password')
+            if not password:
+                password = 'P@ssword123'  # Cambia esto por la contraseña que desees
+            obj.set_password(password)
+
         super().save_model(request, obj, form, change)
 
     def get_urls(self):
         """
         Agrega una URL personalizada para la carga masiva de usuarios.
         Esta URL será accesible desde la interfaz de administración.
-        
+
         -Sobrescribe el método get_urls() para agregar la URL personalizada."""
         urls = super().get_urls()
         custom_urls = [
@@ -93,7 +93,25 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                         try:
                             # Validar valores vacíos y corregir tipos de datos
                             apellido_materno = str(row.get("apellido_materno", "")).strip() or None
-                            pas = str(row.get("password", "")).strip() or "P@ssword123"
+                            valor_pas = row.get("password", "")
+                            pas = "P@ssword123" if pd.isna(valor_pas) or str(valor_pas).strip() == "" else str(valor_pas).strip()
+                            valor_activo = row.get("is_active", "")
+                            activo = True if pd.isna(valor_activo) or str(valor_activo).strip() == "" else str(valor_activo).strip()
+
+                            # Obtener el objeto del área
+                            area_obj = Area.objects.get(carrera_o_puesto=row.get("carrera_o_puesto"))
+
+                            # Asignar automáticamente el objeto Role según el área
+                            area_nombre = area_obj.carrera_o_puesto.strip()
+                            role_obj = None
+
+                            if area_nombre == "Médico":
+                                role_obj = Role.objects.get(nombre_rol="medico")
+                            elif area_nombre == "ADMINISTRATIVO":
+                                role_obj = Role.objects.get(nombre_rol="admin")
+                            else:
+                                role_obj = Role.objects.get(nombre_rol="paciente")
+
 
                             usuario, creado = Usuario.objects.update_or_create(
                                 clave=row["clave"],
@@ -104,10 +122,10 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                                     "apellido_materno": apellido_materno,
                                     "fecha_nacimiento": row.get("fecha_nacimiento", None),
                                     "sexo": row.get("sexo", None),
-                                    "is_active": row.get("is_active", "True") == "True",
+                                    "is_active": activo,
                                     "is_staff": row.get("is_staff", "False") == "True",
                                     "carrera_o_puesto_id": row.get("carrera_o_puesto", None),
-                                    "role_id": row.get("role", None),
+                                    "role_id": role_obj.nombre_rol,
                                 }
                             )
 
