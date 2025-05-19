@@ -38,7 +38,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     ordering = ('email',) #Orden predeterminado de los registros.
     list_filter = ('role', 'is_staff') #Filtros disponibles en la barra lateral.
     search_fields = ('clave', 'email', 'nombres',) #Campos que pueden ser buscados desde el buscador.
-
+    form = ValidarForm  #vincula el formulario de las validaciones de fechas, claves, carreras y rol
     def save_model(self, request, obj, form, change):
         if not change:
             # Si no se proporciona una contraseña, se asigna una por defecto
