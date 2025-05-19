@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.urls import path, reverse
 import pandas as pd
 
-from .forms import BulkUserUploadForm
+from .forms import BulkUserUploadForm, ValidarForm
 from .models import Area, HistorialMedico, Role, Usuario
 from django.contrib.admin import AdminSite
 
