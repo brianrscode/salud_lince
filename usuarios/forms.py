@@ -1,7 +1,8 @@
 import re
 
 from django import forms
-
+from datetime import date
+from .models import Usuario
 from .models import HistorialMedico
 
 class HistorialMedicoForm(forms.ModelForm):
@@ -97,3 +98,58 @@ class BulkUserUploadForm(forms.Form):
 
     """
     file = forms.FileField(label="Selecciona un archivo (.csv o .xls)")
+
+class ValidarForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = '__all__'
+
+    def clean_fecha_nacimiento(self):
+        fecha = self.cleaned_data.get('fecha_nacimiento')
+        if fecha and fecha > date.today():
+            raise forms.ValidationError("La fecha de nacimiento no válida.")
+        return fecha
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        fecha_nacimiento = cleaned_data.get('fecha_nacimiento')
+        clave = cleaned_data.get('clave', '').lower()
+        carrera = cleaned_data.get('carrera_o_puesto')
+        rol = cleaned_data.get('role')
+
+        errores = []
+        edad = None
+         
+         # calcula la fecha
+        if fecha_nacimiento:
+            edad = date.today().year - fecha_nacimiento.year
+            if (date.today().month, date.today().day) < (fecha_nacimiento.month, fecha_nacimiento.day):
+                edad -= 1
+        if rol and rol.nombre_rol == 'paciente' and edad is not None and edad < 15:
+            self.add_error('fecha_nacimiento', "Fecha de nacimiento no válida.")
+
+        # 🔹 Validación de coherencia entre rol y carrera
+        if rol:
+            if rol.nombre_rol.lower() == "medico" and carrera and carrera.carrera_o_puesto != "Médico":
+                self.add_error('carrera_o_puesto', "El rol Médico solo puede pertenecer al área Médica.")
+            elif rol.nombre_rol.lower() == "administrador" and carrera and carrera.carrera_o_puesto != "ADMINISTRATIVO":
+                self.add_error('carrera_o_puesto', "El rol Administrador debe pertenecer al área Administrativo.")
+
+        # Validación de clave y área
+        if clave.startswith("ii") and carrera and "INDUSTRIAL" not in carrera.carrera_o_puesto.upper():
+            self.add_error('clave', "La clave 'ii' corresponde a Ingeniería Industrial.")
+        elif clave.startswith("isc") and carrera and "SISTEMAS" not in carrera.carrera_o_puesto.upper():
+            self.add_error('clave', "La clave 'isc' corresponde a Ingeniería en Sistemas computacionales.")
+        elif clave.startswith("im") and carrera and "MECATRÓNICA" not in carrera.carrera_o_puesto.upper():
+            self.add_error('clave', "La clave 'im' corresponde a Ingenieria Mecatrónica.")
+        elif clave.startswith("ib") and carrera and "BIOQUÍMICA" not in carrera.carrera_o_puesto.upper():
+            self.add_error('clave', "La clave 'ib' corresponde a Ingenieria Bioquímica.")
+        elif clave.startswith("ie") and carrera and "ELECTROMECÁNICA" not in carrera.carrera_o_puesto.upper():
+            self.add_error('clave', "La clave 'ie' corresponde a Ingenieria Electromecánica.")
+        elif clave.startswith("lg") and carrera and "GASTRONOMÍA" not in carrera.carrera_o_puesto.upper():
+            self.add_error('clave', "La clave 'lg' corresponde a Licenciatura en Gastronomía.")
+        #elif clave.startswith("am") and carrera and "MÉDICO" not in carrera.carrera_o_puesto.upper():
+        #   self.add_error('clave', "La clave 'am' corresponde al área Médica.")
+
+        return cleaned_data
