@@ -4,26 +4,26 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
         <!-- Bootstrap -->
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    
+
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=The+Seasons&family=Cardo&family=Belleza&display=swap" rel="stylesheet">
-    
+
         <!-- CSS personalizado -->
         <link rel="stylesheet" href="{% static 'css/stylesFuentes.css' %}">
-    
+
         {% block styles %}{% endblock %}
         <title>{% block title %}{% endblock %}</title>
     </head>
-    
+
 <body>
     {% if user.is_authenticated %}
         <nav class="navbar navbar-expand-lg bg-body-tertiary fuente-navbar">
             <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="{% static 'imgs/itsa-logo.png' %}" width="120" height="40" class="me-2">
+                <a class="navbar-brand d-flex align-items-center" href="{% if user.role.nombre_rol == "paciente" %}{% url 'paciente_dashboard' %}{% elif user.role.nombre_rol == "medico" %}{% url 'medico_dashboard' %}{% else %}{% url 'admin:index' %}{% endif %}">
+                <img  src="{% static 'imgs/itsa-logo.png' %}" width="120" height="40" class="me-2">
                     Salud Lince
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,8 +41,7 @@
                             <li class="nav-item"><a class="nav-link" href="{% url 'medico_historiales' %}">Historiales</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'medico_consultas' %}">Consultas</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'informacion' %}">Cuenta {% if user.role.nombre_rol == "paciente" %}paciente{% elif user.role.nombre_rol == "medico" %}medico {% else %}admin{% endif %}</a></li>
-                        <li class="nav-item"><a class="nav-link" href="">{% if user.is_authenticated %}{{ user.nombres }}{% else %}N/A{% endif %}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'informacion' %}">{% if user.is_authenticated %}{{ user.nombres.title }}{% else %}N/A{% endif %}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
                     </ul>
                 </div>
