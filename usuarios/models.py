@@ -185,16 +185,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'clave'
     REQUIRED_FIELDS = ['email', 'nombres', 'apellido_paterno', 'apellido_materno', 'fecha_nacimiento']
 
-    # Validador para la contraseña, asegura que tenga al menos 8 caracteres
-    password_validator = RegexValidator(
-        regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$',
-        message='La contraseña debe tener al entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un caracter especial.'
-    )
-
     password = models.CharField(
         'Contraseña',
         max_length=128,
-        validators=[password_validator],
         blank=True
     )
 
