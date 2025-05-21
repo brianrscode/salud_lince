@@ -1,7 +1,9 @@
+from datetime import datetime
+
 from admin_extra_buttons.api import ExtraButtonsMixin, button
 from django.contrib import admin, messages
 from django.shortcuts import redirect, render
-from django.urls import path, reverse
+from django.urls import path
 import pandas as pd
 
 from .forms import BulkUserUploadForm, ValidarForm
@@ -103,8 +105,14 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
 
                             # Asignar automáticamente el objeto Role según el área
                             area_nombre = area_obj.carrera_o_puesto.strip()
-                            role_obj = None
 
+                            # Convertir de fecha de formato dd/mm/aaaa a formato yyyy-mm-dd 00:00:00
+                            fecha_nacimiento = None
+                            if row.get("fecha_nacimiento"):
+                                fecha_nacimiento = datetime.strptime(row["fecha_nacimiento"], "%Y-%m-%d %H:%M:%S").date()
+
+                            # ---------------------------- Asignar el rol basado en el área
+                            role_obj = None
                             if area_nombre == "Médico":
                                 role_obj = Role.objects.get(nombre_rol="medico")
                             elif area_nombre == "ADMINISTRATIVO":
@@ -120,7 +128,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                                     "nombres": row["nombres"],
                                     "apellido_paterno": row["apellido_paterno"],
                                     "apellido_materno": apellido_materno,
-                                    "fecha_nacimiento": row.get("fecha_nacimiento", None),
+                                    "fecha_nacimiento": fecha_nacimiento,
                                     "sexo": row.get("sexo", None),
                                     "is_active": activo,
                                     "is_staff": row.get("is_staff", "False") == "True",

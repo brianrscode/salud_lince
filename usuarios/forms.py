@@ -101,10 +101,16 @@ class BulkUserUploadForm(forms.Form):
     """
     file = forms.FileField(label="Selecciona un archivo (.csv o .xls)")
 
+
 class ValidarForm(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Define el formato aceptado para la entrada
+        self.fields['fecha_nacimiento'].input_formats = ['%d/%m/%Y']
 
     def clean_fecha_nacimiento(self):
         fecha = self.cleaned_data.get('fecha_nacimiento')
@@ -116,14 +122,14 @@ class ValidarForm(forms.ModelForm):
         cleaned_data = super().clean()
 
         fecha_nacimiento = cleaned_data.get('fecha_nacimiento')
-        clave = cleaned_data.get('clave', '').lower()
+        clave = cleaned_data.get('clave', '')
         carrera = cleaned_data.get('carrera_o_puesto')
         rol = cleaned_data.get('role')
 
         errores = []
         edad = None
 
-         # calcula la fecha
+        # 🔹 Calcula edad
         if fecha_nacimiento:
             edad = date.today().year - fecha_nacimiento.year
             if (date.today().month, date.today().day) < (fecha_nacimiento.month, fecha_nacimiento.day):
@@ -138,20 +144,20 @@ class ValidarForm(forms.ModelForm):
             elif rol.nombre_rol.lower() == "administrador" and carrera and carrera.carrera_o_puesto != "ADMINISTRATIVO":
                 self.add_error('carrera_o_puesto', "El rol Administrador debe pertenecer al área Administrativo.")
 
-        # Validación de clave y área
+        # 🔹 Validación de clave y área
         if clave.startswith("II") and carrera and "INDUSTRIAL" not in carrera.carrera_o_puesto.upper():
             self.add_error('clave', "La clave 'II' corresponde a Ingeniería Industrial.")
         elif clave.startswith("ISC") and carrera and "SISTEMAS" not in carrera.carrera_o_puesto.upper():
-            self.add_error('clave', "La clave 'ISC' corresponde a Ingeniería en Sistemas computacionales.")
+            self.add_error('clave', "La clave 'ISC' corresponde a Ingeniería en Sistemas Computacionales.")
         elif clave.startswith("IM") and carrera and "MECATRÓNICA" not in carrera.carrera_o_puesto.upper():
-            self.add_error('clave', "La clave 'IM' corresponde a Ingenieria Mecatrónica.")
+            self.add_error('clave', "La clave 'IM' corresponde a Ingeniería Mecatrónica.")
         elif clave.startswith("IB") and carrera and "BIOQUÍMICA" not in carrera.carrera_o_puesto.upper():
-            self.add_error('clave', "La clave 'IB' corresponde a Ingenieria Bioquímica.")
+            self.add_error('clave', "La clave 'IB' corresponde a Ingeniería Bioquímica.")
         elif clave.startswith("IE") and carrera and "ELECTROMECÁNICA" not in carrera.carrera_o_puesto.upper():
-            self.add_error('clave', "La clave 'IE' corresponde a Ingenieria Electromecánica.")
-        elif clave.startswith("Lg") and carrera and "GASTRONOMÍA" not in carrera.carrera_o_puesto.upper():
+            self.add_error('clave', "La clave 'IE' corresponde a Ingeniería Electromecánica.")
+        elif clave.startswith("LG") and carrera and "GASTRONOMÍA" not in carrera.carrera_o_puesto.upper():
             self.add_error('clave', "La clave 'LG' corresponde a Licenciatura en Gastronomía.")
-        #elif clave.startswith("am") and carrera and "MÉDICO" not in carrera.carrera_o_puesto.upper():
+        # elif clave.startswith("am") and carrera and "MÉDICO" not in carrera.carrera_o_puesto.upper():
         #   self.add_error('clave', "La clave 'am' corresponde al área Médica.")
 
         return cleaned_data
