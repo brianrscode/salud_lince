@@ -21,6 +21,8 @@ from .forms import HistorialMedicoForm
 from .forms import LoginForm
 from .models import Area, HistorialMedico, Usuario
 
+from utils.imc import ejecutar_imc_unicorn
+
 
 @never_cache
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)
@@ -322,7 +324,20 @@ def paciente_consultas(request):
     except EmptyPage:
         consultas = paginador.page(paginador.num_pages)
 
-    return render(request, "paciente_consultas.html", {"consultas": consultas})
+    ################## IMC ##################
+    imc_de_consultas = [
+        ejecutar_imc_unicorn(
+            consulta.signos_vitales.peso,
+            int(consulta.signos_vitales.talla * 100)
+        )
+        for consulta in consultas
+    ]
+
+    # Juntar en una sola lista de pares
+    consultas_con_imc = list(zip(consultas, imc_de_consultas))
+    ################## FIN IMC ##################
+
+    return render(request, "paciente_consultas.html", {"consultas": consultas, "consultas_con_imc": consultas_con_imc})
 
 
 @never_cache

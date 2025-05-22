@@ -23,8 +23,8 @@
             <th>Tratamiento</th>
         </tr>
     </thead>
-    <tbody class="table-hover-row">
-        {% for consulta in consultas %}
+   <tbody class="table-hover-row">
+    {% for consulta, imc in consultas_con_imc %}
         <tr data-bs-toggle="modal" data-bs-target="#detalleConsultaModal"
             data-fecha="{{ consulta.fecha }}"
             data-padecimiento="{{ consulta.padecimiento_actual }}"
@@ -33,6 +33,7 @@
             data-categoria-padecimiento="{{ consulta.categoria_de_padecimiento }}"
             data-clave-paciente="{{ consulta.clave_paciente }}"
             data-clave-medico="{{ consulta.clave_medico }}"
+            data-imc="{{ imc }}"
             data-signos='{
                 "peso": "{{ consulta.signos_vitales.peso }}",
                 "talla": "{{ consulta.signos_vitales.talla }}",
@@ -50,8 +51,9 @@
                 </svg>
             </td>
         </tr>
-        {% endfor %}
-    </tbody>
+    {% endfor %}
+</tbody>
+
 </table>
 
 {% comment %} Modal {% endcomment %}
@@ -78,6 +80,7 @@
                     <li><strong class= "fuente-belleza">Frecuencia cardíaca:</strong> <span id="detalleFrecuenciaCardiaca"></span> ppm</li>
                     <li><strong class= "fuente-belleza">Frecuencia respiratoria:</strong> <span id="detalleFrecuenciaRespiratoria"></span> rpm</li>
                     <li><strong class= "fuente-belleza">Presión arterial:</strong> <span id="detallePresionArterial"></span> mmHg</li>
+                    <li><strong class= "fuente-belleza">IMC:</strong> <span id="detalleIMC"></span></li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -140,7 +143,11 @@
             document.getElementById('detalleFrecuenciaCardiaca').textContent = signos.frecuencia_cardiaca;
             document.getElementById('detalleFrecuenciaRespiratoria').textContent = signos.frecuencia_respiratoria;
             document.getElementById('detallePresionArterial').textContent = signos.presion_arterial;
+
+            // ✅ Mostrar IMC en el modal
+            document.getElementById('detalleIMC').textContent = data.imc;
         });
     });
 </script>
 {% endblock %}
+
