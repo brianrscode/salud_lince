@@ -92,7 +92,7 @@ def logout_view(request):
 @never_cache
 @login_required
 @role_required(["medico"])
-def medico_dashboard(request):
+def medico_dashboard_view(request):
     """
     Vista del panel principal para los médicos.
 
@@ -249,7 +249,7 @@ def medico_dashboard(request):
 @never_cache
 @login_required
 @role_required(["paciente"])
-def paciente_dashboard(request):
+def paciente_dashboard_view(request):
     """
     Vista del panel principal para los pacientes.
 
@@ -305,7 +305,7 @@ def historial_view(request):
 @ratelimit(key='ip', rate='10/m', method='GET', block=True)
 @login_required
 @role_required(["paciente"])
-def paciente_consultas(request):
+def paciente_consultas_view(request):
     """
     Vista para mostrar las consultas médicas del paciente autenticado.
 
@@ -329,7 +329,7 @@ def paciente_consultas(request):
 @ratelimit(key='ip', rate='5/m', method='GET', block=True)
 @login_required
 @role_required(["paciente", "medico"])
-def usuario_informacion(request):
+def usuario_informacion_view(request):
     """
     Vista para mostrar la información básica del usuario autenticado.
 
@@ -344,7 +344,7 @@ def usuario_informacion(request):
 @ratelimit(key='ip', rate='10/m', method='GET', block=True) # Limite 10 solicitudes GET por minuto por IP
 @login_required
 @role_required(["paciente", "medico"])
-def cambiar_contrasena(request):
+def cambiar_contrasena_view(request):
     """
     Vista que permite al usuario cambiar su contraseña.
 
@@ -398,7 +398,7 @@ def cambiar_contrasena(request):
 @ratelimit(key='ip', rate='10/m', method='GET', block=True) # Limite 10 solicitudes GET por minuto por IP
 @login_required
 @role_required(["medico"])
-def medico_consultas(request):
+def medico_consultas_view(request):
     """
     Vista para que los médicos vean sus consultas o todas las consultas si así lo desean.
 
@@ -462,7 +462,7 @@ def medico_consultas(request):
 @never_cache
 @login_required
 @role_required(["medico"])
-def medico_historiales(request):
+def medico_historiales_view(request):
     """
     Vista para que los médicos vean los historiales médicos de los pacientes.
 
@@ -495,11 +495,10 @@ def medico_historiales(request):
     return render(request, "medico_historiales.html", {"historiales": historiales, "query": query})
 
 
-
 @never_cache
 @login_required
 @role_required(["medico"])
-def editar_historial(request, pk):
+def editar_historial_view(request, pk):
     """
     Vista que permite al médico editar un historial médico existente.
 

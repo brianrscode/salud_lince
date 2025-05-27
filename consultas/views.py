@@ -13,7 +13,7 @@ from .forms import ConsultaForm, SignosVitalesForm
 @never_cache
 @login_required
 @role_required(['medico'])
-def crear_consulta(request):
+def crear_consulta_view(request):
     """
     Vista para crear una nueva consulta médica y registrar los signos vitales del paciente.
     Solo accesible para usuarios con el rol de 'medico'.
@@ -64,7 +64,7 @@ def crear_consulta(request):
 @never_cache
 @login_required
 @role_required(['medico'])
-def buscar_paciente_por_clave(request):
+def buscar_paciente_por_clave_view(request):
     clave = request.GET.get('clave', '').lower()
     try:
         paciente = Usuario.objects.get(clave__iexact=clave, role__nombre_rol='paciente', is_active=True)
@@ -76,7 +76,7 @@ def buscar_paciente_por_clave(request):
 frecuencia_cardiaca_temporal = {} # Diccionario para almacenar temporalmente la frecuencia
 
 @csrf_exempt # Necesario para peticiones POST desde fuera del formulario de Django
-def recibir_frecuencia(request):
+def recibir_frecuencia_view(request):
     if request.method == 'POST':
         try:
             frecuencia = request.POST.get('frecuencia_cardiaca')
@@ -89,7 +89,7 @@ def recibir_frecuencia(request):
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-def obtener_ultima_frecuencia(request):
+def obtener_ultima_frecuencia_view(request):
     if 'ultima_lectura' in frecuencia_cardiaca_temporal:
         frecuencia = frecuencia_cardiaca_temporal['ultima_lectura']
         return JsonResponse({'frecuencia_cardiaca': frecuencia})
