@@ -60,38 +60,38 @@ def crear_consulta_view(request):
     })
 
 
-@csrf_exempt
-@never_cache
-@login_required
-@role_required(['medico'])
-def buscar_paciente_por_clave_view(request):
-    clave = request.GET.get('clave', '').lower()
-    try:
-        paciente = Usuario.objects.get(clave__iexact=clave, role__nombre_rol='paciente', is_active=True)
-        return JsonResponse({'encontrado': True, 'clave': paciente.clave, 'nombre': paciente.nombres})
-    except Usuario.DoesNotExist:
-        return JsonResponse({'encontrado': False})
+# @csrf_exempt
+# @never_cache
+# @login_required
+# @role_required(['medico'])
+# def buscar_paciente_por_clave_view(request):
+#     clave = request.GET.get('clave', '').lower()
+#     try:
+#         paciente = Usuario.objects.get(clave__iexact=clave, role__nombre_rol='paciente', is_active=True)
+#         return JsonResponse({'encontrado': True, 'clave': paciente.clave, 'nombre': paciente.nombres})
+#     except Usuario.DoesNotExist:
+#         return JsonResponse({'encontrado': False})
 
 
-frecuencia_cardiaca_temporal = {} # Diccionario para almacenar temporalmente la frecuencia
+# frecuencia_cardiaca_temporal = {} # Diccionario para almacenar temporalmente la frecuencia
 
-@csrf_exempt # Necesario para peticiones POST desde fuera del formulario de Django
-def recibir_frecuencia_view(request):
-    if request.method == 'POST':
-        try:
-            frecuencia = request.POST.get('frecuencia_cardiaca')
-            # Aquí podrías implementar lógica para identificar la consulta o el médico
-            # Por ahora, simplemente almacenamos la última frecuencia recibida
-            frecuencia_cardiaca_temporal['ultima_lectura'] = frecuencia
-            return JsonResponse({'status': 'success', 'mensaje': 'Frecuencia cardíaca recibida'})
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'mensaje': str(e)}, status=400)
-    else:
-        return JsonResponse({'error': 'Método no permitido'}, status=405)
+# @csrf_exempt # Necesario para peticiones POST desde fuera del formulario de Django
+# def recibir_frecuencia_view(request):
+#     if request.method == 'POST':
+#         try:
+#             frecuencia = request.POST.get('frecuencia_cardiaca')
+#             # Aquí podrías implementar lógica para identificar la consulta o el médico
+#             # Por ahora, simplemente almacenamos la última frecuencia recibida
+#             frecuencia_cardiaca_temporal['ultima_lectura'] = frecuencia
+#             return JsonResponse({'status': 'success', 'mensaje': 'Frecuencia cardíaca recibida'})
+#         except Exception as e:
+#             return JsonResponse({'status': 'error', 'mensaje': str(e)}, status=400)
+#     else:
+#         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-def obtener_ultima_frecuencia_view(request):
-    if 'ultima_lectura' in frecuencia_cardiaca_temporal:
-        frecuencia = frecuencia_cardiaca_temporal['ultima_lectura']
-        return JsonResponse({'frecuencia_cardiaca': frecuencia})
-    else:
-        return JsonResponse({'frecuencia_cardiaca': None})
+# def obtener_ultima_frecuencia_view(request):
+#     if 'ultima_lectura' in frecuencia_cardiaca_temporal:
+#         frecuencia = frecuencia_cardiaca_temporal['ultima_lectura']
+#         return JsonResponse({'frecuencia_cardiaca': frecuencia})
+#     else:
+#         return JsonResponse({'frecuencia_cardiaca': None})
