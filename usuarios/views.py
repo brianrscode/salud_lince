@@ -470,6 +470,7 @@ def medico_historiales_view(request):
     También se paginan los resultados para mostrar solo una cantidad limitada por página.
     """
     query = request.GET.get('search', '')
+    query = query.strip().upper()
     # Si hay una consulta, filtrar los historiales de acuerdo a la consulta
     if query:
         historiales = HistorialMedico.objects.filter(
