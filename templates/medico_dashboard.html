@@ -10,25 +10,20 @@
 {% block content %}
 
     <h2 clss="modal-title fuente-seasons">Estadísticas de pacientes</h2>
-    {% comment %} <p>{{ prueba }}</p> {% endcomment %}
-    {% comment %} Gráfica de Generos {% endcomment %}
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title fuente-belleza">Género de pacientes</h5>
             <div>{{ genero_pastel|safe }}</div>
         </div>
     </div>
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title fuente-belleza">Distribución de géneros</h5>
             <div>{{ genero_graph|safe }}</div>
         </div>
     </div>
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title fuente-belleza">Distribución de carreras de pacientes</h5>
             <div>{{ padecimientos_graph|safe}}</div>
         </div>
     </div>
@@ -36,7 +31,6 @@
     {% comment %} Gráfica de hábitos {% endcomment %}
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title fuente-belleza">Pacientes con hábitos</h5>
             <div>{{ habitos_graph|safe }}</div>
         </div>
     </div>
@@ -44,14 +38,12 @@
     {% comment %} Gráfica de tipos de consultas {% endcomment %}
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title fuente-belleza">Distribución de tipos de consultas</h5>
             <div>{{ consultas_graph|safe }}</div>
         </div>
     </div>
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title fuente-belleza">Distribución de áreas de pacientes</h5>
             <div>{{ areas_graph|safe }}</div>
         </div>
     </div>
