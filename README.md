@@ -7,7 +7,7 @@ Este proyecto tiene como objetivo crear un sistema medico web que facilite la re
 ## Instalación
 1. Clona este repositorio en tu máquina local:
 ```bash
-git clone https://github.com/brianrscode/sistema_medico.git .
+git clone https://github.com/brianrscode/salud_lince.git
 ```
 
 2. Crea un entorno virtual
@@ -36,21 +36,23 @@ pip install -r requirements.txt
 5. Agrega tú archivo .env que contenga las variables de entorno de tu proyecto
 ```bash
 SECRET_KEY=
-DEBUG=True
-NAME_BD=nombre_bd
-USER_BD=usuario
-PASSWORD_BD=contraseña
-HOST_BD=localhost
-PORT_BD=3306
-LANGUAGE_CODE=
+DEBUG=
+NAME_BD=
+USER_BD=
+PASSWORD_BD=
+HOST_BD=
+PORT_BD=
 TIME_ZONE=
 ```
 
-6. Activa Apache y MySQL en XAMPP
+6. Inicia tu administrador de base de datos
 
 7. Crea la base de datos
 
 8. Realiza las migraciones
+```bash
+python manage.py makemigrations
+```
 ```bash
 python manage.py migrate
 ```
