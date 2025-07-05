@@ -16,7 +16,7 @@ class ConsultaTestCase(TestCase):
             fecha_nacimiento='1990-01-01',
             carrera_o_puesto='ING. SISTEMAS COMP.',
             password='P@ssword123',
-            role='admin'
+            role='paciente'
         )
         cls.medico = Usuario.objects.create_user(
             clave='ISC221734',

@@ -20,34 +20,7 @@
 
 <body>
     {% if user.is_authenticated %}
-        <nav class="navbar navbar-expand-lg bg-body-tertiary fuente-navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center" href="{% if user.role.nombre_rol == "paciente" %}{% url 'paciente_dashboard' %}{% elif user.role.nombre_rol == "medico" %}{% url 'medico_dashboard' %}{% else %}{% url 'admin:index' %}{% endif %}">
-                <img  src="{% static 'imgs/itsa-logo.png' %}" width="120" height="40" class="me-2">
-                    Salud Lince
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">{% if user.is_staff %}Administración{% else %}{% endif %}</a></li>
-                        {% if user.role.nombre_rol == "paciente" %}
-                            <li class="nav-item"><a class="nav-link" href="{% url 'paciente_dashboard' %}">Inicio</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'historial' %}">Historial médico</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'paciente_consultas' %}">Mis consultas</a></li>
-                        {% endif %}
-                        {% if user.role.nombre_rol == "medico" %}
-                            <li class="nav-item"><a class="nav-link" href="{% url 'medico_dashboard' %}">Inicio</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'medico_historiales' %}">Historiales</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'medico_consultas' %}">Consultas</a></li>
-                        {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'informacion' %}">{% if user.is_authenticated %}{{ user.nombres.title }}{% else %}N/A{% endif %}</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
-                    </ul>
-                </div>
-            </div>
-       </nav>
+    {% include "./partials/navbar.html" %}
     {% endif %}
 
     <main class="container">
