@@ -115,8 +115,8 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                             role_obj = None
                             if area_nombre == "Médico":
                                 role_obj = Role.objects.get(nombre_rol="medico")
-                            elif area_nombre == "ADMINISTRATIVO":
-                                role_obj = Role.objects.get(nombre_rol="admin")
+                            # elif area_nombre == "ADMINISTRATIVO":
+                            #     role_obj = Role.objects.get(nombre_rol="paciente")
                             else:
                                 role_obj = Role.objects.get(nombre_rol="paciente")
 

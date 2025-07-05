@@ -31,6 +31,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">{% if user.is_staff %}Administración{% else %}{% endif %}</a></li>
                         {% if user.role.nombre_rol == "paciente" %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'paciente_dashboard' %}">Inicio</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'historial' %}">Historial médico</a></li>

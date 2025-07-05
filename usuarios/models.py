@@ -35,8 +35,8 @@ class UsuarioManager(BaseUserManager):
             area_nombre = carrera_o_puesto
             if area_nombre == 'Médico':
                 role = Role.objects.get(nombre_rol='medico')
-            if area_nombre == 'ADMINISTRATIVO':
-                role = Role.objects.get(nombre_rol='administrador')
+            # if area_nombre == 'ADMINISTRATIVO':
+            #     role = Role.objects.get(nombre_rol='administrador')
             else:
                 role = Role.objects.get(nombre_rol='paciente')
 
@@ -79,7 +79,7 @@ class UsuarioManager(BaseUserManager):
     Returns:
         Usuario: Objeto de superusuario creado y guardado en la base de datos.
     """
-    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, sexo=None, password=None, role="admin", carrera_o_puesto="ADMINISTRATIVO"):
+    def create_superuser(self, clave, nombres, email, apellido_paterno=None, apellido_materno=None, fecha_nacimiento=None, sexo=None, password=None, role="paciente", carrera_o_puesto="ADMINISTRATIVO"):
         usuario = self.create_user(
             clave=clave,
             nombres=nombres,

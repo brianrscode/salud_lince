@@ -41,8 +41,8 @@ def login_view(request):
             return redirect("medico_dashboard")
         if rol == "paciente":
             return redirect("paciente_dashboard")
-        if rol == "admin":
-            return redirect("/admin/")
+        # if rol == "admin":
+        #     return redirect("/admin/")
 
         messages.error(request, "Rol no reconocido.")
         return redirect("login")
@@ -67,8 +67,8 @@ def login_view(request):
             return redirect("medico_dashboard")
         if rol == "paciente":
             return redirect("paciente_dashboard")
-        if rol == "admin":
-            return redirect("/admin/")
+        # if rol == "admin":
+        #     return redirect("/admin/")
 
         messages.error(request, "Rol no reconocido.")
         return redirect("login")

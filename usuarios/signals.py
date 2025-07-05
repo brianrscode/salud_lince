@@ -16,7 +16,7 @@ def crear_roles_por_defecto(sender, **kwargs):
     Los roles por defecto son: 'paciente', 'medico', y 'admin'.
     Si ya existen en la base de datos, no se crean nuevamente.
     """
-    roles = ["paciente", "medico", "admin"]
+    roles = ["paciente", "medico"] # admin
     for role in roles:
         Role.objects.get_or_create(nombre_rol=role)
 
@@ -36,10 +36,10 @@ def crear_areas_por_defecto(sender, **kwargs):
         "ING. INDUSTRIAL",
         "I. ELECTROMECÁNICA",
         "GASTRONOMÍA",
-        "Maestría",
+        "MAESTRÍA",
         "Médico",
         "ADMINISTRATIVO",
-        "Docente"
+        "DOCENTE",
     ]
     for area in areas:
         Area.objects.get_or_create(carrera_o_puesto=area)
@@ -104,6 +104,7 @@ def asignar_grupo_y_crear_historial(sender, instance, created, **kwargs):
         if instance.role == Role.objects.get(nombre_rol='medico'):
             medico_group = Group.objects.get(name='Medico')
             instance.groups.add(medico_group)
+
         # Si el usuario es un paciente, asignarlo al grupo 'Paciente' y crear un historial médico
         elif instance.role == Role.objects.get(nombre_rol='paciente'):
             paciente_group = Group.objects.get(name='Paciente')
@@ -111,9 +112,10 @@ def asignar_grupo_y_crear_historial(sender, instance, created, **kwargs):
             # Si el paciente tiene una carrera o puesto (y no es médico), crear su historial médico
             if instance.carrera_o_puesto and instance.carrera_o_puesto != 'Médico':
                 HistorialMedico.objects.create(id_historial=instance.clave, paciente=instance)
+
         # Si el usuario es un administrador, asignarlo al grupo 'Administrador'
-        elif instance.role == Role.objects.get(nombre_rol='admin'):
-            admin_group = Group.objects.get(name='Administrador')
-            instance.groups.add(admin_group)
+        # elif instance.role == Role.objects.get(nombre_rol='admin'):
+        #     admin_group = Group.objects.get(name='Administrador')
+        #     instance.groups.add(admin_group)
         # Guardar el usuario con los cambios de grupo
         instance.save()
