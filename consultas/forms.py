@@ -37,25 +37,25 @@ class SignosVitalesForm(forms.ModelForm):
     def clean_peso(self):
         peso = self.cleaned_data.get('peso')
         if peso is not None and not re.match(r'^(?:[4-9][0-9]|1[0-9][0-9])(?:\.[0-9])?$', str(peso)):
-            raise ValidationError('Dato de peso no valido (ejemplo de dato a ingresar: "40.0-199.9")')
+            raise ValidationError('Dato de peso no válido (ejemplo de dato a ingresar: "40.0-199.9")')
         return peso
 
     def clean_talla(self):
         talla = self.cleaned_data.get('talla')
         if talla is not None and not re.match(r'^(1\.\d{1,2}|2\.[0-2]\d?)$', str(talla)):
-            raise ValidationError('Dato de talla no valido (ejemplo de dato a ingresar: "1.00-2.29")')
+            raise ValidationError('Dato de talla no válido (ejemplo de dato a ingresar: "1.00-2.29")')
         return talla
 
     def clean_temperatura(self):
         temperatura = self.cleaned_data.get('temperatura')
-        if temperatura is not None and not re.match(r'^(3[5-9]|4[0-3])(\.[0-9])?$', str(temperatura)):
-            raise ValidationError('Dato de temperatura no valido (ejemplo de dato a ingresar: "35.0-43.9")')
+        if temperatura is not None and not re.match(r'^(3[0-9]|4[0-9]|5[0-9])(\.[0-9])?$', str(temperatura)):
+            raise ValidationError('Dato de temperatura no válido (ejemplo de dato a ingresar: "30.0-50.9")')
         return temperatura
 
     def clean_frecuencia_cardiaca(self):
         fc = self.cleaned_data.get('frecuencia_cardiaca')
-        if fc is not None and not re.match(r'^(5[0-9]|[6-9][0-9]|100)$', str(fc)):
-            raise ValidationError('Dato freciuencia cardiaca no valido (ejemplo de dato a ingresar: "50-100")')
+        if fc is not None and not re.match(r'^(5[0-9]|[6-9][0-9]|1[0-9]{2}|2[0-9]{2})$', str(fc)):
+            raise ValidationError('Dato frecuencia cardiaca no válido (ejemplo de dato a ingresar: "50-299")')
         return fc
 
     def clean_frecuencia_respiratoria(self):
