@@ -10,6 +10,16 @@
 
 
 {% block content %}
+{% if user.is_authenticated %}
+<div class="container mt-4">
+  <div class="text-center">
+    <div class="d-inline-block px-5 py-3 shadow-sm rounded-pill"
+          style="background-color: #F8FDFF;">
+        <h4 class="mb-0 fuente-seasons">¡Bienvenid{% if user.sexo == "M" %}o{% else %}a{% endif %}, <strong>{{ user.nombres|title }}</strong>!</h4>
+      </div>
+    </div>
+  </div>
+{% endif %}
 {% comment %} -------------------------- GLOSARIO --------------------------  {% endcomment %}
 <div class="container mt-5">
   <h3 class="mb-4">Glosario médico</h3>

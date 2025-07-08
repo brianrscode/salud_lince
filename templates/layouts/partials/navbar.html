@@ -21,7 +21,7 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'medico_historiales' %}">Historiales</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'medico_consultas' %}">Consultas</a></li>
                 {% endif %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'informacion' %}">{% if user.is_authenticated %}{{ user.nombres.title }}{% else %}N/A{% endif %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'informacion' %}">Mi perfil</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
             </ul>
         </div>
