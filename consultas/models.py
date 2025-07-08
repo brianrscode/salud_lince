@@ -6,7 +6,7 @@ from usuarios.models import Usuario
 
 class CategoriaPadecimiento(models.Model):
     id_padecimiento = models.BigAutoField(primary_key=True)
-    padecimiento = models.CharField(max_length=100)
+    padecimiento = models.CharField(max_length=300)
 
     def __str__(self):
         return self.padecimiento
@@ -16,8 +16,8 @@ class Consulta(models.Model):
     id_consulta = models.BigAutoField(primary_key=True)
     fecha = models.DateTimeField(auto_now_add=True)
     padecimiento_actual = models.TextField()
-    tratamiento_no_farmacologico = models.TextField('Tratamiento no farmacológico', max_length=100, blank=True, null=True)
-    tratamiento_farmacologico_recetado = models.CharField('Tratamiento farmacológico recetado', max_length=100, blank=True, null=True)
+    tratamiento_no_farmacologico = models.TextField('Tratamiento no farmacológico', max_length=300, blank=True, null=True)
+    tratamiento_farmacologico_recetado = models.CharField('Tratamiento farmacológico recetado', max_length=300, blank=True, null=True)
     categoria_de_padecimiento = models.ForeignKey(CategoriaPadecimiento, on_delete=models.SET_NULL, null=True, default=0)
     clave_paciente = models.ForeignKey(
         Usuario,
@@ -52,11 +52,11 @@ class SignosVitales(models.Model):
                                 )])  # en cm
     temperatura = models.DecimalField('Temperatura (°C)', max_digits=3, decimal_places=1, blank=True, null=True,
                                       validators=[RegexValidator(
-                                          regex=r'(3[5-9]|4[0-3])(\.[0-9])?',
+                                          regex=r'(3[0-9]|4[0-3]|5[0-9])(\.[0-9])?',
                                       )])  # en °C
     frecuencia_cardiaca = models.IntegerField('Frecuencia cardíaca (ppm)', blank=True, null=True, # bpm ahora es ppm
                                               validators=[RegexValidator(
-                                                  regex=r'(5[0-9]|[6-9][0-9]|100)',
+                                                  regex=r'(5[0-9]|[6-9][0-9]|1[0-9]{2}|2[0-9]{2})',
                                               )])  
     frecuencia_respiratoria = models.IntegerField('Frecuencia respiratoria (rpm)', blank=True, null=True,
                                               validators=[RegexValidator(
