@@ -3,6 +3,7 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    
     <style>
         .table-hover-row tr:hover {
             cursor: pointer;
@@ -44,58 +45,50 @@
         <a href="?todas=0" class="btn btn-primary">Mostrar solo mis consultas</a>
         <form method="GET" class="mb-3"> <!--Formulario que contiene las opciones busqueda-->
           <input type = "hidden" name = "todas" value ="1">
-          <div class="row my-4">
-              <div class="col-md-3">
-                  <div class="form-group">
-                      <label for="clave_paciente">Clave del Paciente:</label>
-                      <input type="text" class="form-control-mb" id="clave_paciente" name="clave_paciente" value="{{ request.GET.clave_paciente }}">
-                  </div>
-              </div>
-              <div class="col-md-2">
-                  <div class="form-group">
-                      <label for="fecha_inicio">Fecha de Inicio:</label>
-                      <input type="date" class="form-control-mb" id="fecha_inicio" name="fecha_inicio" value="{{ request.GET.fecha_inicio }}">
-                  </div>
-              </div>
-              <div class="col-md-2">
-                  <div class="form-group">
-                      <label for="fecha_fin">Fecha de Fin:</label>
-                      <input type="date" class="form-control-mb" id="fecha_fin" name="fecha_fin" value="{{ request.GET.fecha_fin }}">
-                  </div>
-              </div>
-              <div class="col-md-3">
-                  <button type="submit" class="btn btn-primary mt-3">Buscar</button>
-                  <a href="{% url 'medico_consultas' %}{% if mostrar_todas %}?todas=1{% endif %}" class="btn btn-danger mt-3 ml-2">Cancelar</a>
-              </div>
-          </div>
+          <div class="row g-3 align-items-end mb-4 mt-3">
+                <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                    <label for="clave_paciente" class="form-label">Clave del Paciente:</label>
+                    <input type="text" class="form-control" id="clave_paciente" name="clave_paciente" value="{{ request.GET.clave_paciente }}">
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                    <label for="fecha_inicio" class="form-label">Fecha de Inicio:</label>
+                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" value="{{ request.GET.fecha_inicio }}">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                    <label for="fecha_fin" class="form-label">Fecha de Fin:</label>
+                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" value="{{ request.GET.fecha_fin }}">
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                    <a href="{% url 'medico_consultas' %}{% if mostrar_todas %}?todas=1{% endif %}" class="btn btn-danger w-100">Cancelar</a>
+                </div>
+            </div>
       </form>
     {% else %}
         <a href="?todas=1" class="btn btn-secondary">Mostrar todas las consultas</a>
         <form method="GET" class="mb-3"> <!--Formulario que contiene las opciones busqueda-->
-          <div class="row my-3">
-              <div class="col-md-3">
-                  <div class="form-group">
-                      <label for="clave_paciente">Clave del Paciente:</label>
-                      <input type="text" class="form-control-mb" id="clave_paciente" name="clave_paciente" value="{{ request.GET.clave_paciente }}">
-                  </div>
-              </div>
-              <div class="col-md-2">
-                  <div class="form-group">
-                      <label for="fecha_inicio">Fecha de Inicio:</label>
-                      <input type="date" class="form-control-mb" id="fecha_inicio" name="fecha_inicio" value="{{ request.GET.fecha_inicio }}">
-                  </div>
-              </div>
-              <div class="col-md-2">
-                  <div class="form-group">
-                      <label for="fecha_fin">Fecha de Fin:</label>
-                      <input type="date" class="form-control-mb" id="fecha_fin" name="fecha_fin" value="{{ request.GET.fecha_fin }}">
-                  </div>
-              </div>
-              <div class="col-md-3">
-                  <button type="submit" class="btn btn-primary mt-3">Buscar</button>
-                  <a href="{% url 'medico_consultas' %}{% if mostrar_todas %}?todas=1{% endif %}" class="btn btn-danger mt-3 ml-2">Cancelar</a>
-              </div>
-          </div>
+            <div class="row g-3 align-items-end mb-4 mt-3">
+                <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                    <label for="clave_paciente" class="form-label">Clave del Paciente:</label>
+                    <input type="text" class="form-control" id="clave_paciente" name="clave_paciente" value="{{ request.GET.clave_paciente }}">
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                    <label for="fecha_inicio" class="form-label">Fecha de Inicio:</label>
+                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" value="{{ request.GET.fecha_inicio }}">
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                    <label for="fecha_fin" class="form-label">Fecha de Fin:</label>
+                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" value="{{ request.GET.fecha_fin }}">
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                    <a href="{% url 'medico_consultas' %}{% if mostrar_todas %}?todas=1{% endif %}" class="btn btn-danger w-100">Cancelar</a>
+                </div>
+            </div>
       </form>
     {% endif %}
 </div>
