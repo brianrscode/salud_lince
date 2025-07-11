@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'sistema_medico.wsgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('NAME_BD'),
         'USER': os.getenv('USER_BD'),
         'PASSWORD': os.getenv('PASSWORD_BD'),
