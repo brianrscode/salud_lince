@@ -14,10 +14,12 @@
         <div class="row">
             {% comment %}  Columna izquierda: Información del paciente  {% endcomment %}
             <div class="col-md-6">
-                {% if user.role.nombre_rol == "paciente" %}
+                {% if user.role.nombre_rol and user.role.nombre_rol == "paciente" %} {% comment %}{% endcomment %}
                     <h2 class= "fuente-seasons">Información del paciente</h2>
                 {% elif user.role.nombre_rol == "medico" %}
                     <h2 class= "fuente-seasons">Información del médico</h2>
+                {% else %} {% comment %}{% endcomment %}
+                    <h2 class= "fuente-seasons">N/A</h2> {% comment %}{% endcomment %}
                 {% endif %}
                 <p><strong class= "fuente-belleza">Nombres:</strong> {{ informacion.nombres }}</p>
                 <p><strong class= "fuente-belleza">Apellido paterno:</strong> {{ informacion.apellido_paterno }}</p>
