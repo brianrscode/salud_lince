@@ -69,21 +69,19 @@ WSGI_APPLICATION = 'sistema_medico.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.getenv('NAME_BD'),
-            'USER': os.getenv('USER_BD'),
-            'PASSWORD': os.getenv('PASSWORD_BD'),
-            'HOST': os.getenv('HOST_BD'),
-            'PORT': os.getenv('PORT_BD'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(default=os.getenv('POSTGRES_URL'))
-    }
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('POSTGRES_URL'))
+}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.getenv('NAME_BD'),
+#         'USER': os.getenv('USER_BD'),
+#         'PASSWORD': os.getenv('PASSWORD_BD'),
+#         'HOST': os.getenv('HOST_BD'),
+#         'PORT': os.getenv('PORT_BD'),
+#     }
+# }
 
 # Para que Django use el modelo "Usuario"
 # en lugar del modelo predeterminado "user"
