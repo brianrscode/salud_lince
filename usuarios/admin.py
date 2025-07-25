@@ -109,7 +109,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                             # Convertir de fecha de formato dd/mm/aaaa a formato yyyy-mm-dd 00:00:00
                             fecha_nacimiento = None
                             if row.get("fecha_nacimiento"):
-                                fecha_nacimiento = datetime.strptime(row["fecha_nacimiento"], "%Y-%m-%d %H:%M:%S").date()
+                                fecha_nacimiento = datetime.strptime(str(row["fecha_nacimiento"]), "%d/%m/%Y").strftime("%Y-%m-%d")
 
                             # ---------------------------- Asignar el rol basado en el área
                             role_obj = None
