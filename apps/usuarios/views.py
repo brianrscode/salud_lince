@@ -29,6 +29,7 @@ from apps.usuarios.views_dashboard_utils import (
     generate_gender_figures,
 )
 
+from apps.publicaciones.views import obtener_publicaciones
 
 
 @never_cache
@@ -152,7 +153,8 @@ def paciente_dashboard_view(request):
         { "pregunta": "¿Cuántas veces al día se recomienda lavarse los dientes?", "respuesta": "Al menos dos veces al día, después de las comidas." },
         { "pregunta": "¿Qué es el estrés?", "respuesta": "Una respuesta del cuerpo ante situaciones de presión o peligro." },
     ]
-    return render(request, "paciente_dashboard.html", {"glosario": glosario, "flashcards": flashcards})
+    publicaciones = obtener_publicaciones()
+    return render(request, "paciente_dashboard.html", {"glosario": glosario, "flashcards": flashcards, "publicaciones": publicaciones})
 
 
 @never_cache

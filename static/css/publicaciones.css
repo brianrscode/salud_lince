@@ -1,0 +1,23 @@
+.publicacion {
+    transition: all 0.3s ease;
+    height: 100%;
+    margin-bottom: 1rem;
+}
+.publicacion:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+.publicacion-imagen {
+    object-fit: cover;
+    width: 100%;
+}
+.publicacion .card-body {
+    padding: 1rem;
+}
+.publicacion .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+.publicacion .text-muted {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
