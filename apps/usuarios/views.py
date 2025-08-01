@@ -14,14 +14,14 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from consultas.models import CategoriaPadecimiento, Consulta, SignosVitales
+from apps.consultas.models import CategoriaPadecimiento, Consulta, SignosVitales
 
-from .decorators import role_required
-from .forms import HistorialMedicoForm
-from .forms import LoginForm
-from .models import Area, HistorialMedico, Usuario
+from apps.usuarios.decorators import role_required
+from apps.usuarios.forms import HistorialMedicoForm
+from apps.usuarios.forms import LoginForm
+from apps.usuarios.models import Area, HistorialMedico, Usuario
 
-from .views_dashboard_utils import (
+from apps.usuarios.views_dashboard_utils import (
     generate_habitos_figure,
     generate_consultas_figure,
     generate_area_distribution_figure,

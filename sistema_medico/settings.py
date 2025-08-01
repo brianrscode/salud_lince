@@ -20,18 +20,26 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1','web-production-d53e3.up.railway.app']
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usuarios',
-    'consultas',
+]
+
+THIRD_PARTY_APPS = [
     'admin_extra_buttons',
     'whitenoise.runserver_nostatic',
 ]
+
+LOCAL_APPS = [
+    'apps.usuarios',
+    'apps.consultas',
+]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,19 +76,19 @@ WSGI_APPLICATION = 'sistema_medico.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-}
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': os.getenv('NAME_BD'),
-#         'USER': os.getenv('USER_BD'),
-#         'PASSWORD': os.getenv('PASSWORD_BD'),
-#         'HOST': os.getenv('HOST_BD'),
-#         'PORT': os.getenv('PORT_BD'),
-#     }
+#     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('NAME_BD'),
+        'USER': os.getenv('USER_BD'),
+        'PASSWORD': os.getenv('PASSWORD_BD'),
+        'HOST': os.getenv('HOST_BD'),
+        'PORT': os.getenv('PORT_BD'),
+    }
+}
 
 # Para que Django use el modelo "Usuario"
 # en lugar del modelo predeterminado "user"
@@ -132,7 +140,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
-    'usuarios.authentication.ClaveBackend',  # Reemplaza 'tu_app' con el nombre de tu aplicación
+    'apps.usuarios.authentication.ClaveBackend',  # Reemplaza 'tu_app' con el nombre de tu aplicación
     'django.contrib.auth.backends.ModelBackend',  # Mantén el backend por defecto
 ]
 

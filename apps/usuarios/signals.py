@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_migrate, post_save
 from django.dispatch import receiver
 
-from consultas.models import Consulta
+from apps.consultas.models import Consulta
 
 from .models import Area, HistorialMedico, Role, Usuario
 

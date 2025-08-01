@@ -11,8 +11,8 @@ def redirigir_admin_login(request):
 urlpatterns = [
     path('admin/login/', redirigir_admin_login),  # ⬅️ Esta línea debe ir antes que 'admin/'
     path('admin/', admin.site.urls),
-    path('', include('usuarios.urls')),
-    path('consultas/', include('consultas.urls')),
+    path('', include('apps.usuarios.urls')),
+    path('consultas/', include('apps.consultas.urls')),
 ]
 
 if settings.DEBUG:

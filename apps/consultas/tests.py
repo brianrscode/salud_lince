@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from usuarios.models import Usuario
+from apps.usuarios.models import Usuario
 
 from .models import Consulta, SignosVitales, CategoriaPadecimiento
 

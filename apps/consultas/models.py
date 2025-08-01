@@ -1,7 +1,7 @@
 from django.core.validators import RegexValidator
 from django.db import models
 
-from usuarios.models import Usuario
+from apps.usuarios.models import Usuario
 
 
 class CategoriaPadecimiento(models.Model):
@@ -57,7 +57,7 @@ class SignosVitales(models.Model):
     frecuencia_cardiaca = models.IntegerField('Frecuencia cardíaca (ppm)', blank=True, null=True, # bpm ahora es ppm
                                               validators=[RegexValidator(
                                                   regex=r'(5[0-9]|[6-9][0-9]|1[0-9]{2}|2[0-9]{2})',
-                                              )])  
+                                              )])
     frecuencia_respiratoria = models.IntegerField('Frecuencia respiratoria (rpm)', blank=True, null=True,
                                               validators=[RegexValidator(
                                                   regex=r'^(12|1[3-9]|2[0-9]|3[0-9]|40)$',

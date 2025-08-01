@@ -5,8 +5,8 @@ from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 
-from usuarios.decorators import role_required
-from usuarios.models import Usuario
+from apps.usuarios.decorators import role_required
+from apps.usuarios.models import Usuario
 
 from .forms import ConsultaForm, SignosVitalesForm
 

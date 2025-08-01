@@ -3,8 +3,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from django.db.models import Count
-from consultas.models import Consulta, CategoriaPadecimiento
-from usuarios.models import Usuario, HistorialMedico
+from apps.consultas.models import Consulta, CategoriaPadecimiento
+from apps.usuarios.models import Usuario, HistorialMedico
 
 
 def generate_habitos_figure():

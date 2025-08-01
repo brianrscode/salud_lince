@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Usuario, HistorialMedico, Role
+from apps.usuarios.models import Usuario, HistorialMedico, Role
 
 
 class UsuarioTestCase(TestCase):

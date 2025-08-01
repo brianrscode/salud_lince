@@ -2,8 +2,8 @@ import re
 
 from django import forms
 from datetime import date
-from .models import Usuario
-from .models import HistorialMedico
+from apps.usuarios.models import Usuario
+from apps.usuarios.models import HistorialMedico
 
 class HistorialMedicoForm(forms.ModelForm):
     """
@@ -87,7 +87,7 @@ class LoginForm(forms.Form):
         token_password = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$'
 
         if not re.match(token_password, password):
-            raise forms.ValidationError("Contraseña no válida.")
+            raise forms.ValidationError("Contraseña inválida.")
         return password
 
 

@@ -1,7 +1,6 @@
 import re
 from django.core.exceptions import ValidationError
 from django import forms
-from usuarios.models import Usuario
 from .models import Consulta, SignosVitales
 
 class ConsultaForm(forms.ModelForm):
