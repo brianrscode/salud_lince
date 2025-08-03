@@ -9,6 +9,9 @@ import pandas as pd
 from .forms import BulkUserUploadForm, ValidarForm
 from .models import Area, HistorialMedico, Role, Usuario
 from django.contrib.admin import AdminSite
+from django.conf import settings
+import re
+
 
 class SitioAdminSoloSuperusuarios(AdminSite):
     """
@@ -46,7 +49,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
             # Si no se proporciona una contraseña, se asigna una por defecto
             password = form.cleaned_data.get('password')
             if not password:
-                password = 'P@ssword123'  # Cambia esto por la contraseña que desees
+                password = settings.DEFAULT_PASSWORD  # Cambia esto por la contraseña que desees
             obj.set_password(password)
 
         super().save_model(request, obj, form, change)
@@ -96,7 +99,11 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                             # Validar valores vacíos y corregir tipos de datos
                             apellido_materno = str(row.get("apellido_materno", "")).strip() or None
                             valor_pas = row.get("password", "")
-                            pas = "P@ssword123" if pd.isna(valor_pas) or str(valor_pas).strip() == "" else str(valor_pas).strip()
+                            pas = settings.DEFAULT_PASSWORD if pd.isna(valor_pas) or str(valor_pas).strip() == "" else str(valor_pas).strip()
+                            token_password = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$'
+                            if not re.match(token_password, pas):
+                                messages.error(request, f"Fila {index + 1}: La contraseña no cumple con el formato.")
+                                continue
                             valor_activo = row.get("is_active", "")
                             activo = True if pd.isna(valor_activo) or str(valor_activo).strip() == "" else str(valor_activo).strip()
 

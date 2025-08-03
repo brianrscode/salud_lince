@@ -7,6 +7,7 @@ from django.contrib.auth.models import (
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import RegexValidator
 from django.db import models
+from django.conf import settings
 
 
 class UsuarioManager(BaseUserManager):
@@ -197,7 +198,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
             self.password = make_password(self.password)
 
         if not self.pk and not self.has_usable_password():
-            self.set_password('P@ssword123')  # Cambia esto por la contraseña que desees
+            self.set_password(settings.DEFAULT_PASSWORD)
 
         if self.role is None:
             self.role = Role.objects.get(nombre_rol='paciente')
