@@ -63,7 +63,7 @@ class LoginForm(forms.Form):
         clave = self.cleaned_data.get('clave')
         if not str(clave).startswith('admin'):
             clave = clave.upper()
-        token_clave = r'^((IB|IM|II|IE|ISC|LG|AM)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$'
+        token_clave = r'^((AM|BIE|BIS|BLG|CIE|CII|IB|IE|II|IM|ISC|LG|MXI)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$'
 
         if not re.match(token_clave, clave):
             raise forms.ValidationError("Ingrese su matrícula o número de trabajador.")

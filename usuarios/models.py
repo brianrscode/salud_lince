@@ -148,12 +148,12 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     """
     clave = models.CharField('clave', max_length=9, primary_key=True, unique=True,
                              validators=[RegexValidator(
-                                 regex=r'^((IB|IM|II|IE|ISC|LG|AM)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$',
+                                 regex=r'^((AM|BIE|BIS|BLG|CIE|CII|IB|IE|II|IM|ISC|LG|MXI)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$',
                                  message='Formato de clave no valido'
                              )])
     email = models.EmailField('Correo', unique=True,
                               validators=[RegexValidator(
-                                  regex=r'^(?:(?:(?:ib|im|ii|ie|isc|lg|am)\d{6}|\d{4,6}|[A-Za-z]+(?:\.[A-Za-z]+))@itsatlixco\.edu\.mx|admin\d@admin\.com)$',
+                                  regex=r'^(?:(?:(?:am|bie|bis|blg|cie|cii|ib|ie|ii|im|isc|lg|mxi)\d{6}|\d{4,6}|[A-Za-z]+(?:\.[A-Za-z]+))@itsatlixco\.edu\.mx|admin\d@admin\.com)$',
                                   message='Formato de correo no valido'
                               )])
     nombres = models.CharField('Nombres', max_length=100,
