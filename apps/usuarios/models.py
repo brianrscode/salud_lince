@@ -159,7 +159,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
                               )])
     nombres = models.CharField('Nombres', max_length=100,
                                validators=[RegexValidator(
-                                   regex=r'^([A-ZÑÁÉÍÓÚ][A-ZÑÁÉÍÓÚ]+)( [A-ZÑÁÉÍÓÚ][A-ZÑÁÉÍÓÚ]+)?$',
+                                   regex=r'^([A-ZÑÁÉÍÓÚ][A-ZÑÁÉÍÓÚ]+)( [A-ZÑÁÉÍÓÚ][A-ZÑÁÉÍÓÚ]+)?( [A-ZÑÁÉÍÓÚ][A-ZÑÁÉÍÓÚ]+)?$',
                                    message='El nombre debe ser en mayúsculas y no contener números'
                                )])
     apellido_paterno = models.CharField('Apellido Paterno', max_length=30,
