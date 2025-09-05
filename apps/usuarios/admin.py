@@ -100,7 +100,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                             apellido_materno = str(row.get("apellido_materno", "")).strip() or None
                             valor_pas = row.get("password", "")
                             pas = settings.DEFAULT_PASSWORD if pd.isna(valor_pas) or str(valor_pas).strip() == "" else str(valor_pas).strip()
-                            token_password = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$'
+                            token_password = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%#?&ñ_])[A-Za-z\d@$!%#?&ñ_]{8,15}$'
                             if not re.match(token_password, pas):
                                 messages.error(request, f"Fila {index + 1}: La contraseña no cumple con el formato.")
                                 continue
