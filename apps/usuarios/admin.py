@@ -146,7 +146,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
 
                     # Inserción y actualización en lotes
                     if usuarios_nuevos:
-                        Usuario.objects.bulk_create(usuarios_nuevos, batch_size=500)
+                        Usuario.objects.bulk_create(usuarios_nuevos, batch_size=100)
 
                     if usuarios_existentes:
                         Usuario.objects.bulk_update(
@@ -156,7 +156,7 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                                 "fecha_nacimiento", "sexo", "is_active", "is_staff",
                                 "carrera_o_puesto_id", "role_id"
                             ],
-                            batch_size=500
+                            batch_size=100
                         )
 
                     messages.success(
