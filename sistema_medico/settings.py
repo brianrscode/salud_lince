@@ -78,6 +78,7 @@ WSGI_APPLICATION = 'sistema_medico.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 if DEBUG:
+    print("Estas en modo DEBUG con la base de datos local")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -89,6 +90,7 @@ if DEBUG:
         }
     }
 else:
+    print("Estas en modo producción con la base de datos remota")
     DATABASES = {
         'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
     }

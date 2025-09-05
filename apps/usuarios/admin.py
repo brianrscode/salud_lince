@@ -71,28 +71,30 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
         """
         Vista personalizada para la carga masiva de usuarios desde un archivo CSV o Excel.
 
-        Permite al administrador subir un archivo .csv o .xls/.xlsx y registrar o actualizar usuarios en bloque.
-        Utiliza `pandas` para procesar el archivo y `update_or_create` para manejar inserciones o actualizaciones.
-        Comportamiento:
-        - Si el archivo es válido, se procesan todas las filas.
-        - Si hay errores por fila, se muestra un mensaje detallado.
-        - Al finalizar, se notifica cuántos usuarios fueron creados o actualizados.
+        - Lee el archivo con pandas.
+        - Crea usuarios nuevos con bulk_create en lotes.
+        - Actualiza usuarios existentes con bulk_update en lotes.
+        - Devuelve mensajes claros de cuántos se crearon y cuántos se actualizaron.
         """
         if request.method == "POST":
             form = BulkUserUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 file = request.FILES["file"]
                 try:
+                    # Leer archivo
                     if file.name.endswith(".csv"):
-                        df = pd.read_csv(file, dtype=str)  # Leer archivo como string
-                    elif file.name.endswith(".xls") or file.name.endswith(".xlsx"):
-                        df = pd.read_excel(file, dtype=str)  # Leer archivo como string
+                        df = pd.read_csv(file, dtype=str)
+                    elif file.name.endswith((".xls", ".xlsx")):
+                        df = pd.read_excel(file, dtype=str)
                     else:
                         messages.error(request, "Formato de archivo no compatible.")
                         return redirect("..")
 
-                    usuarios_creados = 0
-                    usuarios_actualizados = 0
+                    usuarios_nuevos = []
+                    usuarios_existentes = []
+
+                    # Obtener claves de usuarios ya registrados
+                    claves_existentes = set(Usuario.objects.values_list("clave", flat=True))
 
                     for index, row in df.iterrows():
                         try:
@@ -100,63 +102,67 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
                             apellido_materno = str(row.get("apellido_materno", "")).strip() or None
                             valor_pas = row.get("password", "")
                             pas = settings.DEFAULT_PASSWORD if pd.isna(valor_pas) or str(valor_pas).strip() == "" else str(valor_pas).strip()
-                            token_password = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&ñ_])[A-Za-z\d@$!%*#?&ñ_]{8,15}$'
+
+                            # Validar contraseña
+                            token_password = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%#?&ñ_])[A-Za-z\d@$!%#?&ñ_]{8,15}$'
                             if not re.match(token_password, pas):
                                 messages.error(request, f"Fila {index + 1}: La contraseña no cumple con el formato.")
                                 continue
-                            valor_activo = row.get("is_active", "")
-                            activo = True if pd.isna(valor_activo) or str(valor_activo).strip() == "" else str(valor_activo).strip()
 
-                            # Obtener el objeto del área
+                            # Obtener área y rol
                             area_obj = Area.objects.get(carrera_o_puesto=row.get("carrera_o_puesto"))
-
-                            # Asignar automáticamente el objeto Role según el área
                             area_nombre = area_obj.carrera_o_puesto.strip()
+                            role_obj = Role.objects.get(nombre_rol="medico" if area_nombre == "Médico" else "paciente")
 
-                            # Convertir de fecha de formato dd/mm/aaaa a formato yyyy-mm-dd 00:00:00
+                            # Convertir fecha de nacimiento
                             fecha_nacimiento = None
                             if row.get("fecha_nacimiento"):
-                                fecha_nacimiento = datetime.strptime(str(row["fecha_nacimiento"]), "%d/%m/%Y").strftime("%Y-%m-%d")
+                                fecha_nacimiento = datetime.strptime(
+                                    str(row["fecha_nacimiento"]), "%d/%m/%Y"
+                                ).strftime("%Y-%m-%d")
 
-                            # ---------------------------- Asignar el rol basado en el área
-                            role_obj = None
-                            if area_nombre == "Médico":
-                                role_obj = Role.objects.get(nombre_rol="medico")
-                            # elif area_nombre == "ADMINISTRATIVO":
-                            #     role_obj = Role.objects.get(nombre_rol="paciente")
-                            else:
-                                role_obj = Role.objects.get(nombre_rol="paciente")
-
-
-                            usuario, creado = Usuario.objects.update_or_create(
+                            usuario = Usuario(
                                 clave=row["clave"],
-                                defaults={
-                                    "email": row["email"],
-                                    "nombres": row["nombres"],
-                                    "apellido_paterno": row["apellido_paterno"],
-                                    "apellido_materno": apellido_materno,
-                                    "fecha_nacimiento": fecha_nacimiento,
-                                    "sexo": row.get("sexo", None),
-                                    "is_active": activo,
-                                    "is_staff": row.get("is_staff", "False") == "True",
-                                    "carrera_o_puesto_id": row.get("carrera_o_puesto", None),
-                                    "role_id": role_obj.nombre_rol,
-                                }
+                                email=row["email"],
+                                nombres=row["nombres"],
+                                apellido_paterno=row["apellido_paterno"],
+                                apellido_materno=apellido_materno,
+                                fecha_nacimiento=fecha_nacimiento,
+                                sexo=row.get("sexo", None),
+                                is_active=True,
+                                is_staff=row.get("is_staff", "False") == "True",
+                                carrera_o_puesto_id=row.get("carrera_o_puesto", None),
+                                role_id=role_obj.nombre_rol,
                             )
 
-                            # Si es un usuario nuevo, se le asigna contraseña
-                            if creado:
-                                usuario.set_password(pas)
-                                usuarios_creados += 1
+                            if row["clave"] in claves_existentes:
+                                usuarios_existentes.append(usuario)
                             else:
-                                usuarios_actualizados += 1
-
-                            usuario.save()
+                                usuario.set_password(pas)
+                                usuarios_nuevos.append(usuario)
 
                         except Exception as e:
                             messages.error(request, f"Error en la fila {index + 1}: {e}")
 
-                    messages.success(request, f"Usuarios creados: {usuarios_creados}, actualizados: {usuarios_actualizados}.")
+                    # Inserción y actualización en lotes
+                    if usuarios_nuevos:
+                        Usuario.objects.bulk_create(usuarios_nuevos, batch_size=500)
+
+                    if usuarios_existentes:
+                        Usuario.objects.bulk_update(
+                            usuarios_existentes,
+                            [
+                                "email", "nombres", "apellido_paterno", "apellido_materno",
+                                "fecha_nacimiento", "sexo", "is_active", "is_staff",
+                                "carrera_o_puesto_id", "role_id"
+                            ],
+                            batch_size=500
+                        )
+
+                    messages.success(
+                        request,
+                        f"Usuarios creados: {len(usuarios_nuevos)}, actualizados: {len(usuarios_existentes)}."
+                    )
                     return redirect("..")
 
                 except Exception as e:
