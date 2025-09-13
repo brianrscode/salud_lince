@@ -146,7 +146,34 @@ class UsuarioAdmin(ExtraButtonsMixin, admin.ModelAdmin):
 
                     # Inserción y actualización en lotes
                     if usuarios_nuevos:
-                        Usuario.objects.bulk_create(usuarios_nuevos, batch_size=100)
+                        # Guardar los usuarios creados
+                        usuarios_creados = Usuario.objects.bulk_create(usuarios_nuevos, batch_size=100)
+
+                        # Crear historiales médicos para los nuevos pacientes
+                        from django.contrib.auth.models import Group
+                        from .models import HistorialMedico
+
+                        for usuario in usuarios_creados:
+                            # Verificar si es un paciente que necesita historial
+                            if (hasattr(usuario, 'role') and
+                                hasattr(usuario.role, 'nombre_rol') and
+                                usuario.role.nombre_rol.lower() == 'paciente' and
+                                hasattr(usuario, 'carrera_o_puesto') and
+                                usuario.carrera_o_puesto != 'Médico'):
+
+                                HistorialMedico.objects.get_or_create(
+                                    id_historial=usuario.clave,
+                                    defaults={'paciente': usuario}
+                                )
+
+                            # Asignar grupo correspondiente
+                            if hasattr(usuario, 'role') and hasattr(usuario.role, 'nombre_rol'):
+                                group_name = usuario.role.nombre_rol.capitalize()
+                                try:
+                                    group = Group.objects.get(name=group_name)
+                                    usuario.groups.add(group)
+                                except Group.DoesNotExist:
+                                    pass
 
                     if usuarios_existentes:
                         Usuario.objects.bulk_update(
