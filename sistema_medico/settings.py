@@ -178,3 +178,6 @@ CSRF_TRUSTED_ORIGINS = ['http://*', 'https://web-production-d53e3.up.railway.app
 
 
 DEFAULT_PASSWORD = os.getenv('DEFAULT_PASSWORD')
+
+LOGIN_REDIRECT_URL = '/'  # redirige a la página principal al iniciar sesión
+LOGOUT_REDIRECT_URL = '/'  # redirige a la página principal al cerrar sesión
