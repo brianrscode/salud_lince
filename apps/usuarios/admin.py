@@ -221,7 +221,13 @@ class RoleAdmin(admin.ModelAdmin):
     ordering = ('nombre_rol',)
     list_filter = ('nombre_rol',)
 
+class AreaAdmin(admin.ModelAdmin):
+    model = Area
+    list_display = ('carrera_o_puesto',)
+    ordering = ('carrera_o_puesto',)
+    list_filter = ('carrera_o_puesto',)
 
 admin.site.register(Usuario, UsuarioAdmin)
 admin.site.register(HistorialMedico, HistorialAdmin)
 admin.site.register(Role, RoleAdmin)
+admin.site.register(Area, AreaAdmin)

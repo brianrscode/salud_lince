@@ -36,7 +36,7 @@ def crear_areas_por_defecto(sender, **kwargs):
         "ING. INDUSTRIAL",
         "I. ELECTROMECÁNICA",
         "GASTRONOMÍA",
-        "MAESTRÍA",
+        "M. EN INGENIERÍA",
         "Médico",
         "ADMINISTRATIVO",
         "DOCENTE",
