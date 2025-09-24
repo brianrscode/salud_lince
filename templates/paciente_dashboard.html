@@ -26,20 +26,26 @@
 <div class="container mt-4">
     <h3 class="mb-3">Noticias y Actualizaciones</h3>
     {% if publicaciones %}
-        <div class="row row-cols-1 row-cols-md-2 g-3">
+        <div class="row row-cols-1 row-cols-md-3 g-3">
             {% for publicacion in publicaciones %}
             <div class="col">
                 <div class="card h-100 publicacion">
-                    {% if publicacion.imagen %}
+                    {% comment %} {% if publicacion.imagen %}
                     <div class="text-center">
                         <img src="{{ publicacion.imagen.url }}" class="publicacion-imagen" alt="{{ publicacion.titulo }}">
                     </div>
-                    {% endif %}
+                    {% endif %} {% endcomment %}
                     <div class="card-body">
                         <h5 class="card-title">{{ publicacion.titulo }}</h5>
                         <p class="text-muted small">
                             {{ publicacion.fecha_publicacion|date:"d/m/Y" }}
                         </p>
+                        {% if publicacion.descripcion %}
+                            <p>{{ publicacion.descripcion }}</p>
+                        {% endif %}
+                        {% if publicacion.url_recurso %}
+                            <a href="{{ publicacion.url_recurso }}" class="btn btn-primary" target="_blank">Ver recurso</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

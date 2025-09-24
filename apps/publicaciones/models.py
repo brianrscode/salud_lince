@@ -4,8 +4,9 @@ from apps.usuarios.models import Usuario
 
 class Publicacion(models.Model):
     titulo = models.CharField('Título', max_length=200)
-    # contenido = models.TextField('Contenido')
-    imagen = models.ImageField('Imagen', upload_to='publicaciones/', blank=True, null=True)
+    # imagen = models.ImageField('Imagen', upload_to='publicaciones/', blank=True, null=True)
+    descripcion = models.TextField('Descripción', blank=True, null=True)
+    url_recurso = models.URLField('URL del recurso', blank=True, null=True)
     fecha_publicacion = models.DateTimeField('Fecha de publicación', default=timezone.now)
     autor = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
     publicado = models.BooleanField('Publicado', default=True)
