@@ -63,7 +63,7 @@ class LoginForm(forms.Form):
         clave = self.cleaned_data.get('clave')
         if not str(clave).startswith('admin'):
             clave = clave.upper()
-        token_clave = r'^((AM|BIE|BIS|BLG|CIE|CII|IB|IE|II|IM|ISC|LG|MI|MXI|MXM|MXS)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$'
+        token_clave = r'^((AM|BIE|BIS|BLG|BII|BIM|BIB|CLG|CIM|CIE|CII|CIB|IB|IE|II|IM|ISC|LG|MI|MXI|MXM|MXE|MXS|MIA)[0-9]{4,6})|^(admin[0-9])|^([0-9]{4,6})$'
 
         if not re.match(token_clave, clave):
             raise forms.ValidationError("Ingrese su matrícula o número de trabajador.")
@@ -157,6 +157,10 @@ class ValidarForm(forms.ModelForm):
             self.add_error('clave', "La clave 'IE' corresponde a Ingeniería Electromecánica.")
         elif clave.startswith("LG") and carrera and "GASTRONOMÍA" not in carrera.carrera_o_puesto.upper():
             self.add_error('clave', "La clave 'LG' corresponde a Licenciatura en Gastronomía.")
+        elif clave.startswith("MI") and carrera and "M. EN INGENIERÍA" not in carrera.carrera_o_puesto.upper():
+            self.add_error('clave', "La clave 'MI' corresponde a la Maestría en Ingeniería")
+        elif clave.startswith("MIA") and carrera and "MAESTRÍA EN IA" not in carrera.carrera_o_puesto.upper():
+            self.add_error('clave', "La clave 'MIA' corresponde a MAESTRÍA en IA.")
         # elif clave.startswith("am") and carrera and "MÉDICO" not in carrera.carrera_o_puesto.upper():
         #   self.add_error('clave', "La clave 'am' corresponde al área Médica.")
 
