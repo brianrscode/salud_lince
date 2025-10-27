@@ -66,6 +66,8 @@ class SignosVitales(models.Model):
                                         validators=[RegexValidator(
                                             regex=r'\b(1[01][0-9]|120|12[0-9]|1[3-9][0-9]|140)\/(60|6[0-9]|70|7[0-9]|80|8[0-9]|90)\b',
                                         )])  # ej: "120/80"
+    imc = models.FloatField('Índice de Masa Corporal(IMC)', blank=True, null= True) #campo para el imc 
+
     consulta = models.OneToOneField(
         'Consulta',
         on_delete=models.CASCADE,
