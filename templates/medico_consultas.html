@@ -117,7 +117,9 @@
                 "temperatura": "{{ consulta.signos_vitales.temperatura }}",
                 "frecuencia_cardiaca": "{{ consulta.signos_vitales.frecuencia_cardiaca }}",
                 "frecuencia_respiratoria": "{{ consulta.signos_vitales.frecuencia_respiratoria }}",
-                "presion_arterial": "{{ consulta.signos_vitales.presion_arterial }}"
+                "presion_arterial": "{{ consulta.signos_vitales.presion_arterial }}",
+                "imc" : "{{consulta.signos_vitales.imc}}"
+                
             }'>
             <td>{{ consulta.fecha }}</td> <!--Datos de la consulta que se previsualizan -->
             <td>{{ consulta.clave_paciente }}</td>
@@ -156,6 +158,7 @@
                     <li><strong>Frecuencia cardíaca:</strong> <span id="detalleFrecuenciaCardiaca"></span></li>
                     <li><strong>Frecuencia respiratoria:</strong> <span id="detalleFrecuenciaRespiratoria"></span></li>
                     <li><strong>Presión arterial:</strong> <span id="detallePresionArterial"></span></li>
+                    <li><strong>IMC:</strong> <span id="detalleIMC"></span></li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -233,6 +236,7 @@
             setSignoVital('detalleFrecuenciaCardiaca', signos.frecuencia_cardiaca, 'ppm'); //bpm a ppm
             setSignoVital('detalleFrecuenciaRespiratoria', signos.frecuencia_respiratoria, 'rpm');
             setSignoVital('detallePresionArterial', signos.presion_arterial, 'mmHg');
+            setSignoVital('detalleIMC', signos.imc, 'kg/m')
         });
     });
 </script>
