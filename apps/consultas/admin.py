@@ -10,7 +10,7 @@ class ConsultaAdmin(admin.ModelAdmin):
 
 
 class SignosVitalesAdmin(admin.ModelAdmin):
-    list_display = ('id_signos', 'peso', 'talla', 'temperatura', 'frecuencia_cardiaca', 'frecuencia_respiratoria', 'presion_arterial')
+    list_display = ('id_signos', 'peso', 'talla', 'temperatura', 'frecuencia_cardiaca', 'frecuencia_respiratoria', 'presion_arterial', 'imc')
     ordering = ('id_signos',)
 
 
