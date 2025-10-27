@@ -31,6 +31,7 @@ class SignosVitalesForm(forms.ModelForm):
             'frecuencia_cardiaca': forms.NumberInput(attrs={'class': 'form-control'}),
             'frecuencia_respiratoria': forms.NumberInput(attrs={'class': 'form-control'}),
             'presion_arterial': forms.TextInput(attrs={'class': 'form-control'}),
+            'imc': forms.NumberInput(attrs={'class': 'form-control', 'readonly': True}),
         }
 
     def clean_peso(self):
