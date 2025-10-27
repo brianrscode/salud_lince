@@ -44,6 +44,10 @@ def crear_consulta_view(request):
 
             signos_vitales = signos_form.save(commit=False)
             signos_vitales.consulta = consulta
+            if signos_vitales.peso and signos_vitales.talla and signos_vitales.talla > 0: #Formula para calcular el imc
+                signos_vitales.imc = round(signos_vitales.peso / (signos_vitales.talla ** 2), 2)
+            else:
+                signos_vitales.imc = None
             signos_vitales.save()
 
             messages.success(request, 'Consulta registrada correctamente.')
