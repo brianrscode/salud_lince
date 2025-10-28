@@ -158,7 +158,7 @@
                     <li><strong>Frecuencia cardíaca:</strong> <span id="detalleFrecuenciaCardiaca"></span></li>
                     <li><strong>Frecuencia respiratoria:</strong> <span id="detalleFrecuenciaRespiratoria"></span></li>
                     <li><strong>Presión arterial:</strong> <span id="detallePresionArterial"></span></li>
-                    <li><strong>IMC:</strong> <span id="detalleIMC"></span></li>
+                    <li><strong>Índice de Masa Corporal (IMC):</strong> <span id="detalleIMC"></span></li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -216,7 +216,7 @@
 
             // Parse signos vitales
             const signos = JSON.parse(data.signos);
-
+            
             const setSignoVital = (id, value, unidad = '') => {
                 // Obtengo el elemento correspondiente a través de su id
                 const elemento = document.getElementById(id);
