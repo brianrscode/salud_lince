@@ -112,4 +112,38 @@
         }
 
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("IMC Script cargado correctamente");
+
+        const pesoInput = document.getElementById('id_peso');
+        const tallaInput = document.getElementById('id_talla');
+        const imcInput = document.getElementById('id_imc');
+
+        // Función principal de cálculo
+        function calcularIMC() {
+            const peso = parseFloat(pesoInput.value);
+            const talla = parseFloat(tallaInput.value);
+
+            if (!isNaN(peso) && !isNaN(talla) && peso > 0 && talla > 0) {
+                const imc = (peso / (talla ** 2)).toFixed(2);
+                imcInput.value = imc;
+
+                // Efecto visual rápido para confirmar el cálculo
+                imcInput.style.backgroundColor = "#e8f5e9";
+                setTimeout(() => imcInput.style.backgroundColor = "", 500);
+            } else {
+                imcInput.value = "";
+            }
+        }
+
+        // Cálculo automático al escribir
+        pesoInput.addEventListener("input", calcularIMC);
+        tallaInput.addEventListener("input", calcularIMC);
+
+        // Cálculo al hacer clic sobre el campo IMC
+        imcInput.addEventListener("click", calcularIMC);
+    });
+    </script>
 {% endblock %}
