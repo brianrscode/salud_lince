@@ -45,7 +45,8 @@
                 "temperatura": "{{ consulta.signos_vitales.temperatura }}",
                 "frecuencia_cardiaca": "{{ consulta.signos_vitales.frecuencia_cardiaca }}",
                 "frecuencia_respiratoria": "{{ consulta.signos_vitales.frecuencia_respiratoria }}",
-                "presion_arterial": "{{ consulta.signos_vitales.presion_arterial }}"
+                "presion_arterial": "{{ consulta.signos_vitales.presion_arterial }}",
+                "imc": "{{consulta.signos_vitales.imc}}"
             }'>
             <td>{{ consulta.fecha }}</td>
             <td class="truncate">{{ consulta.padecimiento_actual }}</td>
@@ -84,6 +85,7 @@
                     <li><strong class= "fuente-belleza">Frecuencia cardíaca:</strong> <span id="detalleFrecuenciaCardiaca"></span> ppm</li>
                     <li><strong class= "fuente-belleza">Frecuencia respiratoria:</strong> <span id="detalleFrecuenciaRespiratoria"></span> rpm</li>
                     <li><strong class= "fuente-belleza">Presión arterial:</strong> <span id="detallePresionArterial"></span> mmHg</li>
+                    <li><strong class= "fuente-belleza">Índice de Masa Corporal(IMC):</strong> <span id="detalleIMC"></span> kg/m</li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -140,12 +142,14 @@
 
             // Parse signos vitales
             const signos = JSON.parse(data.signos);
+
             document.getElementById('detallePeso').textContent = signos.peso;
             document.getElementById('detalleTalla').textContent = signos.talla;
             document.getElementById('detalleTemperatura').textContent = signos.temperatura;
             document.getElementById('detalleFrecuenciaCardiaca').textContent = signos.frecuencia_cardiaca;
             document.getElementById('detalleFrecuenciaRespiratoria').textContent = signos.frecuencia_respiratoria;
             document.getElementById('detallePresionArterial').textContent = signos.presion_arterial;
+            document.getElementById('detalleIMC').textContent = signos.imc;
         });
     });
 </script>
