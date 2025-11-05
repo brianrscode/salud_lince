@@ -11,7 +11,7 @@
 
 {% block content %}
     <div class="container mt-4">
-        <div class="row">
+        <div class="row g-3">
             {% comment %}  Columna izquierda: Información del paciente  {% endcomment %}
             <div class="col-md-6">
                 {% if user.role.nombre_rol and user.role.nombre_rol == "paciente" %} {% comment %}{% endcomment %}
@@ -29,7 +29,6 @@
                 <p><strong class= "fuente-belleza">Fecha de nacimiento:</strong> {{ informacion.fecha_nacimiento }}</p>
                 <p><strong class= "fuente-belleza">Carrera o puesto:</strong> {{ informacion.carrera_o_puesto }}</p>
             </div>
-
             {% comment %} Columna derecha: Formulario de cambio de contraseña {% endcomment %}
             <div class="col-md-6">
                 {% comment %} Mensajes {% endcomment %}
@@ -72,14 +71,87 @@
                     <button type="submit" class="btn btn-primary fuente-belleza">Cambiar contraseña</button>
                 </form>
             </div>
+        <br><br><br>
+        <div class="col-mb-4">
+                <h2 class="fuente-seasons">Contactos de Emergencia</h2>
+                <button type="button" class="btn btn-primary fuente-belleza" data-bs-toggle="modal" data-bs-target="#contactoModal">
+                    Agregar contactos
+                </button>
+            </div>
         </div>
 
-        <br><br><br>
+        <div class="modal fade" id="contactoModal" tabindex="-1" aria-labelledby="contactoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
 
-    </div>
-{% endblock %}
+                    <!-- Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fuente-seasons" id="contactoModalLabel">Contactos de Emergencia</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-{% block scripts %}
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <form id="contactosForm" method="POST" action="{% url 'guardar_contactos' %}">
+                            {% csrf_token %}
+                            <div id="contactosContainer">
+
+                                <!-- Contacto 1 -->
+                                <div class="contacto-item border p-3 mb-3 rounded">
+                                    <h6 class="fw-bold text-primary fuente-belleza">Contacto 1</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label fuente-belleza">Nombre completo</label>
+                                        <input type="text" name="nombre_1" class="form-control"
+                                            value="{% if contactos|length > 0 %}{{ contactos.0.nombre }}{% endif %}"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fuente-belleza">Parentesco</label>
+                                        <input type="text" name="parentesco_1" class="form-control"
+                                            value="{% if contactos|length > 0 %}{{ contactos.0.parentesco }}{% endif %}"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fuente-belleza">Teléfono</label>
+                                        <input type="text" name="telefono_1" class="form-control"
+                                            value="{% if contactos|length > 0 %}{{ contactos.0.telefono }}{% endif %}"
+                                            placeholder="+521234567890" required>
+                                    </div>
+                                </div>
+
+                                <!-- Contacto 2 -->
+                                <div class="contacto-item border p-3 mb-3 rounded">
+                                    <h6 class="fw-bold text-primary fuente-belleza">Contacto 2</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label fuente-belleza">Nombre completo</label>
+                                        <input type="text" name="nombre_2" class="form-control"
+                                            value="{% if contactos|length > 1 %}{{ contactos.1.nombre }}{% endif %}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fuente-belleza">Parentesco</label>
+                                        <input type="text" name="parentesco_2" class="form-control"
+                                            value="{% if contactos|length > 1 %}{{ contactos.1.parentesco }}{% endif %}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fuente-belleza">Teléfono</label>
+                                        <input type="text" name="telefono_2" class="form-control"
+                                            value="{% if contactos|length > 1 %}{{ contactos.1.telefono }}{% endif %}"
+                                            placeholder="+521234567890">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success fuente-belleza">Guardar contactos</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
 <script>
     const showPassword1Checkbox = document.getElementById('showPassword1');
     const showPassword2Checkbox = document.getElementById('showPassword2');
@@ -114,4 +186,40 @@
     });
 
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const agregarBtn = document.getElementById('agregarContactoBtn');
+    const container = document.getElementById('contactosContainer');
+    let contactoCount = 1;
+
+    agregarBtn.addEventListener('click', function() {
+        if (contactoCount >= 2) {
+            alert("Solo puedes agregar hasta 2 contactos de emergencia.");
+            return;
+        }
+
+        contactoCount++;
+        const nuevoContacto = document.createElement('div');
+        nuevoContacto.classList.add('contacto-item', 'border', 'p-3', 'mb-3', 'rounded');
+        nuevoContacto.innerHTML = `
+            <h6 class="fw-bold text-primary fuente-belleza">Contacto ${contactoCount}</h6>
+            <div class="mb-3">
+                <label class="form-label fuente-belleza">Nombre completo</label>
+                <input type="text" name="nombre_${contactoCount}" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fuente-belleza">Parentesco</label>
+                <input type="text" name="parentesco_${contactoCount}" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fuente-belleza">Teléfono</label>
+                <input type="text" name="telefono_${contactoCount}" class="form-control" placeholder="+521234567890" required>
+            </div>
+        `;
+        container.appendChild(nuevoContacto);
+    });
+});
+</script>
+
 {% endblock %}
