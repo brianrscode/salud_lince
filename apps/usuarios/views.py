@@ -1,6 +1,9 @@
 import re
 
 from django.contrib import messages
+from django.db import transaction, IntegrityError
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -14,12 +17,13 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
+
 from apps.consultas.models import CategoriaPadecimiento, Consulta, SignosVitales
 
 from apps.usuarios.decorators import role_required
 from apps.usuarios.forms import HistorialMedicoForm
 from apps.usuarios.forms import LoginForm
-from apps.usuarios.models import Area, HistorialMedico, Usuario
+from apps.usuarios.models import Area, HistorialMedico, Usuario,ContactoEmergencia
 
 from apps.usuarios.views_dashboard_utils import (
     generate_habitos_figure,
@@ -213,7 +217,12 @@ def usuario_informacion_view(request):
     Esta vista es accesible tanto para pacientes como médicos.
     """
     informacion = request.user
-    return render(request, "informacion.html", {"informacion": informacion})
+    contactos = []
+    
+    if hasattr(request.user, "contactos_emergencia"):
+        contactos = request.user.contactos_emergencia.all().order_by("id")
+        
+    return render(request, "informacion.html", {"informacion": informacion, "contactos": contactos,})
 
 
 @never_cache
@@ -387,9 +396,81 @@ def editar_historial_view(request, pk):
     historial = get_object_or_404(HistorialMedico, id_historial=pk)
     datos = request.POST if request.method == 'POST' else None
     form = HistorialMedicoForm(datos, instance=historial)
+    paciente = historial.paciente
+
+    contactos = ContactoEmergencia.objects.filter(paciente=paciente)
 
     if request.method == 'POST' and form.is_valid():
             form.save()
             return redirect('medico_historiales')
 
-    return render(request, 'editar_historial.html', {'form': form, 'historial': historial})
+    return render(request, 'editar_historial.html', {'form': form, 'historial': historial, 'contactos': contactos})
+
+
+telefono_validator = RegexValidator(r'^\+?\d{7,15}$', 'Ingresa un teléfono válido (7 a 15 dígitos, opcional +).')
+@role_required(["paciente"])
+def guardar_contactos_view(request):
+    """
+    Guarda o actualiza los contactos de emergencia de un paciente.
+    """
+    if request.method == "POST":
+        paciente = request.user  # usuario autenticado
+    
+    p = request.user
+
+    # 1) Leer datos
+    c1 = {
+        "nombre": request.POST.get("nombre_1", "").strip(),
+        "parentesco": request.POST.get("parentesco_1", "").strip(),
+        "telefono": request.POST.get("telefono_1", "").strip(),
+    }
+    c2 = {
+        "nombre": request.POST.get("nombre_2", "").strip(),
+        "parentesco": request.POST.get("parentesco_2", "").strip(),
+        "telefono": request.POST.get("telefono_2", "").strip(),
+    }
+
+    # 2) Normalizar lista de contactos a guardar (solo los completos)
+    contactos = []
+    if all(c1.values()):
+        contactos.append(c1)
+    if all(c2.values()):
+        contactos.append(c2)
+
+    # Validación: debe haber al menos 1 contacto completo
+    if not contactos:
+        messages.error(request, "Debes completar al menos un contacto (nombre, parentesco y teléfono).")
+        return redirect("informacion")
+
+    # Validación: máximo 2 (por si cambias el formulario luego)
+    if len(contactos) > 2:
+        messages.error(request, "Solo puedes registrar hasta dos contactos.")
+        return redirect("informacion")
+
+    # Validación: teléfonos válidos y distintos entre sí
+    try:
+        for c in contactos:
+            telefono_validator(c["telefono"])
+    except ValidationError as e:
+        messages.error(request, f"Teléfono inválido: {e.message}")
+        return redirect("informacion")
+
+    telefonos = [c["telefono"] for c in contactos]
+    if len(set(telefonos)) != len(telefonos):
+        messages.error(request, "Los teléfonos de los contactos no pueden ser iguales.")
+        return redirect("informacion")
+
+    # 3) Guardar de forma atómica: borro anteriores y creo nuevos
+    try:
+        with transaction.atomic():
+            ContactoEmergencia.objects.filter(paciente=p).delete()
+            ContactoEmergencia.objects.bulk_create([
+                ContactoEmergencia(paciente=p, **c) for c in contactos
+            ])
+    except IntegrityError:
+        # Por si acaso (colisión con otra sesión, etc.)
+        messages.error(request, "Ya existe un contacto con ese teléfono para este paciente.")
+        return redirect("informacion")
+
+    messages.success(request, "Contactos de emergencia guardados correctamente.")
+    return redirect("informacion")
