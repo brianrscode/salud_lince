@@ -11,6 +11,7 @@ urlpatterns = [
 
     path("cambiar_contrasena/", views.cambiar_contrasena_view, name="cambiar_contrasena"),
     path("informacion/", views.usuario_informacion_view, name="informacion"),
+    path("guardar-contacto/", views.guardar_contactos_view, name="guardar_contactos"),
 
     path("medico/consultas/", views.medico_consultas_view, name="medico_consultas"),
     path("medico/historiales/", views.medico_historiales_view, name="medico_historiales"),
