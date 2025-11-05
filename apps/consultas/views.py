@@ -10,6 +10,11 @@ from apps.usuarios.models import Usuario
 
 from .forms import ConsultaForm, SignosVitalesForm
 
+import pandas as pd
+from django.http import HttpResponse
+from .models import Consulta
+from datetime import datetime
+
 @never_cache
 @login_required
 @role_required(['medico'])
@@ -75,3 +80,44 @@ def buscar_paciente_por_clave_view(request):
         return JsonResponse({'encontrado': True, 'clave': paciente.clave, 'nombre': paciente.nombres})
     except Usuario.DoesNotExist:
         return JsonResponse({'encontrado': False})
+
+
+@login_required
+@role_required(['medico'])
+def exportar_consultas_excel(request):
+    # Obtener las consultas
+    consultas = Consulta.objects.select_related('clave_paciente', 'clave_medico', 'categoria_de_padecimiento')
+
+    # Convertir a una lista de diccionarios
+    data = []
+    for c in consultas:
+        data.append({
+            'ID Consulta': c.id_consulta,
+            'Fecha': c.fecha.strftime('%Y-%m-%d %H:%M'),
+            'Paciente': f"{c.clave_paciente.nombres} {c.clave_paciente.apellido_paterno} {c.clave_paciente.apellido_materno}" if c.clave_paciente else '—',
+            'Médico': f"{c.clave_medico.nombres} {c.clave_medico.apellido_paterno} {c.clave_medico.apellido_materno}" if c.clave_medico else '—',
+            'Categoría de padecimiento': c.categoria_de_padecimiento.padecimiento if c.categoria_de_padecimiento else '—',
+            'Padecimiento actual': c.padecimiento_actual,
+            'Tratamiento no farmacológico': c.tratamiento_no_farmacologico or '',
+            'Tratamiento farmacológico recetado': c.tratamiento_farmacologico_recetado or '',
+            'Peso': c.signos_vitales.peso,
+            'Talla': c.signos_vitales.talla,
+            'Temperatura': c.signos_vitales.temperatura,
+            'Frecuencia cardíaca': c.signos_vitales.frecuencia_cardiaca,
+            'Frecuencia respiratoria': c.signos_vitales.frecuencia_respiratoria,
+            'Presión arterial': c.signos_vitales.presion_arterial,
+            'IMC': c.signos_vitales.imc,
+        })
+
+    # Crear el DataFrame
+    df = pd.DataFrame(data)
+    fecha_y_hora_actual = datetime.now().strftime('%Y-%m-%d %H:%M')
+
+    # Exportar a Excel (en memoria)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename=consultas_medicas_{fecha_y_hora_actual}.xlsx'
+
+    with pd.ExcelWriter(response, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Consultas Médicas')
+
+    return response

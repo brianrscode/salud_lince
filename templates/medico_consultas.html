@@ -3,7 +3,7 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    
+
     <style>
         .table-hover-row tr:hover {
             cursor: pointer;
@@ -37,6 +37,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 {% endif %}
+
+<a href="{% url 'exportar_consultas_excel' %}" class="btn btn-success fuente-belleza">
+  Exportar consultas a Excel
+</a>
 
 <a class="btn btn-success fuente-belleza" href="{% url 'crear_consulta' %}">Crear nueva consulta</a><br><br>
 
@@ -119,7 +123,7 @@
                 "frecuencia_respiratoria": "{{ consulta.signos_vitales.frecuencia_respiratoria }}",
                 "presion_arterial": "{{ consulta.signos_vitales.presion_arterial }}",
                 "imc" : "{{consulta.signos_vitales.imc}}"
-                
+
             }'>
             <td>{{ consulta.fecha }}</td> <!--Datos de la consulta que se previsualizan -->
             <td>{{ consulta.clave_paciente }}</td>
@@ -216,7 +220,7 @@
 
             // Parse signos vitales
             const signos = JSON.parse(data.signos);
-            
+
             const setSignoVital = (id, value, unidad = '') => {
                 // Obtengo el elemento correspondiente a través de su id
                 const elemento = document.getElementById(id);
