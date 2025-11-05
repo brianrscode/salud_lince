@@ -241,3 +241,24 @@ class HistorialMedico(models.Model):
 
     def __str__(self):
         return f'{self.id_historial}'
+
+class ContactoEmergencia(models.Model):
+    paciente = models.ForeignKey('Usuario', on_delete=models.CASCADE, related_name='contactos_emergencia')
+    nombre = models.CharField('Nombre Completo', max_length=120)
+    parentesco = models.CharField('Parentesco', max_length=50)
+    telefono = models.CharField('Teléfono', max_length= 15, validators=[RegexValidator(r'^\+?\d{7,15}$', 'Ingresa un teléfono válido.')]
+    )
+    creado = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        # Evita duplicar el mismo número para un mismo paciente
+        constraints = [
+            models.UniqueConstraint(
+                fields=['paciente', 'telefono'],
+                name='unique_telefono_por_paciente'
+            )
+        ]
+        ordering = ['-creado']
+
+    def __str__(self):
+        return f"{self.nombre} ({self.parentesco}) - {self.telefono}"
