@@ -12,7 +12,34 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
+            {% if contactos %}
+        <div class="table-responsive mt-3">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nombre completo</th>
+                        <th>Parentesco</th>
+                        <th>Teléfono</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contacto in contactos %}
+                    <tr>
+                        <td>{{ contacto.nombre }}</td>
+                        <td>{{ contacto.parentesco }}</td>
+                        <td>{{ contacto.telefono }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+            {% else %}
+                <p class="text-muted mt-2">Este paciente no tiene contactos de emergencia registrados.</p>
+            {% endif %}
+        </div>
+
         <button type="submit" class="btn btn-success fuente-belleza">Guardar cambios</button>
         <a href="{% url 'medico_historiales' %}" class="btn btn-secondary fuente-belleza">Cancelar</a>
     </form>
+      <hr class="mt-5">
 {% endblock %}
